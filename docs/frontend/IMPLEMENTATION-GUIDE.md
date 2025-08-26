@@ -255,7 +255,7 @@ class StockfishService {
   }
 
   private initializeWorker() {
-    this.worker = new Worker('/workers/stockfish.worker.js')
+    this.worker = new Worker(new URL('../workers/stockfish.worker.ts', import.meta.url))
     this.worker.onmessage = (event) => {
       const { id, result } = event.data
       const callback = this.messageQueue.get(id)
@@ -293,22 +293,21 @@ class StockfishService {
 export const stockfishService = new StockfishService()
 ```
 
-### **Stockfish Web Worker**
+### **Stockfish Web Worker (Corrected)**
 ```typescript
-// public/workers/stockfish.worker.js
-import { Chess } from 'chess.js'
+// src/workers/stockfish.worker.ts
+// Files automatically available after npm install - no manual copying needed!
+import Stockfish from 'stockfish'
 
-// Load Stockfish WASM
-importScripts('/stockfish.js')
-
-let stockfish: any
+let engine: any
 let currentAnalysis: any = null
 
-// Initialize Stockfish
-function initStockfish() {
-  stockfish = Stockfish()
+// Initialize Stockfish engine
+async function initStockfish() {
+  // Use the npm package directly - multiple variants available
+  engine = await Stockfish()
   
-  stockfish.addMessageListener((line: string) => {
+  engine.addMessageListener((line: string) => {
     if (currentAnalysis && line.includes('bestmove')) {
       const bestMove = line.split(' ')[1]
       const result = {
@@ -326,8 +325,8 @@ function initStockfish() {
     }
   })
   
-  stockfish.postMessage('uci')
-  stockfish.postMessage('isready')
+  engine.postMessage('uci')
+  engine.postMessage('isready')
 }
 
 // Handle analysis requests
@@ -337,8 +336,8 @@ self.onmessage = (event) => {
   if (type === 'analyze') {
     currentAnalysis = { id, depth, evaluation: 0 }
     
-    stockfish.postMessage(`position fen ${fen}`)
-    stockfish.postMessage(`go depth ${depth}`)
+    engine.postMessage(`position fen ${fen}`)
+    engine.postMessage(`go depth ${depth}`)
   }
 }
 
@@ -550,9 +549,9 @@ const useChessAudio = () => {
 - [Stockfish.js Guide](https://github.com/nmrugg/stockfish.js) - Chess engine integration
 
 **Stockfish Setup:**
-- Download `stockfish.js` and `stockfish.wasm` to `public/` directory
-- Research shows: Use Web Workers to prevent UI blocking during analysis
-- Variants: Lite (7MB) for quick moves, Full (75MB) for deep analysis
+- Files included automatically after `npm install stockfish` - no manual copying needed
+- Multiple variants available: Lite (7MB) for quick moves, Full (75MB) for deep analysis
+- Use Web Workers to prevent UI blocking during analysis (recommended pattern)
 
 **Your Implementation Documents:**
 - Implementation Plan: `docs/frontend/04-poc-implementation-plan.md`
