@@ -1,0 +1,66 @@
+{
+  "name": "chess-training-electron",
+  "version": "1.0.0",
+  "description": "Chess Training POC - Desktop Application",
+  "main": "dist/main.js",
+  "scripts": {
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "conf": "^10.2.0",
+    "electron": "^27.0.0",
+    "wait-on": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/wait-on": "^5.3.4",
+    "electron-builder": "^24.6.0",
+    "typescript": "^5.0.0"
+  },
+  "build": {
+    "appId": "com.chessTraining.app",
+    "productName": "Chess Training",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "resources/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../backend/dist",
+        "to": "backend/dist"
+      },
+      {
+        "from": "../backend/package.json",
+        "to": "backend/package.json"
+      },
+      {
+        "from": "../backend/node_modules",
+        "to": "backend/node_modules"
+      }
+    ],
+    "mac": {
+      "icon": "resources/icon.icns",
+      "target": "dmg"
+    },
+    "win": {
+      "icon": "resources/icon.ico",
+      "target": "nsis"
+    },
+    "linux": {
+      "icon": "resources/icon.png",
+      "target": "AppImage"
+    }
+  },
+  "keywords": [
+    "chess",
+    "training",
+    "desktop",
+    "electron"
+  ],
+  "author": "",
+  "license": "MIT"
+}

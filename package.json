@@ -1,0 +1,27 @@
+{
+  "name": "chess-training",
+  "version": "1.0.0",
+  "description": "Chess training game with puzzles and AI opponents",
+  "main": "backend/src/index.js",
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install && cd ../electron && npm install",
+    "dev": "concurrently --names \"API,WEB,APP\" --prefix-colors \"blue,green,magenta\" \"cd backend && npx nodemon src/app.ts\" \"cd frontend && npx vite\" \"cd electron && NODE_ENV=development npx electron .\"",
+    "build": "cd backend && npx tsc && cd ../frontend && npx tsc --noEmit",
+    "build:prod": "npm run build && cd frontend && npx vite build --emptyOutDir",
+    "start": "npm run dev",
+    "test": "cd backend && echo \"No tests yet\" && cd ../frontend && npx vitest run",
+    "lint": "cd frontend && npx eslint .",
+    "seed": "cd backend && npx ts-node src/scripts/seed.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "chess",
+    "training",
+    "puzzles",
+    "stockfish"
+  ],
+  "author": "",
+  "license": "MIT"
+}
