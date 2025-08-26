@@ -10,24 +10,28 @@ Simple, practical folder structure for the Chess Training application. No unnece
 src/
 ├── components/
 │   ├── auth/
-│   │   ├── LoginForm.tsx
-│   │   ├── RegisterForm.tsx
-│   │   ├── ProfileSettings.tsx
-│   │   └── PasswordReset.tsx
+│   │   ├── LoginForm.tsx           # Research-validated: React Hook Form with Zod validation
+│   │   ├── RegisterForm.tsx        # React Hook Form + TanStack Query mutation
+│   │   ├── ProfileSettings.tsx     # React Hook Form profile management
+│   │   └── PasswordReset.tsx       # React Hook Form password reset flow
 │   │
 │   ├── chess/
-│   │   ├── ChessBoard.tsx         # react-chessboard wrapper
-│   │   ├── GameControls.tsx       # Start, pause, resign, etc
-│   │   ├── MoveList.tsx           # Game notation display
-│   │   ├── GameClock.tsx          # Timer component
-│   │   └── GameResult.tsx         # Win/loss/draw display
+│   │   ├── ChessBoardWrapper.tsx   # Research-validated: react-chessboard integration
+│   │   ├── AnimatedChessPiece.tsx  # Research-validated: React Spring chess piece animations
+│   │   ├── GameControls.tsx        # Start, pause, resign with React Hook Form
+│   │   ├── MoveList.tsx           # Game notation display with TanStack Query
+│   │   ├── GameClock.tsx          # Timer with React Spring animations
+│   │   ├── GameResult.tsx         # Win/loss/draw with React Spring success animations
+│   │   └── StockfishPanel.tsx     # Research-validated: Stockfish analysis integration
 │   │
 │   ├── puzzles/
-│   │   ├── PuzzleInterface.tsx    # Main puzzle solver
-│   │   ├── HintSystem.tsx         # Progressive hints
-│   │   ├── SolutionFeedback.tsx   # Correct/incorrect feedback
-│   │   ├── PuzzleSelector.tsx     # Puzzle difficulty/theme picker
-│   │   └── DifficultyAdjuster.tsx # Adaptive difficulty
+│   │   ├── PuzzleInterface.tsx      # Main solver with react-chessboard + Stockfish
+│   │   ├── HintSystem.tsx           # Progressive hints with React Spring animations
+│   │   ├── SolutionFeedback.tsx     # React Spring success/error animations + Howler.js audio
+│   │   ├── PuzzleConfigForm.tsx     # Research-validated: React Hook Form configuration
+│   │   ├── PuzzleSelector.tsx       # Difficulty/theme picker with TanStack Query
+│   │   ├── DifficultyAdjuster.tsx   # Adaptive difficulty with React Spring indicators
+│   │   └── PuzzleSuccessAnimation.tsx # Research-validated: React Spring celebration animations
 │   │
 │   ├── openings/
 │   │   ├── OpeningExplorer.tsx    # ECO database browser
@@ -119,19 +123,33 @@ src/
 │   └── useDebounce.ts            # Performance helper
 │
 ├── services/
-│   ├── ApiClient.ts              # HTTP client configuration
-│   ├── AuthApiClient.ts          # Authentication API calls
-│   ├── GameApiClient.ts          # Chess game API calls
-│   ├── PuzzleApiClient.ts        # Puzzle training API calls
-│   ├── StatsApiClient.ts         # Statistics API calls
-│   ├── UserApiClient.ts          # User profile API calls
-│   ├── ChessLogicService.ts      # Client-side chess logic
-│   ├── AIService.ts              # Stockfish integration (client-side)
-│   ├── SpacedRepetitionService.ts # Learning algorithm (client-side)
-│   ├── OpeningDataService.ts     # Opening data processing (client-side)
-│   ├── AnalysisProcessor.ts      # Analysis data processing (client-side)
-│   ├── GamificationEngine.ts     # Achievement logic (client-side)
-│   └── CacheService.ts           # API response caching
+│   ├── api/                      # Research-validated API clients with axios + TanStack Query
+│   │   ├── ApiClient.ts          # Axios HTTP client configuration with JWT interceptors
+│   │   ├── AuthApiClient.ts      # Authentication REST API calls
+│   │   ├── GameApiClient.ts      # Chess game REST API calls
+│   │   ├── PuzzleApiClient.ts    # Puzzle training REST API calls
+│   │   ├── StatsApiClient.ts     # Statistics REST API calls
+│   │   └── UserApiClient.ts      # User profile REST API calls
+│   ├── chess/
+│   │   ├── ChessLogicService.ts  # chess.js integration
+│   │   ├── StockfishService.ts   # Research-validated: Stockfish.js Web Worker integration
+│   │   ├── StockfishWorker.ts    # Stockfish Web Worker wrapper for non-blocking analysis
+│   │   └── PositionAnalyzer.ts   # Chess position analysis with Stockfish
+│   ├── audio/
+│   │   ├── AudioService.ts       # Research-validated: Howler.js audio system
+│   │   ├── SoundManager.ts       # Chess-specific sound effects with mobile optimization
+│   │   └── AudioPreloader.ts     # Howler.js audio file preloading for performance
+│   ├── learning/
+│   │   ├── SpacedRepetitionService.ts # Learning algorithm implementation
+│   │   ├── ProgressCalculator.ts     # Learning progress computation
+│   │   └── DifficultyAdjuster.ts     # Adaptive difficulty algorithm
+│   ├── data/
+│   │   ├── OpeningDataService.ts # Opening database processing
+│   │   ├── PuzzleProcessor.ts    # Puzzle data transformation
+│   │   └── StatsCalculator.ts    # Statistics computation
+│   └── cache/
+│       ├── QueryClientConfig.ts  # Research-validated: TanStack Query configuration
+│       └── CacheService.ts       # API response caching with TanStack Query
 │
 ├── stores/                       # Zustand stores
 │   ├── authStore.ts              # User session
@@ -178,24 +196,67 @@ src/
     ├── images/
     │   ├── icons/
     │   └── backgrounds/
-    ├── sounds/
-    │   ├── move.mp3
+    ├── audio/                      # Research-validated: Howler.js optimized audio files
+    │   ├── move.webm               # Primary format for modern browsers
+    │   ├── move.mp3                # Fallback format for compatibility
+    │   ├── capture.webm            # Chess piece capture sounds
     │   ├── capture.mp3
-    │   └── check.mp3
+    │   ├── check.webm              # Check/checkmate notifications
+    │   ├── check.mp3
+    │   ├── success.webm            # Puzzle success feedback
+    │   ├── success.mp3
+    │   ├── error.webm              # Error/incorrect move feedback
+    │   ├── error.mp3
+    │   ├── hint.webm               # Hint system audio feedback
+    │   ├── hint.mp3
+    │   ├── button.webm             # UI interaction sounds
+    │   └── button.mp3
+    ├── stockfish/                  # Research-validated: Stockfish.js engine files
+    │   ├── stockfish.js            # Stockfish WebAssembly build
+    │   ├── stockfish.wasm          # WebAssembly binary
+    │   └── stockfish.worker.js     # Web Worker wrapper
     └── data/
-        ├── openings.json
-        └── puzzles.json
+        ├── openings.json           # ECO opening database
+        └── puzzles.json            # Training puzzle sets
 
-tests/
-├── components/                   # Component tests
-│   ├── auth/
-│   ├── chess/
-│   ├── puzzles/
-│   ├── openings/
-│   ├── analysis/
-│   ├── statistics/
-│   ├── ui/
-│   └── layout/
+tests/                              # Research-validated: Vitest + Playwright testing structure
+├── unit/                         # Vitest unit tests (5x faster than Jest)
+│   ├── components/               # Component unit tests with React Testing Library
+│   │   ├── auth/                 # React Hook Form validation testing
+│   │   ├── chess/                # react-chessboard wrapper testing
+│   │   ├── puzzles/              # React Spring animation testing
+│   │   ├── analysis/             # Stockfish service testing
+│   │   ├── audio/                # Howler.js audio system testing
+│   │   └── ui/                   # Chakra UI component testing
+│   ├── services/                 # Service layer unit tests
+│   │   ├── stockfish/            # Stockfish Web Worker testing
+│   │   ├── audio/                # Howler.js service testing
+│   │   └── api/                  # Axios + TanStack Query testing
+│   ├── stores/                   # Zustand store testing
+│   └── utils/                    # Utility function testing
+├── integration/                  # Integration tests with Vitest
+│   ├── api/                      # TanStack Query + API integration
+│   ├── chess/                    # Chess engine + UI integration
+│   └── auth/                     # Authentication flow integration
+├── e2e/                         # Research-validated: Playwright end-to-end tests
+│   ├── auth/                     # Authentication workflows
+│   │   ├── login.spec.ts         # Login with React Hook Form
+│   │   ├── registration.spec.ts  # Registration flow testing
+│   │   └── password-reset.spec.ts # Password reset workflow
+│   ├── puzzles/                  # Puzzle training workflows
+│   │   ├── tactical-puzzles.spec.ts # Complete puzzle solving flow
+│   │   ├── hint-system.spec.ts      # Hint progression testing
+│   │   └── difficulty-adjustment.spec.ts # Adaptive difficulty
+│   ├── chess/                    # Chess gameplay workflows
+│   │   ├── game-vs-ai.spec.ts    # Stockfish AI opponent testing
+│   │   ├── analysis.spec.ts      # Stockfish analysis workflow
+│   │   └── board-interaction.spec.ts # react-chessboard interaction
+│   ├── audio/                    # Howler.js audio workflows
+│   │   ├── sound-effects.spec.ts # Audio feedback testing
+│   │   └── mobile-audio.spec.ts  # Mobile audio restrictions
+│   └── performance/              # Performance regression testing
+│       ├── load-times.spec.ts    # Page load performance
+│       └── interaction-timing.spec.ts # <50ms interaction timing
 ├── pages/                       # Page tests
 │   ├── LandingPage.test.tsx
 │   ├── auth/
@@ -251,10 +312,13 @@ tests/
     ├── games.ts
     └── puzzles.ts
 
-App.tsx                         # Root component
-main.tsx                        # Entry point
+App.tsx                         # Root component with TanStack Query + Zustand providers
+main.tsx                        # Entry point with React Spring + Howler.js initialization
 index.css                       # Base styles
 vite-env.d.ts                   # Vite types
+vitest.config.ts                # Research-validated: Vitest configuration (5x faster than Jest)
+playwright.config.ts            # Research-validated: Playwright E2E test configuration
+package.json                    # Dependencies with all research-validated libraries
 ```
 
 ## Organization Principles

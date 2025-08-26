@@ -1,203 +1,275 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
-import apiService from '../services/api';
-import type { User, LoginRequest, RegisterRequest } from '../types/api';
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import axios from 'axios'
 
-interface AuthState {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
-  
-  // Actions
-  login: (data: LoginRequest) => Promise<void>;
-  register: (data: RegisterRequest) => Promise<void>;
-  logout: () => Promise<void>;
-  loadUser: () => Promise<void>;
-  updateUserPreferences: (preferences: any) => Promise<void>;
-  clearError: () => void;
+// Types
+interface User {
+  id: string
+  username: string
+  email: string
+  chess_elo: number
+  puzzle_rating: number
+  preferences: Record<string, any>
 }
 
+interface AuthState {
+  // State
+  isAuthenticated: boolean
+  user: User | null
+  accessToken: string | null
+  refreshToken: string | null
+  isLoading: boolean
+  error: string | null
+
+  // Actions
+  login: (email: string, password: string) => Promise<boolean>
+  logout: () => Promise<void>
+  refreshAccessToken: () => Promise<boolean>
+  updateUserPreferences: (preferences: Record<string, any>) => Promise<boolean>
+  clearError: () => void
+  
+  // Internal
+  setTokens: (accessToken: string, refreshToken: string) => void
+  setUser: (user: User) => void
+  setLoading: (loading: boolean) => void
+  setError: (error: string | null) => void
+}
+
+// API Base URL
+const API_BASE_URL = 'http://localhost:3000/api'
+
+// Create axios instance with interceptors
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
 export const useAuthStore = create<AuthState>()(
-  devtools(
+  persist(
     (set, get) => ({
-      user: null,
+      // Initial state
       isAuthenticated: false,
+      user: null,
+      accessToken: null,
+      refreshToken: null,
       isLoading: false,
       error: null,
 
-      login: async (data: LoginRequest) => {
-        set({ isLoading: true, error: null });
+      // Actions
+      login: async (email: string, password: string): Promise<boolean> => {
+        set({ isLoading: true, error: null })
         
         try {
-          const response = await apiService.login(data);
-          
-          if (response.success && response.user) {
+          const response = await apiClient.post('/auth/login', {
+            email,
+            password
+          })
+
+          if (response.data.success) {
+            const { accessToken, refreshToken, user } = response.data
+            
             set({
-              user: response.user,
               isAuthenticated: true,
+              user,
+              accessToken,
+              refreshToken,
               isLoading: false,
               error: null
-            });
+            })
+
+            // Setup axios interceptor with new token
+            setupAxiosInterceptors(get)
+            
+            return true
           } else {
-            set({
-              isLoading: false,
-              error: response.error || 'Login failed'
-            });
+            set({ 
+              isLoading: false, 
+              error: response.data.error || 'Login failed' 
+            })
+            return false
           }
         } catch (error: any) {
-          set({
-            isLoading: false,
-            error: error.response?.data?.error || 'Login failed'
-          });
+          const errorMessage = error.response?.data?.error || 'Network error during login'
+          set({ 
+            isLoading: false, 
+            error: errorMessage 
+          })
+          return false
         }
       },
 
-      register: async (data: RegisterRequest) => {
-        set({ isLoading: true, error: null });
+      logout: async (): Promise<void> => {
+        const { refreshToken } = get()
         
         try {
-          const response = await apiService.register(data);
-          
-          if (response.success && response.user) {
-            // After successful registration, automatically login
-            await get().login({ email: data.email, password: data.password });
-          } else {
-            set({
-              isLoading: false,
-              error: response.error || 'Registration failed'
-            });
+          // Call logout endpoint if we have a refresh token
+          if (refreshToken) {
+            await apiClient.post('/auth/logout', { refreshToken })
           }
-        } catch (error: any) {
-          set({
-            isLoading: false,
-            error: error.response?.data?.error || 'Registration failed'
-          });
-        }
-      },
-
-      logout: async () => {
-        set({ isLoading: true });
-        
-        try {
-          await apiService.logout();
         } catch (error) {
-          console.error('Logout error:', error);
-        } finally {
-          set({
-            user: null,
-            isAuthenticated: false,
-            isLoading: false,
-            error: null
-          });
+          console.warn('Logout API call failed:', error)
         }
+
+        // Clear state regardless of API call result
+        set({
+          isAuthenticated: false,
+          user: null,
+          accessToken: null,
+          refreshToken: null,
+          error: null
+        })
       },
 
-      loadUser: async () => {
-        console.log('🔐 loadUser called');
+      refreshAccessToken: async (): Promise<boolean> => {
+        const { refreshToken, accessToken } = get()
         
-        set({ isLoading: true, error: null });
-        
-        const isAuth = await apiService.isAuthenticated();
-        console.log('🔑 isAuthenticated:', isAuth);
-        
-        if (!isAuth) {
-          console.log('❌ No tokens found, skipping loadUser');
-          set({ isLoading: false });
-          return;
+        // Skip token refresh for demo mode
+        if (accessToken === 'demo-access-token') {
+          console.log('Skipping token refresh for demo mode')
+          return false
         }
         
-        console.log('✅ Attempting to load user profile');
-        
-        // Check if API server is ready with retries
-        let retries = 10;
-        while (retries > 0) {
-          try {
-            const healthCheck = await fetch('http://localhost:3000/api/health');
-            if (healthCheck.ok) break;
-          } catch (error) {
-            // API not ready yet
-          }
-          await new Promise(resolve => setTimeout(resolve, 500));
-          retries--;
+        if (!refreshToken) {
+          return false
         }
-        
-        if (retries === 0) {
-          console.log('❌ API server not available');
-          set({ isLoading: false });
-          return;
-        }
-        
+
         try {
-          const response = await apiService.getProfile();
-          
-          if (response.success && response.user) {
-            console.log('✅ User profile loaded successfully:', response.user.username);
-            set({
-              user: response.user,
-              isAuthenticated: true,
-              isLoading: false,
-              error: null
-            });
+          const response = await apiClient.post('/auth/refresh', {
+            refreshToken
+          })
+
+          if (response.data.success) {
+            const { accessToken: newAccessToken } = response.data
+            
+            set({ accessToken: newAccessToken })
+            return true
           } else {
-            console.log('❌ Profile request failed:', response.error);
-            set({
-              user: null,
-              isAuthenticated: false,
-              isLoading: false,
-              error: null
-            });
+            // Refresh failed, logout user
+            get().logout()
+            return false
           }
-        } catch (error: any) {
-          console.log('❌ Error loading user profile:', error.message);
-          set({
-            user: null,
-            isAuthenticated: false,
-            isLoading: false,
-            error: null
-          });
+        } catch (error) {
+          console.error('Token refresh failed:', error)
+          get().logout()
+          return false
         }
       },
 
-      updateUserPreferences: async (preferences: any) => {
-        set({ isLoading: true, error: null });
+      updateUserPreferences: async (preferences: Record<string, any>): Promise<boolean> => {
+        set({ isLoading: true, error: null })
         
         try {
-          const response = await apiService.updateProfile(preferences);
-          
-          if (response.success) {
-            // Update local user state
-            const currentUser = get().user;
+          const response = await apiClient.put('/user/profile', {
+            preferences
+          })
+
+          if (response.data.success) {
+            // Update user object with new preferences
+            const currentUser = get().user
             if (currentUser) {
               set({
                 user: {
                   ...currentUser,
                   preferences: { ...currentUser.preferences, ...preferences }
                 },
-                isLoading: false,
-                error: null
-              });
+                isLoading: false
+              })
             }
+            return true
           } else {
-            set({
-              isLoading: false,
-              error: response.error || 'Failed to update preferences'
-            });
+            set({ 
+              isLoading: false, 
+              error: response.data.error || 'Failed to update preferences' 
+            })
+            return false
           }
         } catch (error: any) {
-          set({
-            isLoading: false,
-            error: error.response?.data?.error || 'Failed to update preferences'
-          });
+          const errorMessage = error.response?.data?.error || 'Network error updating preferences'
+          set({ 
+            isLoading: false, 
+            error: errorMessage 
+          })
+          return false
         }
       },
 
-      clearError: () => {
-        set({ error: null });
-      }
+      clearError: () => set({ error: null }),
+      
+      // Internal setters
+      setTokens: (accessToken: string, refreshToken: string) => 
+        set({ accessToken, refreshToken }),
+      
+      setUser: (user: User) => set({ user }),
+      
+      setLoading: (loading: boolean) => set({ isLoading: loading }),
+      
+      setError: (error: string | null) => set({ error }),
     }),
     {
-      name: 'auth-store'
+      name: 'chess-auth-storage',
+      // Only persist auth data, not loading states
+      partialize: (state) => ({
+        isAuthenticated: state.isAuthenticated,
+        user: state.user,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+      }),
     }
   )
-);
+)
+
+// Setup axios interceptors for automatic token injection and refresh
+const setupAxiosInterceptors = (getState: () => AuthState) => {
+  // Request interceptor - inject access token
+  apiClient.interceptors.request.use(
+    (config) => {
+      const { accessToken } = getState()
+      if (accessToken && accessToken !== 'demo-access-token') {
+        // Only add auth header for real tokens, not demo tokens
+        config.headers.Authorization = `Bearer ${accessToken}`
+      }
+      return config
+    },
+    (error) => Promise.reject(error)
+  )
+
+  // Response interceptor - handle token refresh (disabled for demo mode)
+  apiClient.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalRequest = error.config
+      const { accessToken } = getState()
+
+      // Skip token refresh completely for demo mode
+      if (accessToken === 'demo-access-token') {
+        return Promise.reject(error)
+      }
+
+      // Only attempt token refresh for 401 errors on non-demo accounts
+      if (error.response?.status === 401 && !originalRequest._retry && accessToken !== 'demo-access-token') {
+        originalRequest._retry = true
+
+        const success = await getState().refreshAccessToken()
+        
+        if (success) {
+          // Retry original request with new token
+          const { accessToken: newToken } = getState()
+          originalRequest.headers.Authorization = `Bearer ${newToken}`
+          return apiClient(originalRequest)
+        }
+      }
+
+      return Promise.reject(error)
+    }
+  )
+}
+
+// Initialize interceptors when store is created (only in browser)
+if (typeof window !== 'undefined') {
+  setupAxiosInterceptors(() => useAuthStore.getState())
+}
+
+// Export the API client for other services to use
+export { apiClient }

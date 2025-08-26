@@ -3,11 +3,18 @@ import { spawn, ChildProcess } from 'child_process';
 import { join } from 'path';
 import waitOn from 'wait-on';
 import { secureStorage } from './storage';
+import Conf from 'conf';
 
 class ChessTrainingApp {
   private mainWindow: BrowserWindow | null = null;
   private backendProcess: ChildProcess | null = null;
   private isDev = process.env.NODE_ENV === 'development';
+  private config = new Conf({
+    projectName: 'chess-training',
+    defaults: {
+      theme: 'cyber-neon'
+    }
+  });
 
   constructor() {
     this.setupEventHandlers();
@@ -35,6 +42,21 @@ class ChessTrainingApp {
     ipcMain.handle('app:get-version', () => app.getVersion());
     ipcMain.handle('app:quit', () => this.shutdown());
     ipcMain.handle('backend:status', () => this.getBackendStatus());
+    
+    // Config handlers
+    ipcMain.handle('config:get', (_, key: string) => this.config.get(key as any));
+    ipcMain.handle('config:set', (_, key: string, value: any) => {
+      this.config.set(key as any, value);
+      return true;
+    });
+    ipcMain.handle('config:delete', (_, key: string) => {
+      this.config.delete(key as any);
+      return true;
+    });
+    ipcMain.handle('config:clear', () => {
+      this.config.clear();
+      return true;
+    });
     
     // Auth storage handlers
     ipcMain.handle('auth:set-tokens', async (_, accessToken: string, refreshToken: string) => {

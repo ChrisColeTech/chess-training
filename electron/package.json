@@ -4,8 +4,11 @@
   "description": "Chess Training POC - Desktop Application",
   "main": "dist/main.js",
   "scripts": {
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "build": "tsc",
+    "dev": "tsc && NODE_ENV=development electron .",
+    "start": "npm run build && electron .",
+    "pack": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder"
   },
   "dependencies": {
     "conf": "^10.2.0",

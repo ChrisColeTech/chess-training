@@ -23,6 +23,14 @@ const electronAPI = {
     quit: () => ipcRenderer.invoke('app:quit')
   },
   
+  // Config methods
+  config: {
+    get: (key: string) => ipcRenderer.invoke('config:get', key),
+    set: (key: string, value: any) => ipcRenderer.invoke('config:set', key, value),
+    delete: (key: string) => ipcRenderer.invoke('config:delete', key),
+    clear: () => ipcRenderer.invoke('config:clear')
+  },
+  
   // Check if running in Electron
   isElectron: true
 };

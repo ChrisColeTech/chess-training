@@ -1,68 +1,176 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+/* Chess Training App Custom Styles */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+    --chess-light: #f0d9b5;
+    --chess-dark: #b58863;
+    --chess-border: #8b4513;
   }
-  a:hover {
-    color: #747bff;
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
   }
-  button {
-    background-color: #f9f9f9;
+  
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    @apply antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+  
+  h1 { @apply text-3xl lg:text-4xl; }
+  h2 { @apply text-2xl lg:text-3xl; }
+  h3 { @apply text-xl lg:text-2xl; }
+  h4 { @apply text-lg lg:text-xl; }
+}
+
+@layer components {
+  /* Theme-aware backgrounds */
+  .theme-bg {
+    @apply bg-neutral-50 dark:bg-gray-900;
+  }
+  
+  .theme-surface {
+    @apply bg-white dark:bg-gray-800;
+  }
+  
+  .theme-text {
+    @apply text-neutral-900 dark:text-gray-100;
+  }
+  
+  .theme-text-secondary {
+    @apply text-neutral-600 dark:text-gray-400;
+  }
+  
+  /* Chess board styling */
+  .chess-square-light {
+    background-color: var(--chess-light);
+  }
+  
+  .chess-square-dark {
+    background-color: var(--chess-dark);
+  }
+  
+  .chess-border {
+    border-color: var(--chess-border);
+  }
+  
+  /* Button variants that adapt to theme */
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2.5 px-5 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-md hover:shadow-lg;
+  }
+  
+  .btn-secondary {
+    @apply bg-neutral-200 dark:bg-gray-700 hover:bg-neutral-300 dark:hover:bg-gray-600 text-neutral-900 dark:text-gray-100 font-medium py-2.5 px-5 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 shadow-md hover:shadow-lg;
+  }
+  
+  .btn-success {
+    @apply bg-success-600 hover:bg-success-700 text-white font-medium py-2.5 px-5 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-success-500 focus:ring-offset-2 shadow-md hover:shadow-lg;
+  }
+  
+  .btn-danger {
+    @apply bg-error-600 hover:bg-error-700 text-white font-medium py-2.5 px-5 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-error-500 focus:ring-offset-2 shadow-md hover:shadow-lg;
+  }
+  
+  /* Card component that adapts to theme */
+  .card {
+    @apply theme-surface rounded-2xl shadow-soft dark:shadow-large border border-neutral-200 dark:border-gray-700 p-6;
+  }
+  
+  /* Enhanced chess board */
+  .chess-board {
+    @apply rounded-xl shadow-chess-piece border-4;
+    border-color: var(--chess-border);
+  }
+  
+  /* Form inputs that adapt to theme */
+  .form-input {
+    @apply block w-full rounded-xl border-neutral-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-3 text-neutral-900 dark:text-gray-100 placeholder-neutral-500 dark:placeholder-gray-400 focus:border-primary-500 focus:ring-primary-500 transition-colors duration-200;
+  }
+  
+  /* Chess piece shadows */
+  .chess-piece {
+    @apply shadow-chess-piece transition-all duration-300;
+  }
+  
+  .chess-piece:hover {
+    @apply shadow-large scale-105;
+  }
+}
+
+@layer utilities {
+  /* Animation utilities */
+  .animate-chess-move {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .animate-piece-capture {
+    @apply animate-bounce-subtle;
+  }
+  
+  /* Chess-specific utilities */
+  .highlight-move {
+    @apply ring-4 ring-warning-400 ring-opacity-60;
+  }
+  
+  .highlight-check {
+    @apply ring-4 ring-error-500 ring-opacity-80;
+  }
+  
+  .highlight-capture {
+    @apply ring-4 ring-warning-500 ring-opacity-70;
+  }
+  
+  /* Glass morphism effects */
+  .glass {
+    @apply bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-white/20 dark:border-gray-700/50;
+  }
+  
+  .glass-card {
+    @apply glass rounded-2xl shadow-large p-6;
   }
 }

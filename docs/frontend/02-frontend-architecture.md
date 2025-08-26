@@ -45,25 +45,51 @@ Clear boundaries between different aspects of the application:
   - **Industry Trend**: Preferred choice for new React projects in 2024
 
 ### UI Framework Selection
-**Decision: Chakra UI** ✅ **Research-validated choice**
+**Decision: Shadcn UI + Tailwind CSS** ✅ **Research-validated choice** (Updated from Chakra UI)
 
-**Rationale from Research:**
-- Built-in accessibility (ARIA attributes by default)
-- Excellent performance with emotion runtime optimizations
-- Gentle learning curve with intuitive API
-- Strong TypeScript support
-- Active community and maintenance
+**Primary UI Framework: Shadcn UI**
+- **Zero Migration Path**: Built on Tailwind CSS, leveraging existing investment
+- **Desktop Application Optimized**: Superior performance in Electron applications
+- **Gaming Aesthetics**: Excellent support for dark themes and glassmorphism effects
+- **Component Quality**: High-quality, customizable components with proper TypeScript support
+- **Research Validation**: Identified as top choice for desktop gaming applications
+
+**Supporting Libraries:**
+- **Tailwind CSS 3.4+**: Utility-first CSS framework for rapid styling
+- **@radix-ui/react-\***: Unstyled, accessible components (Shadcn UI foundation)
+- **class-variance-authority**: Component variant styling utility
+- **tailwind-merge + clsx**: Utility for merging Tailwind classes safely
+- **@heroicons/react**: Consistent, well-maintained React icons
+- **@headlessui/react**: Additional headless UI components for complex interactions
+
+**Migration Benefits:**
+- **Bundle Size**: Significantly smaller than previous Chakra UI implementation
+- **Performance**: No runtime CSS-in-JS overhead, optimized for desktop applications
+- **Gaming UI**: Native support for dark themes, gradients, and modern gaming aesthetics
+- **Developer Experience**: Better TypeScript integration and component customization
+- **Maintenance**: Stable foundation with active development and community support
 
 ### Chess Libraries ✅ **Research-Validated Stack**
 - **chess.js** - Chess game logic and validation *(Validated in research)*
 - **react-chessboard** - Modern, actively maintained board component *(Validated in research)*
 
-### State Management ✅ **Research-Validated**
-**Decision: Zustand** *(Now research-validated - see Technical Decisions Research)*
-- **Bundle Size**: 3.53KB vs Redux Toolkit's 40.1KB (91% smaller)
-- **Performance**: 85ms update time competitive for chess move frequency
-- **TypeScript**: Automatic type inference reduces development overhead
-- **Local State (useState/useReducer)** - For component-specific state
+### State Management ✅ **Implementation Decision Override**
+**Decision: React Context API + useState/useReducer** *(Override from research-recommended Zustand)*
+
+**Research Finding**: TECHNICAL-DECISIONS-RESEARCH.md recommended Zustand for chess applications
+**Implementation Decision**: Chose React Context API instead
+
+**Override Rationale:**
+- **Architecture Simplification**: Removed external state library dependency for simpler codebase
+- **Bundle Size**: Zero additional bytes - uses native React APIs vs Zustand's 3.53KB
+- **Desktop Focus**: Context API sufficient for desktop app without complex state requirements
+- **Theme-Specific**: Primary use case is theme management with Electron persistence
+- **Performance**: Acceptable for our use cases with React.memo and useCallback optimization
+
+**Current Implementation:**
+- **Theme Management**: React Context for global theme state with Electron persistence
+- **Domain State**: useState/useReducer for local component state (chess games, forms, etc.)
+- **Electron Integration**: Direct integration with Electron IPC for native desktop features
 
 ### HTTP Client ✅ **Research-Validated**
 **Decision: axios** *(Now research-validated - see Technical Decisions Research)*
@@ -77,11 +103,46 @@ Clear boundaries between different aspects of the application:
 - **Real-Time Integration**: Excellent WebSocket integration patterns for live game synchronization
 - **DevTools**: Built-in debugging tools essential for complex chess state management
 
+### Form Handling ✅ **Research-Validated**
+**Decision: React Hook Form** *(Now research-validated - see Technical Decisions Research)*
+- **Performance**: 6x smaller than Formik (12.12KB vs 44.34KB)
+- **Active Maintenance**: Formik unmaintained, React Hook Form actively developed
+- **TypeScript Integration**: Stricter types with Zod integration
+- **Re-render Optimization**: Minimal re-renders crucial for chess app performance
+
+### Animation System ✅ **Research-Validated**
+**Decision: React Spring** *(Now research-validated - see Technical Decisions Research)*
+- **Bundle Size**: 19KB vs Framer Motion's 44KB (57% smaller)
+- **Chess-Specific Performance**: Physics-based animations ideal for realistic piece movement
+- **Render Optimization**: Bypasses React re-renders during animations
+- **Natural Movement**: Spring dynamics create more realistic chess piece animations
+
+### Audio System ✅ **Research-Validated**
+**Decision: Howler.js** *(Now research-validated - see Technical Decisions Research)*
+- **Cross-Browser Compatibility**: Web Audio API with HTML5 Audio fallback
+- **Mobile Optimization**: Built-in iOS Safari restrictions handling and auto-unlock
+- **Audio Sprites**: Perfect for chess piece sounds and feedback optimization
+- **Performance**: Automatic caching and optimized loading for repeated chess sounds
+
+### Chess Engine Integration ✅ **Research-Validated**
+**Decision: Stockfish.js** *(Critical requirement from research)*
+- **AI Opponents**: Required for intelligent chess gameplay - all major platforms use it
+- **Game Analysis**: Essential for move evaluation and position assessment
+- **Multiple Variants**: Lite (7MB) for quick moves, Full (75MB) for deep analysis
+- **Web Worker Integration**: Prevents UI blocking during analysis
+
+### Testing Architecture ✅ **Research-Validated**
+**Decision: Vitest + Playwright** *(Now research-validated - see Technical Decisions Research)*
+- **Vitest Performance**: Significantly faster than Jest with parallel Worker threads
+- **Modern Features**: ES modules, TypeScript, JSX support out-of-the-box
+- **Playwright Cross-Browser**: Comprehensive browser coverage for chess app testing
+- **Chess App Suitability**: Fast test execution crucial for rapid chess interaction testing
+
 ### Additional Dependencies
 - **React Router DOM** - Client-side routing *(Standard choice)*
 - **js-cookie** - Token storage and management ⚠️ *(Assumption-based - not researched)*
 
-> **Research Status**: Major technical decisions now have research backing. See `docs/frontend/TECHNICAL-DECISIONS-RESEARCH.md` for detailed analysis and evidence supporting these choices.
+> **Research Status**: All major technical decisions now have research backing. See `docs/frontend/TECHNICAL-DECISIONS-RESEARCH.md` for detailed analysis and evidence supporting these choices.
 
 ## Application Architecture
 
@@ -113,7 +174,7 @@ src/
 #### Shared UI Components
 ```typescript
 // src/components/ui/Button.tsx
-interface ButtonProps extends ChakraButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
@@ -121,17 +182,34 @@ interface ButtonProps extends ChakraButtonProps {
 
 const Button: React.FC<ButtonProps> = ({ 
   variant = 'primary', 
+  size = 'md',
+  className = '',
   children, 
+  isLoading,
   ...props 
 }) => {
-  // Single responsibility: Render styled button
+  // Single responsibility: Render styled button with Tailwind CSS
+  const baseClasses = 'font-medium rounded-lg focus:outline-none focus:ring-2 transition-colors'
+  const variantClasses = {
+    primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
+    secondary: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500',
+    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
+    ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-500'
+  }
+  const sizeClasses = {
+    sm: 'px-3 py-1.5 text-sm',
+    md: 'px-4 py-2',
+    lg: 'px-6 py-3 text-lg'
+  }
+  
   return (
-    <ChakraButton 
-      variant={variant} 
+    <button 
+      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      disabled={isLoading}
       {...props}
     >
-      {children}
-    </ChakraButton>
+      {isLoading ? 'Loading...' : children}
+    </button>
   );
 };
 ```
@@ -185,11 +263,11 @@ const PuzzleInterface: React.FC = () => {
 };
 ```
 
-### State Management Architecture
+### State Management Architecture (Updated)
 
-#### Domain-Specific Stores
+#### React Context API Implementation
 ```typescript
-// src/stores/authStore.ts
+// src/stores/authStore.ts - Updated to React Context API
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
@@ -198,85 +276,125 @@ interface AuthState {
   tokens: AuthTokens | null;
 }
 
-interface AuthActions {
+interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;
   loadUser: () => Promise<void>;
+  clearError: () => void;
 }
 
-// Single responsibility: Manage authentication state
-export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
-  // State
-  user: null,
-  isAuthenticated: false,
-  isLoading: false,
-  error: null,
-  tokens: null,
-  
-  // Actions
-  login: async (credentials) => {
-    set({ isLoading: true, error: null });
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuthStore = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuthStore must be used within an AuthProvider');
+  }
+  return context;
+};
+
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [state, setState] = useState<AuthState>({
+    user: null,
+    isAuthenticated: false,
+    isLoading: false,
+    error: null,
+    tokens: null,
+  });
+
+  // Single responsibility: Manage authentication state
+  const login = useCallback(async (credentials: LoginCredentials) => {
+    setState(prev => ({ ...prev, isLoading: true, error: null }));
     try {
       const response = await AuthApiClient.login(credentials);
-      set({ 
-        user: response.user, 
-        isAuthenticated: true, 
+      setState({
+        user: response.user,
+        isAuthenticated: true,
         isLoading: false,
+        error: null,
         tokens: response.tokens
       });
     } catch (error) {
-      set({ error: error.message, isLoading: false });
+      setState(prev => ({ 
+        ...prev, 
+        error: error.message, 
+        isLoading: false 
+      }));
     }
-  },
-  
-  logout: async () => {
+  }, []);
+
+  const logout = useCallback(async () => {
     try {
       await AuthApiClient.logout();
     } finally {
-      set({ user: null, isAuthenticated: false, tokens: null });
+      setState({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: null,
+        tokens: null
+      });
     }
-  },
-  
-  loadUser: async () => {
-    const token = Cookies.get('authToken');
-    if (!token) {
-      set({ isAuthenticated: false, user: null });
-      return;
-    }
-    
-    set({ isLoading: true });
-    try {
-      const user = await AuthApiClient.getCurrentUser();
-      set({ user, isAuthenticated: true, isLoading: false });
-    } catch (error) {
-      // Token might be expired, try refresh
-      try {
-        const response = await AuthApiClient.refreshToken();
-        set({ 
-          user: response.user, 
-          isAuthenticated: true, 
-          isLoading: false,
-          tokens: response.tokens
-        });
-      } catch (refreshError) {
-        // Refresh failed, clear auth
-        Cookies.remove('authToken');
-        Cookies.remove('refreshToken');
-        set({ user: null, isAuthenticated: false, isLoading: false });
-      }
-    }
-  }
-}));
+  }, []);
+
+  const value = {
+    ...state,
+    login,
+    logout,
+    loadUser,
+    clearError: () => setState(prev => ({ ...prev, error: null }))
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
 ```
 
-#### Store Separation by Domain
-- **authStore.ts** - Authentication and user management
-- **gameStore.ts** - Current game state and chess logic
-- **puzzleStore.ts** - Puzzle training state and progress
-- **openingStore.ts** - Opening training and repertoire
-- **analysisStore.ts** - Game analysis and engine data
-- **progressStore.ts** - Training progress and statistics
-- **settingsStore.ts** - User preferences and configuration
+#### Context Providers by Domain
+- **AuthProvider** - Authentication and user management
+- **ThemeProvider** - Theme state with Electron persistence *(Implemented)*
+- **GameProvider** - Current game state and chess logic
+- **PuzzleProvider** - Puzzle training state and progress
+- **SettingsProvider** - User preferences and configuration
+
+#### Theme Management Implementation *(Current)*
+```typescript
+// src/stores/themeStore.ts - Gaming theme system with Electron persistence
+export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [currentTheme, setCurrentTheme] = useState<string>('cyber-neon');
+  
+  const setTheme = useCallback((themeId: string) => {
+    if (themes[themeId]) {
+      setCurrentTheme(themeId);
+      
+      // Update CSS variables
+      const theme = themes[themeId];
+      const root = document.documentElement;
+      
+      root.style.setProperty('--chess-light', theme.chessLight);
+      root.style.setProperty('--chess-dark', theme.chessDark);
+      root.style.setProperty('--chess-border', theme.chessBorder);
+      
+      // Save to Electron config for persistence
+      if (typeof window !== 'undefined' && (window as any).electronAPI?.config) {
+        (window as any).electronAPI.config.set('theme', themeId);
+      }
+    }
+  }, []);
+
+  // Gaming themes: Cyber Neon, Dragon Gold, Shadow Knight, Emerald Matrix, Crimson War
+  const value = { currentTheme, setTheme, getCurrentTheme };
+  
+  return (
+    <ThemeContext.Provider value={value}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+```
 
 ### Service Layer Architecture
 
@@ -487,6 +605,154 @@ export class StatsApiClient {
 }
 ```
 
+#### Chess Engine Service (Research-Validated)
+```typescript
+// src/services/StockfishService.ts - Critical for AI opponents and analysis
+import Stockfish from 'stockfish'
+
+interface StockfishAnalysis {
+  bestMove: string
+  evaluation: number
+  depth: number
+  pv: string[] // Principal variation
+}
+
+export class StockfishService {
+  private worker: Worker | null = null
+  private messageQueue: Map<string, (result: any) => void> = new Map()
+
+  constructor() {
+    this.initializeWorker()
+  }
+
+  private initializeWorker() {
+    this.worker = new Worker(new URL('../workers/stockfish.worker.ts', import.meta.url))
+    this.worker.onmessage = (event) => {
+      const { id, result } = event.data
+      const callback = this.messageQueue.get(id)
+      if (callback) {
+        callback(result)
+        this.messageQueue.delete(id)
+      }
+    }
+  }
+
+  // Single responsibility: Chess position analysis
+  async analyzePosition(fen: string, depth: number = 15): Promise<StockfishAnalysis> {
+    return new Promise((resolve) => {
+      const id = Math.random().toString(36)
+      this.messageQueue.set(id, resolve)
+      
+      this.worker?.postMessage({
+        id,
+        type: 'analyze',
+        fen,
+        depth
+      })
+    })
+  }
+
+  // Single responsibility: AI opponent move generation
+  async getBestMove(fen: string, difficulty: 'easy' | 'medium' | 'hard'): Promise<string> {
+    const depthMap = { easy: 5, medium: 10, hard: 15 }
+    const analysis = await this.analyzePosition(fen, depthMap[difficulty])
+    return analysis.bestMove
+  }
+}
+
+export const stockfishService = new StockfishService()
+```
+
+#### Audio Service Architecture (Research-Validated)
+```typescript
+// src/services/AudioService.ts - Chess sound effects with Howler.js
+import { Howl } from 'howler'
+
+export class AudioService {
+  private sounds: Howl
+  private enabled: boolean = true
+
+  constructor() {
+    // Single responsibility: Manage chess audio effects
+    this.sounds = new Howl({
+      src: ['/sounds/chess-audio-sprite.mp3'],
+      sprite: {
+        move: [0, 400],
+        capture: [400, 600],
+        check: [1000, 800],
+        checkmate: [1800, 1200],
+        success: [3000, 500],
+        error: [3500, 300]
+      },
+      volume: 0.5
+    })
+  }
+
+  // DRY: Centralized sound playing with enable/disable control
+  private playSound(sprite: string) {
+    if (this.enabled) {
+      this.sounds.play(sprite)
+    }
+  }
+
+  playMove() { this.playSound('move') }
+  playCapture() { this.playSound('capture') }
+  playCheck() { this.playSound('check') }
+  playCheckmate() { this.playSound('checkmate') }
+  playSuccess() { this.playSound('success') }
+  playError() { this.playSound('error') }
+
+  setEnabled(enabled: boolean) {
+    this.enabled = enabled
+  }
+
+  setVolume(volume: number) {
+    this.sounds.volume(volume)
+  }
+}
+
+export const audioService = new AudioService()
+```
+
+#### Form Service Architecture (Research-Validated)
+```typescript
+// src/services/FormService.ts - React Hook Form integration patterns
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+
+// Chess training specific form schemas
+export const loginSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters')
+})
+
+export const registerSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  displayName: z.string().min(2, 'Display name must be at least 2 characters'),
+  skillLevel: z.enum(['beginner', 'intermediate', 'advanced'])
+})
+
+export const gameSettingsSchema = z.object({
+  timeControl: z.number().min(1).max(180),
+  difficulty: z.enum(['easy', 'medium', 'hard']),
+  color: z.enum(['white', 'black', 'random'])
+})
+
+// DRY: Reusable form hook factory
+export function useChessForm<T extends z.ZodSchema>(
+  schema: T,
+  defaultValues?: Partial<z.infer<T>>
+) {
+  return useForm<z.infer<T>>({
+    resolver: zodResolver(schema),
+    defaultValues,
+    mode: 'onBlur' // Performance optimization for chess app
+  })
+}
+```
+
 ### Custom Hooks Architecture
 
 #### Authentication Hook
@@ -558,6 +824,130 @@ export const useChessGame = () => {
 };
 ```
 
+#### Stockfish Integration Hook (Research-Validated)
+```typescript
+// src/hooks/useStockfish.ts - Chess engine integration
+import { useState, useCallback } from 'react'
+import { stockfishService } from '../services/StockfishService'
+
+export const useStockfish = () => {
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [analysis, setAnalysis] = useState<StockfishAnalysis | null>(null)
+
+  const analyzePosition = useCallback(async (fen: string, depth = 15) => {
+    setIsAnalyzing(true)
+    try {
+      const result = await stockfishService.analyzePosition(fen, depth)
+      setAnalysis(result)
+      return result
+    } finally {
+      setIsAnalyzing(false)
+    }
+  }, [])
+
+  const getAIMove = useCallback(async (
+    fen: string, 
+    difficulty: 'easy' | 'medium' | 'hard'
+  ) => {
+    setIsAnalyzing(true)
+    try {
+      const move = await stockfishService.getBestMove(fen, difficulty)
+      return move
+    } finally {
+      setIsAnalyzing(false)
+    }
+  }, [])
+
+  return {
+    analyzePosition,
+    getAIMove,
+    analysis,
+    isAnalyzing
+  }
+}
+```
+
+#### Animation Hook (Research-Validated)
+```typescript
+// src/hooks/useChessAnimation.ts - React Spring chess piece animations
+import { useSpring, animated } from '@react-spring/web'
+
+export const useChessPieceAnimation = (position: { x: number; y: number }) => {
+  const springProps = useSpring({
+    transform: `translate(${position.x}px, ${position.y}px)`,
+    config: { 
+      tension: 300, 
+      friction: 30 // Tuned for natural chess piece movement
+    }
+  })
+  
+  return { springProps, animated }
+}
+
+export const usePuzzleFeedback = (isCorrect: boolean | null) => {
+  const feedbackSpring = useSpring({
+    scale: isCorrect === true ? 1.1 : isCorrect === false ? 0.9 : 1,
+    opacity: isCorrect !== null ? 1 : 0.8,
+    color: isCorrect === true ? '#38a169' : isCorrect === false ? '#e53e3e' : '#4a5568',
+    config: { tension: 400, friction: 25 }
+  })
+  
+  return { feedbackSpring, animated }
+}
+```
+
+#### Audio Integration Hook (Research-Validated)
+```typescript
+// src/hooks/useChessAudio.ts - Howler.js audio integration
+import { useCallback } from 'react'
+import { audioService } from '../services/AudioService'
+
+export const useChessAudio = () => {
+  const playMoveSound = useCallback(() => {
+    audioService.playMove()
+  }, [])
+
+  const playCaptureSound = useCallback(() => {
+    audioService.playCapture()
+  }, [])
+
+  const playCheckSound = useCallback(() => {
+    audioService.playCheck()
+  }, [])
+
+  const playCheckmateSound = useCallback(() => {
+    audioService.playCheckmate()
+  }, [])
+
+  const playSuccessSound = useCallback(() => {
+    audioService.playSuccess()
+  }, [])
+
+  const playErrorSound = useCallback(() => {
+    audioService.playError()
+  }, [])
+
+  const setVolume = useCallback((volume: number) => {
+    audioService.setVolume(volume)
+  }, [])
+
+  const setEnabled = useCallback((enabled: boolean) => {
+    audioService.setEnabled(enabled)
+  }, [])
+
+  return {
+    playMoveSound,
+    playCaptureSound,
+    playCheckSound,
+    playCheckmateSound,
+    playSuccessSound,
+    playErrorSound,
+    setVolume,
+    setEnabled
+  }
+}
+```
+
 ### Page Architecture
 
 #### Domain-Organized Pages
@@ -608,74 +998,88 @@ const LoginPage: React.FC = () => {
 };
 ```
 
-## Design System Implementation
+## Design System Implementation (Updated)
 
-### Chess Theme Configuration
+### Gaming Theme System with Tailwind CSS
 ```typescript
-// src/styles/chessTheme.ts
-export const chessTheme = extendTheme({
-  colors: {
-    chess: {
-      // Board colors
-      lightSquare: '#f0d9b5',
-      darkSquare: '#b58863',
-      
-      // Accent colors
-      primary: '#2b6cb0',
-      secondary: '#38a169',
-      
-      // Move highlighting
-      selectedSquare: '#ffd93d',
-      lastMove: '#ffe066',
-      legalMove: 'rgba(0, 137, 123, 0.3)',
-      check: '#ff6b6b',
-      
-      // UI colors
-      success: '#38a169',
-      error: '#e53e3e',
-      warning: '#d69e2e',
-      info: '#3182ce'
-    },
-    
-    // Dark mode variants
-    dark: {
-      bg: '#1a202c',
-      cardBg: '#2d3748',
-      border: '#4a5568',
-      text: '#e2e8f0'
-    }
+// src/stores/themeStore.ts - Current implementation
+export const themes: Record<string, Theme> = {
+  'cyber-neon': {
+    id: 'cyber-neon',
+    name: 'Cyber Neon',
+    description: 'Cyberpunk gaming with electric blues',
+    primary: 'cyan',
+    chessLight: '#1e40af',
+    chessDark: '#1e3a8a', 
+    chessBorder: '#00d4ff',
+    background: 'from-gray-900 via-blue-900 to-gray-900',
+    surface: 'bg-gray-800/90 backdrop-blur-sm border border-cyan-500/30',
+    text: 'text-cyan-100',
+    isDark: true,
   },
-  
-  fonts: {
-    heading: 'Inter, system-ui, sans-serif',
-    body: 'Inter, system-ui, sans-serif',
-    mono: 'Fira Code, Monaco, Consolas, monospace'
+  'dragon-gold': {
+    id: 'dragon-gold',
+    name: 'Dragon Gold',
+    description: 'Mystical dark theme with golden accents',
+    primary: 'yellow',
+    background: 'from-gray-900 via-orange-900 to-gray-900',
+    surface: 'bg-gray-800/90 backdrop-blur-sm border border-yellow-500/30',
+    text: 'text-yellow-100',
+    isDark: true,
   },
-  
-  components: {
-    Button: {
-      defaultProps: {
-        colorScheme: 'chess'
-      }
-    }
-  }
-});
+  // Additional gaming themes: Shadow Knight, Emerald Matrix, Crimson War
+};
 ```
 
-### Component Variants
-```typescript
-// src/components/ui/Button.tsx - Extended Chakra Button
-export const buttonVariants = {
-  variants: {
-    chess: {
-      bg: 'chess.darkSquare',
-      color: 'white',
-      _hover: {
-        bg: 'chess.primary'
+### Tailwind CSS Configuration
+```javascript
+// tailwind.config.js - Gaming-optimized configuration
+module.exports = {
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        chess: {
+          light: 'var(--chess-light)',
+          dark: 'var(--chess-dark)',
+          border: 'var(--chess-border)'
+        }
+      },
+      backgroundImage: {
+        'gaming-gradient': 'var(--gaming-gradient)'
+      },
+      backdropBlur: {
+        xs: '2px'
       }
     }
+  },
+  plugins: [
+    require('@tailwindcss/forms')
+  ]
+}
+```
+
+### Dynamic Theme Application
+```typescript
+// Theme colors mapped to Tailwind classes to avoid purging issues
+const getThemeColors = (primary: string) => {
+  const colorMap = {
+    cyan: {
+      primary: 'text-cyan-400',
+      bg: 'bg-cyan-500',
+      hover: 'hover:bg-cyan-600',
+      border: 'border-cyan-500/30'
+    },
+    yellow: {
+      primary: 'text-yellow-400',
+      bg: 'bg-yellow-500', 
+      hover: 'hover:bg-yellow-600',
+      border: 'border-yellow-500/30'
+    }
+    // Additional color mappings for all theme primaries
   }
-};
+  return colorMap[primary as keyof typeof colorMap] || colorMap.cyan
+}
 ```
 
 ## Performance Optimization Strategy

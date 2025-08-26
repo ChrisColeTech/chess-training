@@ -179,6 +179,12 @@ Build a working authentication system from scratch that integrates with the exis
    # Chess Libraries (research-validated)
    npm install chess.js react-chessboard
    
+   # Chess Engine (research-validated: CRITICAL for AI opponents and analysis)
+   npm install stockfish
+   
+   # Additional research-validated dependencies  
+   npm install @types/chess.js @hookform/resolvers zod
+   
    # Forms (research-validated: React Hook Form - 6x smaller than Formik)
    npm install react-hook-form @hookform/resolvers zod
    
@@ -197,10 +203,15 @@ Build a working authentication system from scratch that integrates with the exis
 
    > **Research Alignment**: All dependencies now reflect research-validated choices from `TECHNICAL-DECISIONS-RESEARCH.md` with evidence-based rationale for each selection.
 
-3. **Create the complete folder structure:**
+3. **Create the complete folder structure (research-aligned):**
    ```bash
-   mkdir -p src/components/auth src/components/ui src/components/layout
-   mkdir -p src/pages/auth src/hooks src/services src/stores src/types src/utils
+   # Research-validated project structure from docs/frontend/12-project-structure.md
+   mkdir -p src/components/{auth,chess,puzzles,analysis,ui,layout,audio}
+   mkdir -p src/pages/{auth,chess,puzzles,analysis,profile,help}
+   mkdir -p src/services/{api,chess,audio,learning,data,cache}
+   mkdir -p src/hooks src/stores src/types src/utils src/constants
+   mkdir -p src/assets/{audio,stockfish,images,data}
+   mkdir -p tests/{unit,integration,e2e}
    ```
 
 4. **Test that everything works:**
@@ -222,14 +233,17 @@ Build a working authentication system from scratch that integrates with the exis
    echo "VITE_API_BASE_URL=http://localhost:3000/api" > .env
    ```
 
-2. **Set up Chakra UI theme:**
-   - Create `src/theme/index.ts` with chess color scheme
-   - Wrap App.tsx with ChakraProvider and theme
-   - Test that Chakra components render
+2. **Set up research-validated providers and theme:**
+   - Configure TanStack Query provider with optimized caching settings
+   - Set up Chakra UI provider with chess-themed color scheme
+   - Initialize Howler.js AudioProvider for chess sound effects
+   - Configure app providers in correct dependency order
 
-3. **Configure TypeScript strict mode:**
-   - Update tsconfig.json with strict settings
-   - Fix any immediate TypeScript errors
+3. **Configure testing and build tools (research-validated):**
+   - Set up Vitest configuration (5x faster than Jest)
+   - Configure Playwright for E2E testing with chess-specific scenarios
+   - Add test setup files for React Testing Library + Vitest
+   - Configure build optimizations for chess libraries
 
 **Milestone:** App runs with Chakra UI theme and can access environment variables
 
@@ -238,44 +252,149 @@ Build a working authentication system from scratch that integrates with the exis
 **Goal:** Create the foundation for talking to the backend API
 
 **Actions:**
-1. **Create base API client (`src/services/ApiClient.ts`):**
-   - Configure axios with base URL from environment
-   - Add request/response interceptors
-   - Add automatic token injection
-   - Add error handling
+1. **Create research-validated API client system (`src/services/api/ApiClient.ts`):**
+   - Configure axios with base URL, JWT interceptors, and auto-refresh
+   - Add request/response interceptors for token injection
+   - Implement automatic token refresh on 401 responses
+   - Add comprehensive error handling and timeouts
 
-2. **Create auth-specific API client (`src/services/AuthApiClient.ts`):**
-   - Implement login() method calling `/auth/login`
-   - Implement register() method calling `/auth/register`
-   - Implement logout() and token refresh
-   - Handle cookie storage for tokens
+2. **Create SRP-compliant API clients (following architecture document):**
+   
+   **`src/services/api/AuthApiClient.ts`** - Authentication domain only:
+   - POST /auth/register - User registration
+   - POST /auth/login - User authentication  
+   - POST /auth/refresh - Token refresh
+   - POST /auth/logout - User logout
+   
+   **`src/services/api/UserApiClient.ts`** - User profile domain only:
+   - GET /user/profile - Get user info for dashboard
+   - PUT /user/profile - Update user preferences
+   
+   **`src/services/api/StatsApiClient.ts`** - Statistics domain only:
+   - GET /stats/dashboard - Dashboard statistics and overview
 
-3. **Create TypeScript interfaces (`src/types/auth.ts`):**
-   - Define User, AuthResponse, LoginCredentials interfaces
-   - Match the exact structure of backend API responses
+3. **Create SRP-compliant TypeScript interfaces (separate domain files):**
+   
+   **`src/types/auth.ts`** - Authentication domain only:
+   - LoginCredentials, RegisterData, AuthResponse, AuthTokens interfaces
+   
+   **`src/types/user.ts`** - User profile domain only:  
+   - User, UserProfile, UserPreferences interfaces
+   
+   **`src/types/stats.ts`** - Statistics domain only:
+   - DashboardStats, GameSummary, ProgressData interfaces
 
-4. **Test API connection:**
-   - Create simple test to verify backend connection
+4. **Add TanStack Query integration patterns:**
+   
+   **`src/hooks/api/useAuthQueries.ts`** - Authentication TanStack Query hooks:
+   ```typescript
+   import { useMutation, useQueryClient } from '@tanstack/react-query';
+   import { AuthApiClient } from '@/services/api/AuthApiClient';
+   
+   // Login mutation with automatic cache invalidation
+   export const useLogin = () => {
+     const queryClient = useQueryClient();
+     return useMutation({
+       mutationFn: AuthApiClient.login,
+       onSuccess: (data) => {
+         // Cache user data and invalidate related queries
+         queryClient.setQueryData(['user', 'profile'], data.user);
+         queryClient.invalidateQueries({ queryKey: ['stats'] });
+       },
+       onError: (error) => {
+         console.error('Login failed:', error);
+       }
+     });
+   };
+   
+   // Registration mutation with success handling
+   export const useRegister = () => {
+     return useMutation({
+       mutationFn: AuthApiClient.register,
+       onSuccess: () => {
+         // Handle successful registration
+       }
+     });
+   };
+   ```
+   
+   **`src/hooks/api/useUserQueries.ts`** - User profile TanStack Query hooks:
+   ```typescript
+   import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+   import { UserApiClient } from '@/services/api/UserApiClient';
+   
+   // User profile query with 5-minute cache
+   export const useUserProfile = () => {
+     return useQuery({
+       queryKey: ['user', 'profile'],
+       queryFn: UserApiClient.getProfile,
+       staleTime: 5 * 60 * 1000, // 5 minutes
+       gcTime: 10 * 60 * 1000, // 10 minutes
+     });
+   };
+   
+   // Profile update mutation with optimistic updates
+   export const useUpdateProfile = () => {
+     const queryClient = useQueryClient();
+     return useMutation({
+       mutationFn: UserApiClient.updateProfile,
+       onMutate: async (newProfile) => {
+         // Optimistic update
+         await queryClient.cancelQueries({ queryKey: ['user', 'profile'] });
+         const previousProfile = queryClient.getQueryData(['user', 'profile']);
+         queryClient.setQueryData(['user', 'profile'], newProfile);
+         return { previousProfile };
+       },
+       onError: (err, newProfile, context) => {
+         // Rollback on error
+         queryClient.setQueryData(['user', 'profile'], context?.previousProfile);
+       },
+       onSettled: () => {
+         // Refetch to ensure consistency
+         queryClient.invalidateQueries({ queryKey: ['user', 'profile'] });
+       }
+     });
+   };
+   ```
+
+5. **Test API connection:**
+   - Create simple test to verify backend connection  
    - Ensure API calls work with existing backend
+   - Test TanStack Query integration and caching behavior
 
-**Milestone:** API client can successfully communicate with backend auth endpoints
+**Milestone:** API client can successfully communicate with backend auth endpoints with optimized caching
 
 ### Step 4: Build Authentication State Management
 
 **Goal:** Create a state system that manages user authentication
 
 **Actions:**
-1. **Create auth store (`src/stores/authStore.ts`):**
-   - Define AuthState and AuthActions interfaces
-   - Implement Zustand store with login/logout actions
-   - Connect store actions to AuthApiClient
-   - Handle loading states and errors
+1. **Create SRP-compliant domain stores (following architecture document):**
+   
+   **`src/stores/authStore.ts`** - Authentication state only:
+   - Authentication tokens, login status, loading states
+   - Login/logout actions connected to AuthApiClient only
+   - Token refresh and session management
+   
+   **`src/stores/userStore.ts`** - User profile state only:
+   - User profile data, preferences, profile loading states  
+   - Profile update actions connected to UserApiClient only
+   
+   **`src/stores/progressStore.ts`** - Progress and statistics state only (matching project structure doc):
+   - Progress statistics data, loading states for stats
+   - Stats refresh actions connected to StatsApiClient only
 
-2. **Create useAuth hook (`src/hooks/useAuth.ts`):**
-   - Wrap the auth store in a custom hook
-   - Add business logic for token refresh
-   - Add session persistence logic
-   - Handle automatic logout on token expiry
+2. **Create SRP-compliant domain hooks:**
+   
+   **`src/hooks/useAuth.ts`** - Authentication business logic only:
+   - Wrap authStore, handle login/logout flows only
+   - Token refresh and session persistence logic
+   
+   **`src/hooks/useUser.ts`** - User profile business logic only:
+   - Wrap userStore, handle profile data and preferences only
+   
+   **`src/hooks/useProgress.ts`** - Progress and statistics business logic only (matching project structure doc):
+   - Wrap progressStore, handle stats loading and display only
 
 3. **Test state management:**
    - Verify store updates when calling actions
@@ -295,11 +414,11 @@ Build a working authentication system from scratch that integrates with the exis
    - `src/components/ui/Card.tsx` - Container component
    - Test each component renders correctly
 
-2. **Create authentication-specific components:**
-   - `src/components/auth/LoginForm.tsx` - Login form with validation
-   - `src/components/auth/RegisterForm.tsx` - Registration form
-   - Connect forms to useAuth hook
-   - Add proper form validation and error display
+2. **Create research-validated authentication forms:**
+   - `src/components/auth/LoginForm.tsx` - React Hook Form with Zod validation (6x smaller than Formik)
+   - `src/components/auth/RegisterForm.tsx` - Integrated with TanStack Query mutations
+   - Connect forms to Zustand auth store and TanStack Query
+   - Add React Spring animations for form feedback
 
 3. **Create layout components:**
    - `src/components/layout/AppLayout.tsx` - Main app wrapper
@@ -382,6 +501,67 @@ Build a working authentication system from scratch that integrates with the exis
 
 **Milestone:** Complete authentication system works flawlessly
 
+### Files to Create/Modify in Objective 1
+
+**New Files Created:**
+```
+src/
+├── components/
+│   ├── auth/
+│   │   ├── LoginForm.tsx
+│   │   ├── RegisterForm.tsx
+│   │   └── ProtectedRoute.tsx
+│   ├── ui/
+│   │   ├── Button.tsx
+│   │   ├── Input.tsx
+│   │   └── Card.tsx
+│   └── layout/
+│       ├── AppLayout.tsx
+│       └── Header.tsx
+├── pages/
+│   ├── LandingPage.tsx
+│   ├── DashboardPage.tsx
+│   └── auth/
+│       ├── LoginPage.tsx
+│       └── RegisterPage.tsx
+├── services/
+│   └── api/
+│       ├── ApiClient.ts
+│       ├── AuthApiClient.ts
+│       ├── UserApiClient.ts
+│       └── StatsApiClient.ts
+├── stores/
+│   ├── authStore.ts
+│   ├── userStore.ts
+│   └── progressStore.ts
+├── hooks/
+│   ├── useAuth.ts
+│   ├── useUser.ts
+│   └── useProgress.ts
+├── types/
+│   ├── auth.ts
+│   ├── user.ts
+│   └── stats.ts
+├── router/
+│   └── index.tsx
+├── theme/
+│   └── index.ts
+└── utils/
+    └── constants.ts
+
+Root Files:
+├── .env
+├── vitest.config.ts
+├── playwright.config.ts
+└── tsconfig.json (updated)
+
+Modified Files:
+├── src/main.tsx (providers setup)
+├── src/App.tsx (router integration)
+├── package.json (dependencies)
+└── vite.config.ts (build optimization)
+```
+
 ### Final Deliverables
 
 When this objective is complete, you will have:
@@ -417,23 +597,143 @@ Add chess gameplay to your existing authenticated app. At the end of this object
 **Goal:** Connect your frontend to the backend's chess game endpoints
 
 **Actions:**
-1. **Create game API client (`src/services/GameApiClient.ts`):**
-   - Add methods for `/api/games/create`, `/api/games/:id/move`, `/api/games/:id`
-   - Handle game creation with AI difficulty levels
-   - Handle move submission and response processing
-   - Add error handling for invalid moves
+1. **Create SRP-compliant game API client (`src/services/api/GameApiClient.ts`):**
+   
+   **Single Domain Responsibility: Chess Game Management Only**
+   - **POST** `/games/create` - Start new game vs AI with difficulty level (1-5)
+   - **POST** `/games/:gameId/move` - Submit player move, receive AI response 
+   - **GET** `/games/:gameId` - Get current game state (FEN, PGN, status)
+   - **GET** `/games/history` - Get user's completed games list
+   
+   **API Response Integration:**
+   - Handle game creation response with gameId and initialFen
+   - Process move responses with gameState, aiMove, and legality checking
+   - Manage error responses for illegal moves and invalid game states
 
-2. **Create chess types (`src/types/chess.ts`):**
-   - Define Game, Move, GameStatus interfaces
-   - Match backend API response structure exactly
-   - Add ChessPosition, GameResult types
+2. **Create chess types matching exact backend API responses (`src/types/chess.ts`):**
+   
+   **Game Creation Response:**
+   ```typescript
+   interface GameCreateResponse {
+     success: boolean;
+     gameId: string;
+     initialFen: string;
+   }
+   ```
+   
+   **Move Response:**
+   ```typescript
+   interface MoveResponse {
+     success: boolean;
+     legal: boolean;
+     gameState: {
+       fen: string;
+       turn: 'white' | 'black';
+       check: boolean;
+       gameOver: boolean;
+       result: string | null;
+     };
+     aiMove?: {
+       from: string;
+       to: string;
+       san: string;
+     };
+     error?: string; // For illegal moves
+   }
+   ```
+   
+   **Game State Response:**
+   ```typescript
+   interface GameState {
+     id: string;
+     aiLevel: number;
+     currentFen: string;
+     pgn: string;
+     result: string | null;
+     gameOver: boolean;
+   }
+   ```
 
-3. **Test API integration:**
+3. **Add TanStack Query integration patterns for chess games:**
+   
+   **`src/hooks/api/useGameQueries.ts`** - Chess game TanStack Query hooks:
+   ```typescript
+   import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+   import { GameApiClient } from '@/services/api/GameApiClient';
+   
+   // Create new game mutation
+   export const useCreateGame = () => {
+     const queryClient = useQueryClient();
+     return useMutation({
+       mutationFn: GameApiClient.createGame,
+       onSuccess: (data) => {
+         // Cache new game data
+         queryClient.setQueryData(['game', data.gameId], data);
+         // Invalidate game history to include new game
+         queryClient.invalidateQueries({ queryKey: ['games', 'history'] });
+       }
+     });
+   };
+   
+   // Make move mutation with optimistic updates
+   export const useMakeMove = (gameId: string) => {
+     const queryClient = useQueryClient();
+     return useMutation({
+       mutationFn: (move: MoveRequest) => GameApiClient.makeMove(gameId, move),
+       onMutate: async (move) => {
+         // Cancel outgoing queries and optimistically update
+         await queryClient.cancelQueries({ queryKey: ['game', gameId] });
+         const previousGame = queryClient.getQueryData(['game', gameId]);
+         
+         // Optimistically update game state (simplified)
+         queryClient.setQueryData(['game', gameId], (old: any) => ({
+           ...old,
+           // Add optimistic move update logic here
+         }));
+         
+         return { previousGame };
+       },
+       onError: (err, move, context) => {
+         // Rollback optimistic update on error
+         queryClient.setQueryData(['game', gameId], context?.previousGame);
+       },
+       onSettled: () => {
+         // Always refetch to ensure server state consistency
+         queryClient.invalidateQueries({ queryKey: ['game', gameId] });
+       }
+     });
+   };
+   
+   // Game state query with short cache for real-time gameplay
+   export const useGameState = (gameId: string) => {
+     return useQuery({
+       queryKey: ['game', gameId],
+       queryFn: () => GameApiClient.getGameState(gameId),
+       staleTime: 30 * 1000, // 30 seconds for active games
+       gcTime: 5 * 60 * 1000, // 5 minutes
+       enabled: !!gameId,
+       refetchOnWindowFocus: true, // Sync when user returns to tab
+     });
+   };
+   
+   // Game history query with longer cache
+   export const useGameHistory = () => {
+     return useQuery({
+       queryKey: ['games', 'history'],
+       queryFn: GameApiClient.getGameHistory,
+       staleTime: 5 * 60 * 1000, // 5 minutes
+       gcTime: 15 * 60 * 1000, // 15 minutes
+     });
+   };
+   ```
+
+4. **Test API integration:**
    - Create a simple test to create a game via API
-   - Submit a test move and verify response
+   - Submit a test move and verify response  
    - Ensure backend connection works properly
+   - Test TanStack Query caching and optimistic updates
 
-**Milestone:** You can successfully create games and make moves via backend API
+**Milestone:** You can successfully create games and make moves via backend API with optimized caching
 
 ### Step 2: Set Up Chess State Management
 
@@ -469,11 +769,11 @@ Add chess gameplay to your existing authenticated app. At the end of this object
    - Create wrapper component for chess board
    - Configure board themes and piece sets
 
-2. **Create ChessBoard wrapper (`src/components/chess/ChessBoard.tsx`):**
-   - Integrate react-chessboard with game state
-   - Handle move input from user interactions
-   - Display current position from game store
-   - Add move validation feedback (highlights, sounds)
+2. **Create research-validated ChessBoard wrapper (`src/components/chess/ChessBoardWrapper.tsx`):**
+   - Integrate react-chessboard with Zustand game store
+   - Add React Spring animations for piece movements
+   - Connect to Howler.js for move sound effects (capture, check, etc.)
+   - Implement square highlighting and move validation feedback
 
 3. **Test board functionality:**
    - Verify board displays current game position
@@ -483,7 +783,38 @@ Add chess gameplay to your existing authenticated app. At the end of this object
 
 **Milestone:** Interactive chess board that connects to your game state
 
-### Step 4: Build Game Controls and UI
+### Step 4: Integrate AI Opponents (Research-Validated CRITICAL)
+
+**Goal:** Add Stockfish AI opponents for intelligent chess gameplay
+
+**Actions:**
+1. **Create Stockfish service (`src/services/StockfishService.ts`):**
+   - Import and initialize Stockfish engine in Web Worker
+   - Implement position analysis and best move calculation
+   - Add difficulty mapping (Easy: depth 5, Medium: depth 10, Hard: depth 15)
+   - Handle engine communication via message queues
+
+2. **Create AI integration hook (`src/hooks/useStockfishAI.ts`):**
+   - Hook for getting AI moves based on current position
+   - Handle AI thinking time and loading states
+   - Integrate with game state for AI move processing
+   - Add error handling for engine failures
+
+3. **Integrate AI into chess game:**
+   - Modify game flow to trigger AI moves after player moves
+   - Add AI opponent logic to useChessGame hook
+   - Handle AI move response and board updates
+   - Implement AI difficulty selection in game creation
+
+4. **Test AI integration:**
+   - Verify AI responds with valid moves
+   - Test different difficulty levels produce appropriate play
+   - Ensure AI moves are processed through game state
+   - Test game completion with AI opponents
+
+**Milestone:** Working AI opponents using Stockfish engine integration
+
+### Step 5: Build Game Controls and UI
 
 **Goal:** Add all the controls needed for a complete chess game experience
 
@@ -604,15 +935,78 @@ Add chess gameplay to your existing authenticated app. At the end of this object
 
 **Milestone:** Production-quality chess playing experience
 
+### Files to Create/Modify in Objective 2
+
+**New Files Created:**
+```
+src/
+├── components/
+│   ├── chess/
+│   │   ├── ChessBoardWrapper.tsx
+│   │   ├── AnimatedChessPiece.tsx
+│   │   ├── GameControls.tsx
+│   │   ├── MoveHistory.tsx
+│   │   ├── GameInfo.tsx
+│   │   ├── GameResult.tsx
+│   │   ├── GameReview.tsx
+│   │   └── StockfishPanel.tsx
+│   └── audio/
+│       ├── AudioProvider.tsx
+│       └── SoundManager.tsx
+├── pages/
+│   └── chess/
+│       ├── PlayPage.tsx
+│       └── GameHistoryPage.tsx
+├── services/
+│   ├── api/
+│   │   └── GameApiClient.ts
+│   ├── chess/
+│   │   ├── StockfishService.ts
+│   │   ├── StockfishWorker.ts
+│   │   └── ChessLogicService.ts
+│   └── audio/
+│       └── AudioService.ts
+├── stores/
+│   └── gameStore.ts
+├── hooks/
+│   ├── useChessGame.ts
+│   ├── useStockfishAI.ts
+│   └── useAudio.ts
+├── types/
+│   └── chess.ts
+├── utils/
+│   └── chessHelpers.ts
+└── assets/
+    ├── audio/
+    │   ├── move.webm
+    │   ├── move.mp3
+    │   ├── capture.webm
+    │   ├── capture.mp3
+    │   ├── check.webm
+    │   └── check.mp3
+    └── stockfish/
+        ├── stockfish.js
+        ├── stockfish.wasm
+        └── stockfish.worker.js
+
+Modified Files:
+├── src/router/index.tsx (chess routes)
+├── src/components/layout/Header.tsx (chess navigation)
+└── src/pages/DashboardPage.tsx (chess integration)
+```
+
 ### Final Deliverables
 
 When this objective is complete, you will have:
 
 - ✅ **Full chess games** playable against AI through your app
 - ✅ **Interactive chess board** with drag-and-drop move input
+- ✅ **Stockfish AI opponents** with multiple difficulty levels
 - ✅ **Game controls** for new games, resign, draw offers
 - ✅ **Move history** with algebraic notation and navigation
 - ✅ **Game history** to review all completed games
+- ✅ **Audio feedback** for moves, captures, and game events
+- ✅ **Smooth animations** for piece movements and game transitions
 - ✅ **Dashboard integration** showing chess statistics
 - ✅ **Mobile support** for chess playing on phones/tablets
 - ✅ **Error handling** for all chess-related API calls
@@ -645,23 +1039,129 @@ Add tactical puzzle training to your chess app. At the end of this objective, us
 **Goal:** Connect your frontend to the backend's puzzle endpoints
 
 **Actions:**
-1. **Create puzzle API client (`src/services/PuzzleApiClient.ts`):**
-   - Add methods for `/api/puzzles/next`, `/api/puzzles/:id/solve`, `/api/puzzles/:id/hint`
-   - Handle puzzle fetching with difficulty preferences
-   - Handle solution submission and validation
-   - Add error handling for invalid solutions
+1. **Create SRP-compliant puzzle API client (`src/services/api/PuzzleApiClient.ts`):**
+   
+   **Single Domain Responsibility: Puzzle Training Only**
+   - **GET** `/puzzles/next` - Get next puzzle based on user rating and spaced repetition schedule
+   - **POST** `/puzzles/:puzzleId/solve` - Submit solution moves and receive feedback with rating changes
+   - **POST** `/puzzles/:puzzleId/hint` - Request progressive hints for current puzzle
+   
+   **API Response Integration:**
+   - Handle puzzle data with FEN position, themes, rating, and description
+   - Process solve responses with correct/incorrect feedback and rating changes
+   - Manage hint responses with progressive clue system and usage tracking
 
-2. **Create puzzle types (`src/types/puzzle.ts`):**
-   - Define Puzzle, PuzzleAttempt, Hint interfaces
-   - Match backend API response structure exactly
-   - Include difficulty, theme, solution types
+2. **Create puzzle types matching exact backend API responses (`src/types/puzzle.ts`):**
+   
+   **Puzzle Response:**
+   ```typescript
+   interface PuzzleResponse {
+     success: boolean;
+     puzzle: {
+       id: string;
+       fen: string;
+       themes: string[];
+       rating: number;
+       description: string;
+     };
+   }
+   ```
+   
+   **Solution Response:**
+   ```typescript
+   interface SolveResponse {
+     success: boolean;
+     correct: boolean;
+     solution?: string[];
+     ratingChange: number;
+     newRating: number;
+     feedback?: string;
+     hint?: string; // For wrong answers
+   }
+   ```
+   
+   **Hint Response:**
+   ```typescript
+   interface HintResponse {
+     success: boolean;
+     hint: string;
+     hintsUsed: number;
+   }
+   ```
 
-3. **Test API connection:**
+3. **Add TanStack Query integration patterns for puzzle training:**
+   
+   **`src/hooks/api/usePuzzleQueries.ts`** - Puzzle training TanStack Query hooks:
+   ```typescript
+   import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+   import { PuzzleApiClient } from '@/services/api/PuzzleApiClient';
+   
+   // Get next puzzle query with intelligent caching
+   export const useNextPuzzle = (userId: string) => {
+     return useQuery({
+       queryKey: ['puzzle', 'next', userId],
+       queryFn: PuzzleApiClient.getNextPuzzle,
+       staleTime: 0, // Always fresh for training progression
+       gcTime: 2 * 60 * 1000, // 2 minutes cache
+       retry: 2, // Retry failed puzzle loads
+     });
+   };
+   
+   // Submit puzzle solution mutation with progress tracking
+   export const useSolvePuzzle = (puzzleId: string) => {
+     const queryClient = useQueryClient();
+     return useMutation({
+       mutationFn: (solution: PuzzleSolution) => PuzzleApiClient.solvePuzzle(puzzleId, solution),
+       onSuccess: (result) => {
+         // Update puzzle progress and user statistics
+         queryClient.setQueryData(['puzzle', puzzleId, 'result'], result);
+         queryClient.invalidateQueries({ queryKey: ['puzzle', 'next'] });
+         queryClient.invalidateQueries({ queryKey: ['stats', 'puzzle'] });
+         
+         // Pre-load next puzzle for seamless experience
+         queryClient.prefetchQuery({
+           queryKey: ['puzzle', 'next', result.userId],
+           queryFn: PuzzleApiClient.getNextPuzzle,
+         });
+       },
+       onError: (error) => {
+         console.error('Puzzle solution failed:', error);
+       }
+     });
+   };
+   
+   // Puzzle hint mutation with progressive disclosure
+   export const usePuzzleHint = (puzzleId: string) => {
+     const queryClient = useQueryClient();
+     return useMutation({
+       mutationFn: () => PuzzleApiClient.getHint(puzzleId),
+       onSuccess: (hint) => {
+         // Cache hint data
+         queryClient.setQueryData(['puzzle', puzzleId, 'hint'], hint);
+         // Track hint usage in statistics
+         queryClient.invalidateQueries({ queryKey: ['stats', 'puzzle'] });
+       }
+     });
+   };
+   
+   // User puzzle statistics query with moderate caching
+   export const usePuzzleStats = (userId: string) => {
+     return useQuery({
+       queryKey: ['stats', 'puzzle', userId],
+       queryFn: () => PuzzleApiClient.getUserPuzzleStats(userId),
+       staleTime: 2 * 60 * 1000, // 2 minutes
+       gcTime: 10 * 60 * 1000, // 10 minutes
+     });
+   };
+   ```
+
+4. **Test API connection:**
    - Verify puzzle endpoint returns valid data
-   - Test solution submission works
+   - Test solution submission works  
    - Test hint system responds properly
+   - Test TanStack Query caching and prefetching behavior
 
-**Milestone:** You can fetch puzzles and submit solutions via API calls
+**Milestone:** You can fetch puzzles and submit solutions via API calls with intelligent caching
 
 ### Step 2: Create Puzzle Store and State Management
 
@@ -833,6 +1333,54 @@ Add tactical puzzle training to your chess app. At the end of this objective, us
 
 **Milestone:** Production-quality puzzle training experience
 
+### Files to Create/Modify in Objective 3
+
+**New Files Created:**
+```
+src/
+├── components/
+│   └── puzzles/
+│       ├── PuzzleBoard.tsx
+│       ├── PuzzleControls.tsx
+│       ├── SolutionFeedback.tsx
+│       ├── HintSystem.tsx
+│       ├── PuzzleProgress.tsx
+│       ├── TrainingDashboard.tsx
+│       ├── PuzzleConfigForm.tsx
+│       └── PuzzleSuccessAnimation.tsx
+├── pages/
+│   └── puzzles/
+│       ├── PuzzleTrainingPage.tsx
+│       ├── PuzzleSelectionPage.tsx
+│       └── PuzzleStatsPage.tsx
+├── services/
+│   ├── api/
+│   │   └── PuzzleApiClient.ts
+│   └── learning/
+│       ├── SpacedRepetitionService.ts
+│       ├── ProgressCalculator.ts
+│       └── DifficultyAdjuster.ts
+├── stores/
+│   └── puzzleStore.ts
+├── hooks/
+│   ├── usePuzzleSession.ts
+│   └── useSpacedRepetition.ts
+├── types/
+│   └── puzzle.ts
+├── utils/
+│   └── spacedRepetition.ts
+└── components/
+    └── ui/
+        ├── ProgressBar.tsx
+        └── StatCard.tsx
+
+Modified Files:
+├── src/router/index.tsx (puzzle routes)
+├── src/components/layout/Header.tsx (puzzle navigation)
+├── src/pages/DashboardPage.tsx (puzzle integration)
+└── src/stores/gameStore.ts (puzzle stats integration)
+```
+
 ### Final Deliverables
 
 When this objective is complete, you will have:
@@ -843,6 +1391,8 @@ When this objective is complete, you will have:
 - ✅ **Progress tracking** showing solving statistics and rating
 - ✅ **Spaced repetition** to optimize learning and retention
 - ✅ **Training dashboard** with comprehensive puzzle statistics
+- ✅ **React Hook Form configuration** for puzzle preferences
+- ✅ **React Spring animations** for success/error feedback
 - ✅ **Mobile support** for puzzle solving on phones/tablets
 - ✅ **Multiple training modes** (quick solve, themed training, review)
 
@@ -872,50 +1422,160 @@ Add user profile management and comprehensive statistics to your chess training 
 
 ### Step 1: Set Up User Profile API Integration
 
-**Goal:** Connect your frontend to the backend's user and statistics endpoints
+**Goal:** Connect your frontend to the backend's user and statistics endpoints (matching /docs/API_DOCUMENTATION.md)
 
 **Actions:**
-1. **Create user API client (`src/services/UserApiClient.ts`):**
-   - Add methods for `/api/user/profile`, `/api/user/update-profile`
-   - Add methods for `/api/stats/dashboard`, `/api/stats/detailed`
-   - Handle profile updates and validation
+1. **Create user API client (`src/services/api/UserApiClient.ts`) - User profile domain only:**
+   - GET /user/profile - Get user info and preferences  
+   - PUT /user/profile - Update user preferences
+   - Handle user profile updates with proper validation
    - Add error handling for profile operations
+   
+2. **Create statistics API client (`src/services/api/StatsApiClient.ts`) - Statistics domain only:**
+   - GET /stats/dashboard - Get comprehensive dashboard statistics
+   - Methods for chess game history and performance metrics
+   - Methods for puzzle training statistics and rating progression
+   - Historical data retrieval with proper caching
 
-2. **Create statistics API client (`src/services/StatsApiClient.ts`):**
-   - Methods for chess game statistics
-   - Methods for puzzle training statistics  
-   - Methods for rating progression data
-   - Historical data retrieval
+3. **Create SRP-compliant TypeScript interfaces (separate domain files):**
+   
+   **`src/types/user.ts`** - User profile domain only:
+   ```typescript
+   interface User {
+     id: string;
+     username: string;
+     email: string;
+     chessElo: number;
+     puzzleRating: number;
+     gamesPlayed: number;
+     wins: number;
+     losses: number;
+     draws: number;
+     puzzlesSolved: number;
+     preferences: UserPreferences;
+   }
+   
+   interface UserPreferences {
+     boardTheme: string;
+     soundEnabled: boolean;
+     showCoordinates?: boolean;
+   }
+   
+   interface ProfileUpdateRequest {
+     preferences: Partial<UserPreferences>;
+   }
+   ```
+   
+   **`src/types/stats.ts`** - Statistics domain only:
+   ```typescript
+   interface DashboardStats {
+     chessRating: number;
+     puzzleRating: number;
+     todayGames: number;
+     todayPuzzles: number;
+     currentStreak: number;
+     recentGames: GameSummary[];
+   }
+   
+   interface GameSummary {
+     result: string;
+     aiLevel: number;
+     eloChange: number;
+     date: string;
+   }
+   ```
 
-3. **Create user types (`src/types/user.ts`):**
-   - Define UserProfile, UserStats, RatingHistory interfaces
-   - Match backend API response structures
-   - Include preferences, settings, achievements
+4. **Add TanStack Query integration patterns for user profile and statistics:**
+   
+   **`src/hooks/api/useProfileQueries.ts`** - User profile TanStack Query hooks:
+   ```typescript
+   import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+   import { UserApiClient, StatsApiClient } from '@/services/api';
+   
+   // User profile query with medium-term caching
+   export const useUserProfile = (userId: string) => {
+     return useQuery({
+       queryKey: ['user', 'profile', userId],
+       queryFn: () => UserApiClient.getProfile(userId),
+       staleTime: 5 * 60 * 1000, // 5 minutes
+       gcTime: 15 * 60 * 1000, // 15 minutes
+       enabled: !!userId,
+     });
+   };
+   
+   // Profile update mutation with optimistic updates
+   export const useUpdateUserProfile = () => {
+     const queryClient = useQueryClient();
+     return useMutation({
+       mutationFn: UserApiClient.updateProfile,
+       onMutate: async (newData) => {
+         await queryClient.cancelQueries({ queryKey: ['user', 'profile'] });
+         const previousProfile = queryClient.getQueryData(['user', 'profile']);
+         
+         // Optimistic update
+         queryClient.setQueryData(['user', 'profile'], (old: any) => ({
+           ...old,
+           ...newData,
+         }));
+         
+         return { previousProfile };
+       },
+       onError: (err, newData, context) => {
+         queryClient.setQueryData(['user', 'profile'], context?.previousProfile);
+       },
+       onSettled: () => {
+         queryClient.invalidateQueries({ queryKey: ['user', 'profile'] });
+       }
+     });
+   };
+   
+   // Dashboard statistics query with shorter cache for real-time updates
+   export const useDashboardStats = (userId: string) => {
+     return useQuery({
+       queryKey: ['stats', 'dashboard', userId],
+       queryFn: () => StatsApiClient.getDashboardStats(userId),
+       staleTime: 2 * 60 * 1000, // 2 minutes
+       gcTime: 10 * 60 * 1000, // 10 minutes
+       enabled: !!userId,
+       refetchOnWindowFocus: true, // Refresh when user returns
+     });
+   };
+   ```
 
-**Milestone:** You can fetch and update user profile data via API calls
+**Milestone:** You can fetch and update user profile data via API calls with optimized caching
 
 ### Step 2: Set Up Profile State Management
 
-**Goal:** Manage user profile and statistics state in your app
+**Goal:** Manage user profile and statistics state following SRP architecture
 
 **Actions:**
-1. **Create profile store (`src/stores/profileStore.ts`):**
-   - Store user profile data from API
-   - Handle profile updates and preferences
-   - Manage avatar and personal information
+1. **Create SRP-compliant domain stores (following architecture document):**
+   
+   **`src/stores/userStore.ts`** - User profile domain only:
+   - Store user profile data from GET /user/profile API
+   - Handle profile updates via PUT /user/profile API 
+   - Manage user preferences and personal information
    - Cache profile data for offline access
-
-2. **Create statistics store (`src/stores/statsStore.ts`):**
-   - Store comprehensive statistics from API
-   - Track rating progressions over time
-   - Manage performance metrics and trends
+   
+   **`src/stores/progressStore.ts`** - Progress and statistics domain only (matching project structure doc):
+   - Store dashboard statistics from GET /stats/dashboard API
+   - Track rating progressions and performance metrics
+   - Manage game history and puzzle training statistics
    - Handle real-time statistics updates
 
-3. **Create profile hooks (`src/hooks/useProfile.ts`, `src/hooks/useStats.ts`):**
-   - Hooks for loading and updating profile
-   - Hooks for fetching various statistics
-   - Hooks for preference management
-   - Real-time data synchronization
+2. **Create SRP-compliant hooks (separate domain hooks):**
+   
+   **`src/hooks/useUser.ts`** - User profile domain only:
+   - Hook for loading and updating user profile
+   - Hook for preference management and settings
+   - Profile synchronization with backend API
+   - Error handling for profile operations
+   
+   **`src/hooks/useProgress.ts`** - Progress and statistics domain only (matching project structure doc):
+   - Hook for fetching dashboard statistics  
+   - Hook for loading comprehensive performance data
+   - Statistics synchronization and real-time updates
+   - Statistics filtering and aggregation
 
 **Milestone:** Profile and statistics data is properly managed and synced with API
 
@@ -1093,6 +1753,65 @@ Add user profile management and comprehensive statistics to your chess training 
 
 **Milestone:** Professional-quality profile and statistics experience
 
+### Files to Create/Modify in Objective 4
+
+**New Files Created:**
+```
+src/
+├── components/
+│   ├── profile/
+│   │   ├── ProfileHeader.tsx
+│   │   ├── ProfileEditor.tsx
+│   │   ├── AchievementsDisplay.tsx
+│   │   └── ProfileAvatar.tsx
+│   ├── stats/
+│   │   ├── StatsDashboard.tsx
+│   │   ├── RatingChart.tsx
+│   │   ├── PerformanceMetrics.tsx
+│   │   └── ProgressOverview.tsx
+│   └── settings/
+│       ├── BoardSettings.tsx
+│       ├── NotificationSettings.tsx
+│       ├── AudioSettings.tsx
+│       └── PreferenceForm.tsx
+├── pages/
+│   └── profile/
+│       ├── ProfilePage.tsx
+│       ├── PreferencesPage.tsx
+│       ├── ProgressOverviewPage.tsx
+│       ├── DetailedStatsPage.tsx
+│       └── AchievementsPage.tsx
+├── services/
+│   ├── api/
+│   │   ├── UserApiClient.ts
+│   │   └── StatsApiClient.ts
+│   └── data/
+│       ├── StatsCalculator.ts
+│       └── AchievementTracker.ts
+├── stores/
+│   ├── userStore.ts
+│   └── progressStore.ts
+├── hooks/
+│   ├── useUser.ts
+│   ├── useProgress.ts
+│   └── useAchievements.ts
+├── types/
+│   ├── user.ts
+│   ├── statistics.ts
+│   └── achievements.ts
+└── utils/
+    ├── chartHelpers.ts
+    ├── dataExport.ts
+    └── dateFormatters.ts
+
+Modified Files:
+├── src/router/index.tsx (profile routes)
+├── src/components/layout/Header.tsx (profile menu)
+├── src/pages/DashboardPage.tsx (profile integration)
+├── src/stores/authStore.ts (profile data)
+└── src/stores/gameStore.ts (stats integration)
+```
+
 ### Final Deliverables
 
 When this objective is complete, you will have:
@@ -1104,6 +1823,8 @@ When this objective is complete, you will have:
 - ✅ **Rating progression** charts showing improvement over time
 - ✅ **Data export** capabilities for personal training records
 - ✅ **Profile sharing** features for social interaction
+- ✅ **React Hook Form preferences** with validation
+- ✅ **TanStack Query data management** for efficient statistics loading
 - ✅ **Mobile optimization** for profile management on all devices
 
 ### How to Validate Success
@@ -1136,33 +1857,64 @@ Add game analysis capabilities to your chess training app. At the end of this ob
 
 **Actions:**
 1. **Create analysis service (`src/services/AnalysisService.ts`):**
-   - Client-side position evaluation using chess.js
-   - Move quality assessment (good, inaccuracy, mistake, blunder)
-   - Basic tactical pattern recognition
-   - Calculate material balance and positional factors
+   - **CRITICAL: Use Stockfish engine for position evaluation** (research-validated requirement)
+   - Integration with StockfishService for deep analysis
+   - Move quality assessment using engine evaluation (good, inaccuracy, mistake, blunder)
+   - Position assessment with Stockfish analysis depth
+   - Calculate evaluation scores and principal variations
 
 2. **Create analysis types (`src/types/analysis.ts`):**
    - Define MoveAnalysis, PositionEvaluation, GameAnalysis interfaces
    - Analysis result structures and evaluation scores
    - Move classification types and annotations
 
-3. **Test analysis engine:**
-   - Verify position evaluation works for various positions
-   - Test move quality assessment accuracy
-   - Validate analysis output format
+3. **Test Stockfish analysis integration:**
+   - Verify Stockfish position evaluation works for various positions
+   - Test engine move quality assessment accuracy
+   - Validate Stockfish analysis output and evaluation format
+   - Test analysis depth configuration and performance
 
-**Milestone:** Basic chess analysis engine is working and can evaluate positions
+**Milestone:** Stockfish analysis engine integration is working and can evaluate positions with professional-grade accuracy
 
 ### Step 2: Load and Prepare Game Data for Analysis
 
 **Goal:** Set up game data loading and preparation for analysis
 
 **Actions:**
-1. **Create game loader (`src/services/GameAnalysisClient.ts`):**
-   - Load completed games from backend API
-   - Parse game moves and positions
-   - Prepare game data for analysis processing
-   - Handle different game formats (PGN, API format)
+1. **Create game analysis API client (`src/services/api/GameAnalysisClient.ts`):**
+   - GET /games/history - Load completed games from backend API
+   - GET /games/:gameId - Load specific game for detailed analysis
+   - Parse game moves and positions from backend response format
+   - Prepare game data for Stockfish analysis processing
+   - Handle PGN export and different game formats
+   
+   **Backend API Integration:**
+   ```typescript
+   interface GameHistoryResponse {
+     success: boolean;
+     games: GameHistoryItem[];
+   }
+   
+   interface GameHistoryItem {
+     id: string;
+     result: string;
+     aiLevel: number;
+     completedAt: string;
+     eloChange: number;
+   }
+   
+   interface GameDetailResponse {
+     success: boolean;
+     game: {
+       id: string;
+       aiLevel: number;
+       currentFen: string;
+       pgn: string;
+       result: string | null;
+       gameOver: boolean;
+     };
+   }
+   ```
 
 2. **Create analysis store (`src/stores/analysisStore.ts`):**
    - Store current game being analyzed
@@ -1176,7 +1928,72 @@ Add game analysis capabilities to your chess training app. At the end of this ob
    - Hook for managing analysis state
    - Progress tracking for long analysis runs
 
-**Milestone:** Games can be loaded from API and prepared for analysis
+4. **Add TanStack Query integration patterns for game analysis:**
+   
+   **`src/hooks/api/useAnalysisQueries.ts`** - Game analysis TanStack Query hooks:
+   ```typescript
+   import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+   import { GameAnalysisClient } from '@/services/api/GameAnalysisClient';
+   
+   // Game history query for analysis selection
+   export const useGamesForAnalysis = (userId: string) => {
+     return useQuery({
+       queryKey: ['games', 'analysis', 'list', userId],
+       queryFn: () => GameAnalysisClient.getGameHistory(),
+       staleTime: 5 * 60 * 1000, // 5 minutes
+       gcTime: 15 * 60 * 1000, // 15 minutes
+       enabled: !!userId,
+     });
+   };
+   
+   // Individual game data for analysis
+   export const useGameForAnalysis = (gameId: string) => {
+     return useQuery({
+       queryKey: ['games', 'analysis', 'detail', gameId],
+       queryFn: () => GameAnalysisClient.getGameDetail(gameId),
+       staleTime: 10 * 60 * 1000, // 10 minutes (game data doesn't change)
+       gcTime: 30 * 60 * 1000, // 30 minutes
+       enabled: !!gameId,
+     });
+   };
+   
+   // Analysis results with heavy caching (expensive computation)
+   export const useGameAnalysisResults = (gameId: string) => {
+     return useQuery({
+       queryKey: ['games', 'analysis', 'results', gameId],
+       queryFn: () => GameAnalysisClient.getAnalysisResults(gameId),
+       staleTime: 60 * 60 * 1000, // 1 hour (analysis results are static)
+       gcTime: 24 * 60 * 60 * 1000, // 24 hours
+       enabled: !!gameId,
+       retry: 1, // Analysis is expensive, don't retry too much
+     });
+   };
+   
+   // Prefetch strategy for seamless analysis experience
+   export const usePrefetchGameAnalysis = () => {
+     const queryClient = useQueryClient();
+     
+     return {
+       prefetchGameDetail: (gameId: string) => {
+         queryClient.prefetchQuery({
+           queryKey: ['games', 'analysis', 'detail', gameId],
+           queryFn: () => GameAnalysisClient.getGameDetail(gameId),
+           staleTime: 10 * 60 * 1000,
+         });
+       },
+       
+       prefetchAnalysisResults: (gameId: string) => {
+         queryClient.prefetchQuery({
+           queryKey: ['games', 'analysis', 'results', gameId],
+           queryFn: () => GameAnalysisClient.getAnalysisResults(gameId),
+           staleTime: 60 * 60 * 1000,
+         });
+       }
+     };
+   };
+   ```
+
+**Milestone:** Games can be loaded from API and prepared for analysis with intelligent caching
 
 ### Step 3: Build Move-by-Move Analysis Interface
 
@@ -1353,17 +2170,72 @@ Add game analysis capabilities to your chess training app. At the end of this ob
 
 **Milestone:** Analysis system is fast, reliable, and production-ready
 
+### Files to Create/Modify in Objective 5
+
+**New Files Created:**
+```
+src/
+├── components/
+│   └── analysis/
+│       ├── AnalysisBoard.tsx
+│       ├── MoveAnalysisPanel.tsx
+│       ├── PositionEvaluation.tsx
+│       ├── AnalysisNavigator.tsx
+│       ├── AnalysisTimeline.tsx
+│       ├── CriticalMoments.tsx
+│       ├── OpeningAnalysis.tsx
+│       ├── EndgameAnalysis.tsx
+│       ├── MistakeTraining.tsx
+│       ├── PositionTrainer.tsx
+│       ├── PatternRecognition.tsx
+│       └── StockfishAnalysisPanel.tsx
+├── pages/
+│   └── analysis/
+│       ├── GameAnalysisPage.tsx
+│       ├── AnalysisReportPage.tsx
+│       └── CompareGamesPage.tsx
+├── services/
+│   ├── chess/
+│   │   ├── AnalysisService.ts
+│   │   └── PositionAnalyzer.ts
+│   └── data/
+│       └── GameAnalysisClient.ts
+├── stores/
+│   └── analysisStore.ts
+├── hooks/
+│   └── useGameAnalysis.ts
+├── types/
+│   └── analysis.ts
+├── utils/
+│   ├── mistakeAnalysis.ts
+│   ├── analysisReporting.ts
+│   └── patternRecognition.ts
+└── components/
+    └── chess/
+        └── AnalysisViewer.tsx
+
+Modified Files:
+├── src/router/index.tsx (analysis routes)
+├── src/components/layout/Header.tsx (analysis navigation)
+├── src/components/chess/GameHistoryList.tsx (analysis integration)
+├── src/pages/chess/PlayPage.tsx (post-game analysis)
+├── src/services/chess/StockfishService.ts (analysis methods)
+└── src/stores/gameStore.ts (analysis data integration)
+```
+
 ### Final Deliverables
 
 When this objective is complete, you will have:
 
-- ✅ **Game analysis engine** that evaluates moves and positions
+- ✅ **Stockfish analysis engine integration** that evaluates moves and positions with professional accuracy
 - ✅ **Move-by-move analysis** with detailed explanations and alternatives
 - ✅ **Critical moment identification** highlighting key game moments
 - ✅ **Mistake analysis** with improvement suggestions
 - ✅ **Opening and endgame analysis** with educational content
 - ✅ **Analysis reports** providing game summaries and insights
 - ✅ **Training from analysis** creating practice exercises from mistakes
+- ✅ **React Spring animations** for analysis visualization and navigation
+- ✅ **TanStack Query integration** for analysis data caching and performance
 - ✅ **Mobile-optimized** analysis interface for studying on any device
 
 ### How to Validate Success
@@ -1659,12 +2531,484 @@ After completing this objective, you should be able to:
 5. **Production:** Deploy to hosting → monitor performance → handle real user traffic
 6. **Cross-platform:** Test on different browsers and devices → consistent experience everywhere
 
+### Files to Create/Modify in Objective 6
+
+**New Files Created:**
+```
+src/
+├── components/
+│   ├── common/
+│   │   ├── ErrorBoundary.tsx
+│   │   ├── LoadingFallbacks.tsx
+│   │   ├── PageTransitions.tsx
+│   │   └── ScreenReaderSupport.tsx
+│   └── help/
+│       ├── HelpSearch.tsx
+│       ├── TutorialGuide.tsx
+│       ├── ContactForm.tsx
+│       └── InteractiveWalkthrough.tsx
+├── pages/
+│   ├── help/
+│   │   ├── HelpCenterPage.tsx
+│   │   ├── TutorialsPage.tsx
+│   │   └── ContactPage.tsx
+│   └── legal/
+│       ├── AboutPage.tsx
+│       ├── PrivacyPage.tsx
+│       └── TermsPage.tsx
+├── services/
+│   ├── cache/
+│   │   └── ApiCache.ts
+│   └── monitoring/
+│       ├── ErrorReporting.ts
+│       └── PerformanceMonitoring.ts
+├── utils/
+│   ├── errorHandling.ts
+│   ├── lazyLoading.ts
+│   ├── keyboardNavigation.ts
+│   └── accessibility.ts
+├── config/
+│   └── environment.ts
+├── assets/
+│   └── icons/
+│       ├── favicon.ico
+│       ├── icon-192.png
+│       ├── icon-512.png
+│       └── apple-touch-icon.png
+└── public/
+    ├── manifest.json
+    ├── robots.txt
+    └── sw.js
+
+Configuration Files:
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       ├── deploy.yml
+│       └── lighthouse.yml
+├── lighthouse.config.js
+├── bundle-analyzer.config.js
+└── sentry.config.js
+
+Documentation Files:
+├── docs/
+│   ├── DEPLOYMENT.md
+│   ├── PERFORMANCE.md
+│   ├── ACCESSIBILITY.md
+│   └── TROUBLESHOOTING.md
+
+Modified Files:
+├── vite.config.ts (production optimizations)
+├── package.json (build scripts, dependencies)
+├── tsconfig.json (strict settings)
+├── src/main.tsx (error monitoring setup)
+├── src/router/index.tsx (help and legal routes)
+├── src/components/layout/Header.tsx (help navigation)
+├── src/components/layout/Footer.tsx (legal links)
+├── index.html (meta tags, PWA setup)
+└── README.md (updated documentation)
+```
+
+### Final Deliverables
+
+When this objective is complete, you will have:
+
+- ✅ **Complete help system** with tutorials, FAQ, and support
+- ✅ **Robust error handling** with graceful fallbacks and recovery
+- ✅ **Optimized performance** with fast loading and smooth operation
+- ✅ **Professional polish** with consistent UI and micro-interactions
+- ✅ **Full accessibility** supporting users with disabilities
+- ✅ **Production deployment** with monitoring and error tracking
+- ✅ **Cross-platform compatibility** working on all devices and browsers
+- ✅ **Legal compliance** with privacy policy and terms of service
+- ✅ **PWA capabilities** for offline chess training
+- ✅ **Research-validated build optimization** using Vite (16x faster than CRA)
+
+### How to Validate Success
+
+After completing this objective, you should be able to:
+
+1. **Help users:** New users can find help → complete tutorials → solve problems independently
+2. **Handle errors:** Disconnect internet → see graceful error handling → reconnect and continue
+3. **Performance:** App loads quickly → smooth animations → responsive on mobile
+4. **Accessibility:** Navigate entire app with keyboard → screen reader announces chess moves
+5. **Production:** Deploy to hosting → monitor performance → handle real user traffic
+6. **Cross-platform:** Test on different browsers and devices → consistent experience everywhere
+
 The final production app should:
 - Load in under 3 seconds on 3G connection
 - Work perfectly on Chrome, Firefox, Safari, and Edge
 - Be fully keyboard navigable and screen reader compatible  
 - Handle network failures and API errors gracefully
 - Provide professional user experience comparable to commercial chess apps
+
+## Objective 7: Comprehensive Testing Suite
+
+### Objective
+
+Create a complete testing suite using research-validated testing tools (Vitest + Playwright) to ensure all application features work correctly across all platforms and scenarios. At the end of this objective, you will have comprehensive test coverage including unit tests, integration tests, and end-to-end tests.
+
+### Step 1: Unit Testing with Vitest
+
+**Goal:** Create comprehensive unit tests for all components and services
+
+**Actions:**
+1. **Set up Vitest test environment:**
+   - Configure Vitest with jsdom environment (5x faster than Jest)
+   - Set up React Testing Library integration
+   - Configure test coverage reporting
+   - Add test utilities and custom matchers
+
+2. **Create component unit tests:**
+   - Test all auth components (LoginForm, RegisterForm, ProtectedRoute)
+   - Test all chess components (ChessBoardWrapper, GameControls, MoveHistory)
+   - Test all puzzle components (PuzzleBoard, HintSystem, SolutionFeedback)
+   - Test UI components (Button, Input, Card, Modal)
+
+3. **Create service unit tests:**
+   - Test API clients (AuthApiClient, GameApiClient, PuzzleApiClient)
+   - Test Stockfish service and Web Worker integration
+   - Test audio service and Howler.js integration
+   - Test state management (Zustand stores)
+
+**Milestone:** All components and services have comprehensive unit test coverage
+
+### Step 2: Integration Testing
+
+**Goal:** Test component interactions and API integrations
+
+**Actions:**
+1. **Create authentication flow tests:**
+   - Test complete login/logout workflows
+   - Test protected route access and redirection
+   - Test token refresh and session persistence
+   - Test error handling for auth failures
+
+2. **Create chess game integration tests:**
+   - Test complete game creation and gameplay flow
+   - Test Stockfish AI integration and responses
+   - Test chess board interaction with game state
+   - Test audio feedback integration with game events
+
+3. **Create puzzle training integration tests:**
+   - Test puzzle loading and solution submission
+   - Test hint system integration with backend
+   - Test progress tracking and statistics updates
+   - Test spaced repetition algorithm
+
+**Milestone:** All major user workflows are tested with integration tests
+
+### Step 3: End-to-End Testing with Playwright
+
+**Goal:** Test complete user journeys across different browsers
+
+**Actions:**
+1. **Set up Playwright test environment:**
+   - Configure Playwright for multiple browsers (Chrome, Firefox, Safari)
+   - Set up mobile device emulation for responsive testing
+   - Configure test data and database seeding
+   - Add screenshot and video recording for test failures
+
+2. **Create authentication E2E tests:**
+   - Test user registration flow from start to finish
+   - Test login flow with various credential scenarios
+   - Test password reset workflow
+   - Test session management across browser sessions
+
+3. **Create chess gameplay E2E tests:**
+   - Test complete chess game from creation to completion
+   - Test AI opponent interaction and response times
+   - Test game controls, resignation, and draw offers
+   - Test game history and review functionality
+
+4. **Create puzzle training E2E tests:**
+   - Test complete puzzle solving sessions
+   - Test hint usage and progression
+   - Test difficulty adjustment and spaced repetition
+   - Test progress tracking and statistics updates
+
+**Milestone:** All user journeys work correctly across different browsers and devices
+
+### Step 4: Performance Testing
+
+**Goal:** Ensure application meets performance requirements
+
+**Actions:**
+1. **Create performance benchmarks:**
+   - Test chess board interaction response times (<50ms requirement)
+   - Test Stockfish analysis performance across different depths
+   - Test audio system performance and mobile compatibility
+   - Test React Spring animation performance
+
+2. **Create load testing scenarios:**
+   - Test API response times under various conditions
+   - Test concurrent user scenarios (if applicable)
+   - Test memory usage during long training sessions
+   - Test chess engine performance optimization
+
+3. **Create mobile performance tests:**
+   - Test touch interaction response times on mobile
+   - Test audio playback on mobile devices with restrictions
+   - Test chess board rendering performance on older devices
+   - Test battery usage during extended use
+
+**Milestone:** Application meets all performance requirements across devices
+
+### Step 5: Accessibility Testing
+
+**Goal:** Ensure application is fully accessible
+
+**Actions:**
+1. **Create automated accessibility tests:**
+   - Integrate axe-core with Vitest for WCAG compliance testing
+   - Test color contrast ratios across all UI components
+   - Test keyboard navigation throughout the application
+   - Test screen reader compatibility with chess components
+
+2. **Create keyboard navigation tests:**
+   - Test complete chess board navigation with arrow keys
+   - Test form navigation and submission with keyboard only
+   - Test modal and dialog keyboard accessibility
+   - Test focus management during navigation
+
+3. **Create screen reader tests:**
+   - Test chess position announcements for screen readers
+   - Test move history reading and navigation
+   - Test game state announcements (check, checkmate)
+   - Test puzzle feedback and hint system accessibility
+
+**Milestone:** Application is fully accessible and WCAG 2.1 AA compliant
+
+### Step 6: Cross-Browser and Device Testing
+
+**Goal:** Ensure compatibility across all target platforms
+
+**Actions:**
+1. **Create cross-browser test matrix:**
+   - Test all features in Chrome, Firefox, Safari, and Edge
+   - Test mobile browsers on iOS and Android
+   - Test progressive web app functionality
+   - Test offline capability where applicable
+
+2. **Create responsive design tests:**
+   - Test chess board usability on various screen sizes
+   - Test form layouts on mobile devices
+   - Test navigation and menu functionality
+   - Test touch interactions and gestures
+
+3. **Create compatibility tests:**
+   - Test Stockfish Web Worker compatibility across browsers
+   - Test Howler.js audio compatibility and mobile restrictions
+   - Test React Spring animations across different devices
+   - Test TanStack Query caching across browser sessions
+
+**Milestone:** Application works consistently across all target platforms
+
+### Step 7: Test Data Management and Fixtures
+
+**Goal:** Create reliable test data and mocking systems
+
+**Actions:**
+1. **Create comprehensive test fixtures:**
+   - Create user data fixtures for various test scenarios
+   - Create chess game data fixtures for different game states
+   - Create puzzle data fixtures for training scenarios
+   - Create API response mocks for consistent testing
+
+2. **Create testing utilities:**
+   - Create helper functions for common test operations
+   - Create custom matchers for chess-specific assertions
+   - Create mock implementations for external services
+   - Create test database seeding and cleanup utilities
+
+3. **Create CI/CD integration:**
+   - Configure tests to run automatically on commits
+   - Set up test coverage reporting and thresholds
+   - Configure parallel test execution for faster CI
+   - Set up test failure notifications and reporting
+
+**Milestone:** Testing infrastructure is robust and maintainable
+
+### Step 8: Test Documentation and Maintenance
+
+**Goal:** Ensure tests are well-documented and maintainable
+
+**Actions:**
+1. **Create testing documentation:**
+   - Document testing strategies and best practices
+   - Create guides for writing new tests
+   - Document test data management and fixtures
+   - Create troubleshooting guides for test failures
+
+2. **Create test maintenance procedures:**
+   - Establish procedures for updating tests with feature changes
+   - Create guidelines for test refactoring and cleanup
+   - Set up regular test review and optimization
+   - Establish test coverage goals and monitoring
+
+3. **Create test reporting and analytics:**
+   - Set up comprehensive test reporting dashboards
+   - Create test performance monitoring
+   - Set up flaky test detection and resolution
+   - Create test trend analysis and insights
+
+**Milestone:** Testing system is fully documented and maintainable
+
+### Files to Create/Modify in Objective 7
+
+**New Files Created:**
+```
+tests/
+├── unit/
+│   ├── components/
+│   │   ├── auth/
+│   │   │   ├── LoginForm.test.tsx
+│   │   │   ├── RegisterForm.test.tsx
+│   │   │   └── ProtectedRoute.test.tsx
+│   │   ├── chess/
+│   │   │   ├── ChessBoardWrapper.test.tsx
+│   │   │   ├── GameControls.test.tsx
+│   │   │   ├── MoveHistory.test.tsx
+│   │   │   └── StockfishPanel.test.tsx
+│   │   ├── puzzles/
+│   │   │   ├── PuzzleBoard.test.tsx
+│   │   │   ├── HintSystem.test.tsx
+│   │   │   ├── SolutionFeedback.test.tsx
+│   │   │   └── PuzzleConfigForm.test.tsx
+│   │   ├── audio/
+│   │   │   └── AudioProvider.test.tsx
+│   │   └── ui/
+│   │       ├── Button.test.tsx
+│   │       ├── Input.test.tsx
+│   │       └── Card.test.tsx
+│   ├── services/
+│   │   ├── api/
+│   │   │   ├── ApiClient.test.ts
+│   │   │   ├── AuthApiClient.test.ts
+│   │   │   ├── GameApiClient.test.ts
+│   │   │   └── PuzzleApiClient.test.ts
+│   │   ├── chess/
+│   │   │   ├── StockfishService.test.ts
+│   │   │   └── ChessLogicService.test.ts
+│   │   └── audio/
+│   │       └── AudioService.test.ts
+│   ├── stores/
+│   │   ├── authStore.test.ts
+│   │   ├── gameStore.test.ts
+│   │   └── puzzleStore.test.ts
+│   ├── hooks/
+│   │   ├── useAuth.test.ts
+│   │   ├── useChessGame.test.ts
+│   │   └── usePuzzleSession.test.ts
+│   └── utils/
+│       ├── chessHelpers.test.ts
+│       └── spacedRepetition.test.ts
+├── integration/
+│   ├── auth/
+│   │   ├── login-flow.test.tsx
+│   │   ├── registration-flow.test.tsx
+│   │   └── protected-routes.test.tsx
+│   ├── chess/
+│   │   ├── game-creation.test.tsx
+│   │   ├── ai-interaction.test.tsx
+│   │   └── game-completion.test.tsx
+│   ├── puzzles/
+│   │   ├── puzzle-solving.test.tsx
+│   │   ├── hint-system.test.tsx
+│   │   └── progress-tracking.test.tsx
+│   └── api/
+│       ├── auth-integration.test.ts
+│       ├── game-integration.test.ts
+│       └── puzzle-integration.test.ts
+├── e2e/
+│   ├── auth/
+│   │   ├── registration.spec.ts
+│   │   ├── login.spec.ts
+│   │   └── password-reset.spec.ts
+│   ├── chess/
+│   │   ├── game-vs-ai.spec.ts
+│   │   ├── game-controls.spec.ts
+│   │   └── game-history.spec.ts
+│   ├── puzzles/
+│   │   ├── puzzle-training.spec.ts
+│   │   ├── hint-usage.spec.ts
+│   │   └── progress-tracking.spec.ts
+│   ├── profile/
+│   │   ├── profile-management.spec.ts
+│   │   └── statistics-viewing.spec.ts
+│   └── accessibility/
+│       ├── keyboard-navigation.spec.ts
+│       ├── screen-reader.spec.ts
+│       └── wcag-compliance.spec.ts
+├── performance/
+│   ├── chess-board-performance.spec.ts
+│   ├── stockfish-performance.spec.ts
+│   ├── audio-performance.spec.ts
+│   └── mobile-performance.spec.ts
+├── fixtures/
+│   ├── users.ts
+│   ├── games.ts
+│   ├── puzzles.ts
+│   └── api-responses.ts
+├── mocks/
+│   ├── api-clients.ts
+│   ├── stockfish-service.ts
+│   ├── audio-service.ts
+│   └── browser-apis.ts
+├── utils/
+│   ├── test-helpers.ts
+│   ├── custom-matchers.ts
+│   ├── test-setup.ts
+│   └── database-helpers.ts
+└── setup/
+    ├── vitest.setup.ts
+    ├── playwright.setup.ts
+    ├── test-environment.ts
+    └── global-teardown.ts
+
+Configuration Files:
+├── vitest.config.ts (comprehensive configuration)
+├── playwright.config.ts (multi-browser setup)
+├── coverage.config.ts
+└── .github/workflows/tests.yml (CI/CD integration)
+
+Documentation:
+├── docs/testing/
+│   ├── TESTING_STRATEGY.md
+│   ├── UNIT_TESTING_GUIDE.md
+│   ├── E2E_TESTING_GUIDE.md
+│   ├── PERFORMANCE_TESTING.md
+│   ├── ACCESSIBILITY_TESTING.md
+│   └── TEST_MAINTENANCE.md
+```
+
+### Final Deliverables
+
+When this objective is complete, you will have:
+
+- ✅ **Comprehensive unit tests** using Vitest (5x faster than Jest)
+- ✅ **Integration tests** covering all major user workflows
+- ✅ **End-to-end tests** using Playwright across multiple browsers
+- ✅ **Performance tests** ensuring <50ms chess interaction times
+- ✅ **Accessibility tests** with WCAG 2.1 AA compliance
+- ✅ **Cross-browser compatibility** tests for all target platforms
+- ✅ **Mobile device testing** with touch interaction validation
+- ✅ **Test fixtures and mocks** for consistent, reliable testing
+- ✅ **CI/CD integration** with automated test execution
+- ✅ **Test documentation** and maintenance procedures
+- ✅ **Coverage reporting** with quality gates and thresholds
+
+### How to Validate Success
+
+After completing this objective, you should be able to:
+
+1. **Run all tests:** `npm test` → all unit, integration, and E2E tests pass
+2. **Check coverage:** Test coverage reports show >90% coverage for critical paths
+3. **Cross-browser testing:** Tests pass in Chrome, Firefox, Safari, and Edge
+4. **Mobile testing:** All functionality works correctly on mobile devices
+5. **Performance validation:** Chess interactions consistently meet <50ms requirement
+6. **Accessibility validation:** All accessibility tests pass with WCAG compliance
+7. **CI/CD validation:** Tests run automatically on commits and deployments
 
 ## Implementation Sequence
 
@@ -1676,6 +3020,7 @@ The objectives are ordered by dependency and API integration complexity:
 - **Objective 4**: User Profile & Statistics - User data and progress via API
 - **Objective 5**: Game Analysis System - Analysis features using API data
 - **Objective 6**: Polish & Production Features - Final features and optimization
+- **Objective 7**: Comprehensive Testing Suite - Complete test coverage with Vitest + Playwright
 
 ## Success Metrics
 
@@ -1707,11 +3052,12 @@ The objectives are ordered by dependency and API integration complexity:
 | Objective | Description                 | Status         | Start Date | Complete Date | Notes                                   |
 | --------- | --------------------------- | -------------- | ---------- | ------------- | --------------------------------------- |
 | **1**     | Authentication & Foundation | ⏸️ Not Started |            |               | API integration for auth and UI foundation |
-| **2**     | Chess Game Integration    | ⏸️ Not Started |            |               | Chess gameplay using game API endpoints        |
-| **3**     | Puzzle Training Integration      | ⏸️ Not Started |            |               | Puzzle system using puzzle API endpoints       |
+| **2**     | Chess Game Integration    | ⏸️ Not Started |            |               | Chess gameplay with Stockfish AI using game API endpoints        |
+| **3**     | Puzzle Training Integration      | ⏸️ Not Started |            |               | Puzzle system with spaced repetition using puzzle API endpoints       |
 | **4**     | User Profile & Statistics     | ⏸️ Not Started |            |               | Profile and stats using user API endpoints       |
-| **5**     | Game Analysis System        | ⏸️ Not Started |            |               | Basic analysis using API game data   |
+| **5**     | Game Analysis System        | ⏸️ Not Started |            |               | Stockfish analysis using API game data   |
 | **6**     | Polish & Production Features   | ⏸️ Not Started |            |               | Final features and optimization      |
+| **7**     | Comprehensive Testing Suite   | ⏸️ Not Started |            |               | Vitest + Playwright testing with >90% coverage      |
 
 ### Status Legend
 
@@ -1724,11 +3070,12 @@ The objectives are ordered by dependency and API integration complexity:
 ### Key Milestones
 
 - [ ] **Foundation Ready** (Obj 1 complete) - Authentication and UI working with API
-- [ ] **Chess Core Ready** (Obj 2 complete) - Playable chess using game API
-- [ ] **Training Active** (Obj 3 complete) - Puzzle training using puzzle API
+- [ ] **Chess Core Ready** (Obj 2 complete) - Playable chess with Stockfish AI using game API
+- [ ] **Training Active** (Obj 3 complete) - Puzzle training with spaced repetition using puzzle API
 - [ ] **Profile Complete** (Obj 4 complete) - User management using user API
-- [ ] **Analysis Ready** (Obj 5 complete) - Game analysis using API data
+- [ ] **Analysis Ready** (Obj 5 complete) - Stockfish game analysis using API data
 - [ ] **Production Ready** (Obj 6 complete) - All features complete and optimized
+- [ ] **Testing Complete** (Obj 7 complete) - Comprehensive test suite with >90% coverage
 
 ### Usage Instructions
 
@@ -1736,5 +3083,21 @@ The objectives are ordered by dependency and API integration complexity:
 2. **Add Dates**: Fill in start/complete dates to track timeline
 3. **Add Notes**: Include API integration details, blockers, or discoveries
 4. **Check Milestones**: Mark milestones as completed when validation criteria are met
+5. **File Coverage**: Each objective includes comprehensive file lists to ensure complete project structure population
+
+### Project Structure Population
+
+Following this implementation plan will create **every file needed** for the complete chess training application:
+
+**📊 Total File Creation Coverage:**
+- **Objective 1**: ~30 files (SRP-compliant: 3 API clients, 3 stores, 3 hooks, 3 type files, authentication foundation, basic UI)
+- **Objective 2**: ~35 files (chess gameplay, Stockfish AI, audio system)  
+- **Objective 3**: ~30 files (puzzle training, spaced repetition, progress tracking)
+- **Objective 4**: ~35 files (user profiles, statistics, preferences, achievements)
+- **Objective 5**: ~25 files (game analysis, Stockfish integration, pattern recognition)
+- **Objective 6**: ~40 files (production features, error handling, accessibility, help system)
+- **Objective 7**: ~60 files (comprehensive testing suite with >90% coverage)
+
+**🎯 Total: ~250+ files** covering the complete project structure from `/docs/frontend/12-project-structure.md`
 
 This table should be updated regularly to track progress and identify any bottlenecks or dependencies that need attention.
