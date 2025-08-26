@@ -4,6 +4,22 @@
 
 This document distills the most important insights from our comprehensive frontend research and explains how these findings will directly enhance our chess training application's user interface and user experience.
 
+## Architectural Context
+
+**Important:** These lessons learned are strategic insights that apply to frontend development regardless of specific architecture. The actual implementation uses a **REST API architecture**:
+
+```
+Frontend (React) → HTTP API Calls → Backend (Express/Node.js) → SQLite Database  
+```
+
+**Application Guidelines:**
+- **UI/UX Lessons**: Apply directly to React frontend components
+- **Performance Standards**: <50ms interactions, <1s loading - frontend optimization targets
+- **Service Layer References**: Backend handles chess engines, spaced repetition algorithms, database access
+- **API Integration**: Frontend makes HTTP calls instead of direct service implementation
+
+Where technical examples mention direct service implementation, the actual pattern uses API client calls to backend endpoints.
+
 ## 🎯 Core Research-Driven Insights
 
 ### 1. The Simplicity vs Customization Balance
@@ -302,16 +318,22 @@ const usePuzzle = () => {
 
 ### Service Layer Architecture
 
-**API Service Pattern:**
+**⚠️ ARCHITECTURAL NOTE:** The service examples below are strategic patterns. In the REST API architecture, the frontend implements API clients that call backend endpoints instead of direct service logic.
+
+**API Client Pattern (Actual Implementation):**
 ```typescript
-class ApiService {
+class ApiClient {
   // Centralized error handling, auth headers, timeouts
 }
 
-class PuzzleService {
-  // Domain-specific API calls for puzzles
-  static async getPuzzles(difficulty: string) { /* */ }
-  static async submitSolution(puzzleId: string, solution: Move[]) { /* */ }
+class PuzzleApiClient {
+  // Domain-specific API calls to backend endpoints
+  static async getPuzzles(difficulty: string) { 
+    return apiClient.get(`/api/puzzles?difficulty=${difficulty}`);
+  }
+  static async submitSolution(puzzleId: string, solution: Move[]) { 
+    return apiClient.post(`/api/puzzles/${puzzleId}/solve`, { solution });
+  }
 }
 ```
 
@@ -1148,8 +1170,12 @@ This research integration transforms our strategic planning from opinion-based t
 
 ### Comprehensive Algorithm Implementation Knowledge
 
+**⚠️ ARCHITECTURAL NOTE:** The technical implementations below include patterns for both frontend and backend development. In the REST API architecture:
+- **Frontend implements**: API clients, UI components, client-side state management
+- **Backend implements**: Chess engines, spaced repetition algorithms, database schemas, authentication
+
 **From Phase-by-Phase Technical Research:**
-Every technical implementation question that could block development has been researched and resolved with complete code implementations:
+Every technical implementation question that could block development has been researched and resolved with complete specifications:
 
 #### **SM-2 Spaced Repetition Algorithm (Phase 3):**
 - **Complete TypeScript implementation** with exact formulas and quality scales

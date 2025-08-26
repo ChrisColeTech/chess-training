@@ -35,8 +35,9 @@ Implementation planning was done **without properly analyzing the existing POC a
 - Shows DatabaseService pattern instead of API calls
 - References Electron safeStorage instead of API tokens
 - Service layer assumes direct database access
-**Impact**: Core architecture document - blocks all development
-**Required Fix**: Complete rewrite to show REST API integration patterns
+- **FALSELY CLAIMS RESEARCH VALIDATION**: Makes technology decisions (Zustand, axios, React Query, js-cookie) that were NOT actually researched
+**Impact**: Core architecture document - blocks all development and undermines credibility
+**Required Fix**: Complete rewrite to show REST API integration patterns AND align with actual research findings
 
 #### **Document 04: POC Implementation Plan**
 **File**: `/docs/frontend/04-poc-implementation-plan.md`  
@@ -193,11 +194,18 @@ After rewrites, verify:
 - [ ] Test implementation guidance
 - [ ] Complete verification checklist
 
-### **Phase 4: Development Readiness**
+### **Phase 4: Research-Architecture Alignment (CRITICAL)**
+- [ ] Audit all architecture decisions against actual research findings
+- [ ] Remove all technology choices that were NOT actually researched
+- [ ] Add missing research for technologies currently in architecture document
+- [ ] Create honest distinction between researched vs assumed decisions
+
+### **Phase 5: Development Readiness**
 - [ ] All documentation aligned
 - [ ] Implementation plan tested
 - [ ] Objective 1 can begin immediately
 - [ ] No architectural conflicts remain
+- [ ] All architecture decisions are research-backed or clearly labeled as assumptions
 
 ## Immediate Action Required
 
@@ -210,3 +218,61 @@ After rewrites, verify:
 **TIMELINE**: Documentation remediation must be completed before any Objective 1 implementation work begins.
 
 This remediation is **the highest priority task** and blocks all other development work until completed successfully.
+
+---
+
+## CRITICAL FINDING: Research-Architecture Misalignment
+
+### Problem Discovery
+During implementation plan development, a critical misalignment was discovered between what was actually researched (Document 01) and what the architecture document (Document 02) claims as "research-validated."
+
+### Detailed Analysis
+
+#### ✅ ACTUALLY RESEARCHED (Document 01 Research Findings):
+- **UI Frameworks**: Chakra UI, Material-UI, Tailwind CSS researched with **Chakra UI recommended**
+- **Chess Libraries**: chess.js, react-chessboard researched and **both recommended**
+- **Animation Libraries**: Listed as research area but **NO FINDINGS DOCUMENTED**
+
+#### ❌ FALSELY CLAIMED AS RESEARCHED (Document 02 Architecture):
+- **Zustand**: Architecture claims it's a decision but **NO research findings exist**
+- **axios**: Architecture lists as HTTP client but **NOT researched**
+- **React Query/TanStack Query**: Architecture includes but **NOT researched**  
+- **js-cookie**: Architecture specifies but **NOT researched**
+- **framer-motion**: Implementation plan includes but **NOT researched**
+
+#### 📝 RESEARCH GAPS IDENTIFIED:
+The research document lists these areas for investigation but provides **NO actual findings**:
+- State management approaches (Redux, Zustand, Context)
+- HTTP client libraries 
+- Animation and transition libraries
+- Chart/visualization libraries for statistics
+- Audio libraries for sound effects
+
+### Impact Assessment
+
+**Credibility Issue**: The architecture document undermines the entire project by claiming research validation for decisions that were never researched.
+
+**Implementation Risk**: Developers following the architecture may use technologies that weren't properly evaluated, leading to suboptimal choices.
+
+**Documentation Integrity**: The mismatch between research (Document 01) and architecture (Document 02) creates confusion about what was actually validated.
+
+### Required Remediation Actions
+
+#### Immediate (Phase 4):
+1. **Audit ALL architecture decisions** against Document 01 research findings
+2. **Remove false research claims** from architecture document  
+3. **Clearly label** which decisions are research-backed vs assumptions
+4. **Either complete missing research** OR **acknowledge gaps honestly**
+
+#### Options for Resolution:
+1. **Conservative Approach**: Remove all non-researched technologies, use only Chakra UI + chess.js + react-chessboard
+2. **Research Completion**: Actually research state management, HTTP clients, etc. and document findings
+3. **Honest Labeling**: Keep current technologies but clearly mark as "assumption-based" not "research-validated"
+
+### Success Criteria for Resolution:
+- [ ] Every technology choice is either research-backed OR clearly labeled as assumption
+- [ ] Architecture document contains zero false research claims  
+- [ ] Implementation plan uses only validated or clearly-marked-as-assumed technologies
+- [ ] Documentation integrity restored with honest research-to-architecture mapping
+
+This research-architecture misalignment is a **critical documentation integrity issue** that must be resolved before any implementation work proceeds.

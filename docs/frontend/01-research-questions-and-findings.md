@@ -3,6 +3,22 @@
 ## Executive Summary
 This document contains comprehensive research for designing and implementing a world-class chess training application frontend. We examine design patterns, user experience best practices, technical architecture, and feature requirements to create a robust, scalable, and engaging chess training platform.
 
+## Architectural Context
+**Important:** This research was conducted for a general chess training application and contains findings that apply to different architectural approaches. The specific implementation uses a **REST API architecture** with the following pattern:
+
+```
+Frontend (React) → HTTP API Calls → Backend (Express/Node.js) → SQLite Database
+```
+
+**Research Application Guidelines:**
+- **UI/UX Research** (Sections 1-2): Applies directly to frontend implementation
+- **Database Schema Research** (Section 39): Applies to backend implementation, not frontend
+- **Authentication Research** (Section 38): Frontend uses API calls instead of Electron safeStorage  
+- **Engine Integration Research** (Sections 13-22): Backend handles chess engines, frontend makes API calls
+- **Performance Research** (Sections 9-12): Applies to web application optimization
+
+**Key Distinction:** Where research mentions direct database access or Electron-native features, the actual implementation uses REST API calls to backend services instead.
+
 ## Research Questions & Methodology
 
 ### 1. Design & User Experience
@@ -847,6 +863,13 @@ This research provides the foundation for building a professional-grade chess tr
 
 ## Electron Chess Engine Integration Research Findings
 
+**⚠️ ARCHITECTURAL NOTE:** The engine integration research below assumes frontend chess engine implementation. In the REST API architecture, chess engines run on the **backend** and the frontend makes API calls to:
+- `/api/games/:id/move` - For AI opponent moves
+- `/api/analysis/analyze` - For position analysis
+- `/api/puzzles/validate` - For puzzle solution validation
+
+The frontend does not integrate Stockfish.js directly.
+
 ### 19. Stockfish.js WebAssembly Implementation Research Findings
 
 #### Stockfish.js Variants and Performance
@@ -1541,6 +1564,11 @@ This technical research provides complete implementation details for the core al
 #### JWT Authentication with SafeStorage
 **Research Source: Electron documentation, Auth0 implementation guides, security best practices**
 
+**⚠️ ARCHITECTURAL NOTE:** This Electron-specific authentication research does **not apply** to the REST API architecture. The actual frontend implementation uses:
+- HTTP API calls to `/api/auth/login`, `/api/auth/register`, `/api/auth/refresh` endpoints
+- Cookie-based token storage instead of Electron safeStorage
+- Standard web application authentication patterns instead of desktop-specific approaches
+
 **SafeStorage Implementation:**
 ```typescript
 import { safeStorage } from 'electron';
@@ -1607,6 +1635,8 @@ async function apiCallWithRefresh(url: string, options: RequestInit): Promise<Re
 
 #### Comprehensive Database Schema
 **Research Source: Chess database design patterns, spaced repetition systems, training platforms**
+
+**⚠️ ARCHITECTURAL NOTE:** This database schema research applies to the **backend implementation**. The frontend does not access the database directly. Instead, the frontend makes HTTP API calls to backend endpoints that interact with this database structure.
 
 **Core Schema Implementation:**
 ```sql

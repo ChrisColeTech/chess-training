@@ -119,18 +119,19 @@ src/
 │   └── useDebounce.ts            # Performance helper
 │
 ├── services/
-│   ├── AuthService.ts            # User authentication
-│   ├── ChessService.ts           # Chess logic
-│   ├── AIService.ts              # Stockfish integration
-│   ├── PuzzleService.ts          # Puzzle management
-│   ├── SpacedRepetitionService.ts # Learning algorithm
-│   ├── OpeningService.ts         # Opening database
-│   ├── AnalysisService.ts        # Game analysis
-│   ├── GamificationService.ts    # Achievement system
-│   ├── AchievementService.ts     # Badge management
-│   ├── StatisticsService.ts      # Performance tracking
-│   ├── ApiService.ts             # HTTP client
-│   └── StorageService.ts         # Data persistence
+│   ├── ApiClient.ts              # HTTP client configuration
+│   ├── AuthApiClient.ts          # Authentication API calls
+│   ├── GameApiClient.ts          # Chess game API calls
+│   ├── PuzzleApiClient.ts        # Puzzle training API calls
+│   ├── StatsApiClient.ts         # Statistics API calls
+│   ├── UserApiClient.ts          # User profile API calls
+│   ├── ChessLogicService.ts      # Client-side chess logic
+│   ├── AIService.ts              # Stockfish integration (client-side)
+│   ├── SpacedRepetitionService.ts # Learning algorithm (client-side)
+│   ├── OpeningDataService.ts     # Opening data processing (client-side)
+│   ├── AnalysisProcessor.ts      # Analysis data processing (client-side)
+│   ├── GamificationEngine.ts     # Achievement logic (client-side)
+│   └── CacheService.ts           # API response caching
 │
 ├── stores/                       # Zustand stores
 │   ├── authStore.ts              # User session
@@ -242,9 +243,9 @@ tests/
 ├── setup.ts                    # Test configuration
 ├── testUtils.tsx               # Test helpers
 ├── mocks/                      # Mock implementations
-│   ├── services.ts
-│   ├── stores.ts
-│   └── electron.ts
+│   ├── apiClients.ts             # Mock API client responses
+│   ├── services.ts               # Mock client-side services
+│   └── stores.ts                 # Mock store implementations
 └── fixtures/                   # Test data
     ├── users.ts
     ├── games.ts
@@ -273,11 +274,25 @@ Each component follows a consistent structure:
 - `ComponentName.stories.tsx` - Storybook stories (for UI components)
 
 ### Service Layer
-Services contain business logic and API interactions, organized by domain:
+Services are divided into two categories organized by purpose:
+
+**API Clients** - Handle HTTP communication with backend:
+- `*ApiClient.ts` files make REST API calls to backend endpoints
+- Handle authentication tokens, request/response transformation
+- Manage API error handling and retry logic
+- Keep HTTP concerns separate from business logic
+
+**Client-Side Services** - Handle frontend business logic:
+- Process data received from API clients
+- Implement client-side algorithms (chess logic, spaced repetition)
+- Provide computed values and derived state
 - Keep components focused on presentation
-- Centralize business rules
-- Make testing easier
-- Enable service reuse across components
+
+This separation ensures:
+- Clear distinction between API communication and business logic
+- Easy testing with mocked API clients
+- Reusable logic across components
+- Proper error handling for network operations
 
 ### State Management
 Zustand stores organized by domain with clear responsibilities:

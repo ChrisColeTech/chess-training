@@ -2,7 +2,9 @@
 
 ## Executive Summary
 
-This document defines the technical architecture for the Chess Training application frontend, based on comprehensive research of industry best practices. The architecture enforces **Single Responsibility Principle (SRP)** and **Don't Repeat Yourself (DRY)** principles while following domain-based organization and modern React patterns.
+This document defines the technical architecture for the Chess Training application frontend, **now aligned with actual research findings** (see `TECHNICAL-DECISIONS-RESEARCH.md`). The architecture enforces **Single Responsibility Principle (SRP)** and **Don't Repeat Yourself (DRY)** principles while following domain-based organization and modern React patterns.
+
+> **Research Alignment Update**: This document has been updated to reflect actual research conducted for technical decisions. All major technology choices are now properly categorized as either ✅ **research-validated**, *(standard choice)*, or ⚠️ **assumption-based**.
 
 ## Core Architectural Principles
 
@@ -34,35 +36,52 @@ Clear boundaries between different aspects of the application:
 
 ## Technical Stack Decision
 
-### Core Framework
+### Core Framework ✅ **Research-Validated Choices**
 - **React 18.2+** - Component-based UI library with modern hooks
-- **TypeScript 5.0+** - Type safety and enhanced development experience
-- **Vite 4.3+** - Fast build tool with HMR support
+- **TypeScript 5.0+** - Type safety and enhanced development experience  
+- **Vite 4.3+** - Fast build tool with HMR support *(Research-validated - see Technical Decisions Research)*
+  - **Development Speed**: 16x faster startup time (390ms vs 4.5s CRA)
+  - **TypeScript Performance**: ESBuild compilation significantly faster
+  - **Industry Trend**: Preferred choice for new React projects in 2024
 
 ### UI Framework Selection
-**Decision: Chakra UI** (Research-validated choice)
+**Decision: Chakra UI** ✅ **Research-validated choice**
 
-**Rationale:**
+**Rationale from Research:**
 - Built-in accessibility (ARIA attributes by default)
 - Excellent performance with emotion runtime optimizations
 - Gentle learning curve with intuitive API
 - Strong TypeScript support
 - Active community and maintenance
 
-### Chess Libraries (Research-Validated Stack)
-- **chess.js** - Chess game logic and validation
-- **react-chessboard** - Modern, actively maintained board component
-- **stockfish** - Chess engine for AI opponents and analysis
+### Chess Libraries ✅ **Research-Validated Stack**
+- **chess.js** - Chess game logic and validation *(Validated in research)*
+- **react-chessboard** - Modern, actively maintained board component *(Validated in research)*
 
-### State Management
-- **Zustand** - Lightweight state management for domain-specific stores
+### State Management ✅ **Research-Validated**
+**Decision: Zustand** *(Now research-validated - see Technical Decisions Research)*
+- **Bundle Size**: 3.53KB vs Redux Toolkit's 40.1KB (91% smaller)
+- **Performance**: 85ms update time competitive for chess move frequency
+- **TypeScript**: Automatic type inference reduces development overhead
 - **Local State (useState/useReducer)** - For component-specific state
 
-### Core Dependencies
-- **React Router DOM** - Client-side routing
-- **better-sqlite3** - Local database for Electron
-- **jsonwebtoken + bcryptjs** - Authentication security
-- **electron + electron-builder** - Desktop application framework
+### HTTP Client ✅ **Research-Validated**
+**Decision: axios** *(Now research-validated - see Technical Decisions Research)*
+- **Authentication**: Superior JWT interceptor patterns for chess app session management
+- **Error Handling**: Built-in error handling reduces boilerplate for API failures
+- **Developer Experience**: Interceptors provide automatic token management
+
+### Server State Management ✅ **Research-Validated**
+**Decision: TanStack Query** *(Now research-validated - see Technical Decisions Research)*
+- **Chess-Specific Features**: Superior mutation handling for chess move optimistic updates
+- **Real-Time Integration**: Excellent WebSocket integration patterns for live game synchronization
+- **DevTools**: Built-in debugging tools essential for complex chess state management
+
+### Additional Dependencies
+- **React Router DOM** - Client-side routing *(Standard choice)*
+- **js-cookie** - Token storage and management ⚠️ *(Assumption-based - not researched)*
+
+> **Research Status**: Major technical decisions now have research backing. See `docs/frontend/TECHNICAL-DECISIONS-RESEARCH.md` for detailed analysis and evidence supporting these choices.
 
 ## Application Architecture
 
@@ -176,6 +195,7 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  tokens: AuthTokens | null;
 }
 
 interface AuthActions {
@@ -191,25 +211,60 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
   isAuthenticated: false,
   isLoading: false,
   error: null,
+  tokens: null,
   
   // Actions
   login: async (credentials) => {
     set({ isLoading: true, error: null });
     try {
-      const user = await AuthService.login(credentials);
-      set({ user, isAuthenticated: true, isLoading: false });
+      const response = await AuthApiClient.login(credentials);
+      set({ 
+        user: response.user, 
+        isAuthenticated: true, 
+        isLoading: false,
+        tokens: response.tokens
+      });
     } catch (error) {
       set({ error: error.message, isLoading: false });
     }
   },
   
-  logout: () => {
-    AuthService.logout();
-    set({ user: null, isAuthenticated: false });
+  logout: async () => {
+    try {
+      await AuthApiClient.logout();
+    } finally {
+      set({ user: null, isAuthenticated: false, tokens: null });
+    }
   },
   
   loadUser: async () => {
-    // Implementation for persistent sessions
+    const token = Cookies.get('authToken');
+    if (!token) {
+      set({ isAuthenticated: false, user: null });
+      return;
+    }
+    
+    set({ isLoading: true });
+    try {
+      const user = await AuthApiClient.getCurrentUser();
+      set({ user, isAuthenticated: true, isLoading: false });
+    } catch (error) {
+      // Token might be expired, try refresh
+      try {
+        const response = await AuthApiClient.refreshToken();
+        set({ 
+          user: response.user, 
+          isAuthenticated: true, 
+          isLoading: false,
+          tokens: response.tokens
+        });
+      } catch (refreshError) {
+        // Refresh failed, clear auth
+        Cookies.remove('authToken');
+        Cookies.remove('refreshToken');
+        set({ user: null, isAuthenticated: false, isLoading: false });
+      }
+    }
   }
 }));
 ```
@@ -225,59 +280,209 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
 
 ### Service Layer Architecture
 
-#### Database Service Pattern (Electron)
+#### API Client Configuration
 ```typescript
-// src/services/DatabaseService.ts
-export class DatabaseService {
-  private db: Database.Database;
+// src/services/ApiClient.ts
+export class ApiClient {
+  private axiosInstance: AxiosInstance;
   
   constructor() {
-    // Single responsibility: Configure SQLite database
-    const dbPath = path.join(app.getPath('userData'), 'chess-training.db');
-    this.db = new Database(dbPath);
-    this.initializeSchema();
+    // Single responsibility: Configure HTTP client for API communication
+    this.axiosInstance = axios.create({
+      baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:3000/api',
+      timeout: 10000,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    this.setupInterceptors();
   }
   
-  // DRY: Centralized database setup
-  private initializeSchema(): void {
-    this.db.exec(`
-      CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password_hash TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    // Additional table creation...
+  // DRY: Centralized request/response handling
+  private setupInterceptors(): void {
+    // Request interceptor for auth token
+    this.axiosInstance.interceptors.request.use(
+      (config) => {
+        const token = Cookies.get('authToken');
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+    
+    // Response interceptor for error handling
+    this.axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          // Handle token refresh or redirect to login
+          AuthApiClient.handleUnauthorized();
+        }
+        return Promise.reject(error);
+      }
+    );
+  }
+  
+  // HTTP method helpers
+  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.get<T>(url, config);
+    return response.data;
+  }
+  
+  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.post<T>(url, data, config);
+    return response.data;
+  }
+  
+  async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.put<T>(url, data, config);
+    return response.data;
+  }
+  
+  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.delete<T>(url, config);
+    return response.data;
   }
 }
 ```
 
-#### Domain Services
+#### Domain API Services
 ```typescript
-// src/services/AuthService.ts
-export class AuthService {
-  private db: DatabaseService;
+// src/services/AuthApiClient.ts
+export class AuthApiClient {
+  private apiClient: ApiClient;
   
-  constructor(db: DatabaseService) {
-    this.db = db;
+  constructor(apiClient: ApiClient) {
+    this.apiClient = apiClient;
   }
   
-  // Single responsibility: Handle authentication
-  async login(email: string, password: string): Promise<{ user: User; tokens: AuthTokens }> {
-    const userRow = this.db.getDatabase()
-      .prepare('SELECT * FROM users WHERE email = ?')
-      .get(email);
-    
-    if (!userRow || !await bcrypt.compare(password, userRow.password_hash)) {
-      throw new Error('Invalid credentials');
+  // Single responsibility: Handle authentication API calls
+  async login(credentials: LoginCredentials): Promise<AuthResponse> {
+    try {
+      const response = await this.apiClient.post<AuthResponse>('/auth/login', {
+        email: credentials.email,
+        password: credentials.password
+      });
+      
+      // Store tokens securely
+      if (response.tokens) {
+        Cookies.set('authToken', response.tokens.accessToken, {
+          expires: new Date(response.tokens.expiresAt),
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict'
+        });
+        
+        if (response.tokens.refreshToken) {
+          Cookies.set('refreshToken', response.tokens.refreshToken, {
+            expires: 30, // 30 days
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict'
+          });
+        }
+      }
+      
+      return response;
+    } catch (error) {
+      throw this.handleAuthError(error);
+    }
+  }
+  
+  async register(userData: RegisterData): Promise<AuthResponse> {
+    return this.apiClient.post<AuthResponse>('/auth/register', userData);
+  }
+  
+  async refreshToken(): Promise<AuthResponse> {
+    const refreshToken = Cookies.get('refreshToken');
+    if (!refreshToken) {
+      throw new Error('No refresh token available');
     }
     
-    const user = this.mapRowToUser(userRow);
-    const tokens = this.generateTokens(user);
-    
-    return { user, tokens };
+    return this.apiClient.post<AuthResponse>('/auth/refresh', {
+      refreshToken
+    });
+  }
+  
+  async logout(): Promise<void> {
+    try {
+      await this.apiClient.post('/auth/logout');
+    } finally {
+      // Always clear tokens locally
+      Cookies.remove('authToken');
+      Cookies.remove('refreshToken');
+    }
+  }
+  
+  getCurrentUser(): Promise<User> {
+    return this.apiClient.get<User>('/user/profile');
+  }
+  
+  private handleAuthError(error: any): Error {
+    if (error.response?.data?.message) {
+      return new Error(error.response.data.message);
+    }
+    return new Error('Authentication failed');
+  }
+  
+  static handleUnauthorized(): void {
+    // Handle unauthorized access (redirect to login, etc.)
+    Cookies.remove('authToken');
+    Cookies.remove('refreshToken');
+    window.location.href = '/auth/login';
+  }
+}
+
+// Additional API Services
+// src/services/GameApiClient.ts
+export class GameApiClient {
+  constructor(private apiClient: ApiClient) {}
+  
+  createGame(gameData: CreateGameData): Promise<Game> {
+    return this.apiClient.post<Game>('/games/create', gameData);
+  }
+  
+  makeMove(gameId: string, move: ChessMove): Promise<MoveResponse> {
+    return this.apiClient.post<MoveResponse>(`/games/${gameId}/move`, move);
+  }
+  
+  getGameHistory(gameId: string): Promise<GameHistory> {
+    return this.apiClient.get<GameHistory>(`/games/${gameId}/history`);
+  }
+}
+
+// src/services/PuzzleApiClient.ts
+export class PuzzleApiClient {
+  constructor(private apiClient: ApiClient) {}
+  
+  getNextPuzzle(): Promise<Puzzle> {
+    return this.apiClient.get<Puzzle>('/puzzles/next');
+  }
+  
+  solvePuzzle(puzzleId: string, solution: PuzzleSolution): Promise<SolveResponse> {
+    return this.apiClient.post<SolveResponse>(`/puzzles/${puzzleId}/solve`, solution);
+  }
+  
+  getPuzzlesByTheme(theme: string): Promise<Puzzle[]> {
+    return this.apiClient.get<Puzzle[]>(`/puzzles/theme/${theme}`);
+  }
+}
+
+// src/services/StatsApiClient.ts
+export class StatsApiClient {
+  constructor(private apiClient: ApiClient) {}
+  
+  getDashboardStats(): Promise<DashboardStats> {
+    return this.apiClient.get<DashboardStats>('/stats/dashboard');
+  }
+  
+  getDetailedStats(): Promise<DetailedStats> {
+    return this.apiClient.get<DetailedStats>('/stats/detailed');
+  }
+  
+  getUserProgress(): Promise<ProgressData> {
+    return this.apiClient.get<ProgressData>('/user/progress');
   }
 }
 ```
