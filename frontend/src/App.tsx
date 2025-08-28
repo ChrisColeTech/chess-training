@@ -11,6 +11,7 @@ import { LandingPage } from './pages/LandingPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { PageTransition } from './components/PageTransition'
 import { AuthNavigator } from './components/AuthNavigator'
+import { MainLayout } from './components/layout/MainLayout'
 
 // Puzzle pages
 import TacticalPuzzlesPage from './pages/puzzles/TacticalPuzzlesPage'
@@ -88,7 +89,8 @@ function App() {
   return (
     <Router>
       <AuthNavigator />
-      <Routes>
+      <MainLayout>
+        <Routes>
         {/* Landing page as home */}
         <Route 
           path="/" 
@@ -221,7 +223,7 @@ function App() {
 
         {/* Study routes */}
         <Route 
-          path="/study/opening-explorer" 
+          path="/study/openings" 
           element={
             <PageTransition direction="slide-left">
               <OpeningExplorerPage />
@@ -229,7 +231,7 @@ function App() {
           } 
         />
         <Route 
-          path="/study/endgame-library" 
+          path="/study/endgames" 
           element={
             <PageTransition direction="slide-left">
               <EndgameLibraryPage />
@@ -237,7 +239,7 @@ function App() {
           } 
         />
         <Route 
-          path="/study/master-games" 
+          path="/study/masters" 
           element={
             <PageTransition direction="slide-left">
               <MasterGamesPage />
@@ -255,7 +257,7 @@ function App() {
 
         {/* Progress routes */}
         <Route 
-          path="/progress" 
+          path="/progress/overview" 
           element={
             <PageTransition direction="slide-left">
               <ProgressOverviewPage />
@@ -263,7 +265,7 @@ function App() {
           } 
         />
         <Route 
-          path="/progress/detailed" 
+          path="/progress/detailed-stats" 
           element={
             <PageTransition direction="slide-left">
               <DetailedStatsPage />
@@ -323,7 +325,7 @@ function App() {
 
         {/* Help routes */}
         <Route 
-          path="/help" 
+          path="/help/center" 
           element={
             <PageTransition direction="slide-left">
               <HelpCenterPage />
@@ -346,7 +348,8 @@ function App() {
             </PageTransition>
           } 
         />
-      </Routes>
+        </Routes>
+      </MainLayout>
     </Router>
   )
 }

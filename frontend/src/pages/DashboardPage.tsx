@@ -1,4 +1,9 @@
-import { CheckCircle, Flame, TestTube, Info, LogOut, Moon, Star, Sun, Target, TrendingUp, User, Zap } from 'lucide-react'
+import { 
+  CheckCircle, Flame, TestTube, Info, LogOut, Moon, Star, Sun, Target, TrendingUp, User, Zap,
+  PlayCircle, Trophy, BookOpen, Settings, BarChart3, Puzzle, Brain, Shield, HelpCircle,
+  ChevronRight, Clock, Award, Users, Search, Database, Gamepad2, Lightbulb
+} from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { useThemeStore, themes } from '../stores/themeStore'
 import { useAuthStore } from '../stores/authStore'
 import { soundFX } from '../utils/soundEffects'
@@ -114,78 +119,285 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Component Showcase */}
-        <div className="space-y-8">
-          <h2 className="text-2xl font-bold text-center mb-8">Tailwind CSS Components Showcase</h2>
-          
+        {/* Navigation Sections */}
+        <div className="space-y-12">
+          <h2 className="text-3xl font-bold text-center mb-8">Chess Training Dashboard</h2>
+
+          {/* Quick Actions */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <Link 
+              to="/puzzles/tactical" 
+              onClick={() => soundFX.playClick()}
+              className={`flex flex-col items-center p-6 ${theme.surface} rounded-xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl`}
+            >
+              <Puzzle size={32} className={`${colors.primary} mb-3`} />
+              <span className="font-bold text-lg">Solve Puzzles</span>
+              <span className="text-sm opacity-70">Tactical training</span>
+            </Link>
+
+            <Link 
+              to="/play/computer" 
+              onClick={() => soundFX.playClick()}
+              className={`flex flex-col items-center p-6 ${theme.surface} rounded-xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl`}
+            >
+              <PlayCircle size={32} className={`${colors.primary} mb-3`} />
+              <span className="font-bold text-lg">Play Game</span>
+              <span className="text-sm opacity-70">vs Computer</span>
+            </Link>
+
+            <Link 
+              to="/progress/overview" 
+              onClick={() => soundFX.playClick()}
+              className={`flex flex-col items-center p-6 ${theme.surface} rounded-xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl`}
+            >
+              <BarChart3 size={32} className={`${colors.primary} mb-3`} />
+              <span className="font-bold text-lg">Progress</span>
+              <span className="text-sm opacity-70">View stats</span>
+            </Link>
+
+            <Link 
+              to="/study/plans" 
+              onClick={() => soundFX.playClick()}
+              className={`flex flex-col items-center p-6 ${theme.surface} rounded-xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl`}
+            >
+              <BookOpen size={32} className={`${colors.primary} mb-3`} />
+              <span className="font-bold text-lg">Study</span>
+              <span className="text-sm opacity-70">Learning plans</span>
+            </Link>
+          </div>
+
+          {/* Main Navigation Categories */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Enhanced Stats Card */}
-            <div className={`${theme.surface} rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 gpu-accelerated group`}>
-              <h3 className="text-lg font-semibold mb-4 group-hover:text-cyan-400 transition-colors">Player Statistics</h3>
-              <div className="space-y-4">
-                <div className="text-center">
-                  <div className="text-sm opacity-60">Chess Rating</div>
-                  <div className="text-3xl font-bold hover:animate-level-up cursor-default">1,450</div>
-                  <div className={`text-sm text-${theme.primary}-400 animate-success-bounce`}>+25 this week <Zap className="w-4 h-4 inline" /></div>
-                </div>
-                <div className="w-full bg-black/20 rounded-full h-3 overflow-hidden">
-                  <div className={`bg-gradient-to-r ${theme.primary} h-3 rounded-full shadow-lg transition-all duration-1000 ease-out animate-pulse-glow`} 
-                       style={{width: '75%', 
-                               background: 'linear-gradient(90deg, #3b82f6, #06b6d4, #3b82f6)',
-                               backgroundSize: '200% 100%',
-                               animation: 'shimmer 2s infinite'
-                              }}>
-                  </div>
-                </div>
-                <div className="flex justify-center space-x-2">
-                  <span className="px-3 py-1 bg-green-500/20 text-green-300 border border-green-500/30 rounded-full text-sm cursor-pointer hover:bg-green-500/30 transition-colors">Improving <TrendingUp className="w-4 h-4 inline" /></span>
-                  <span className={`px-3 py-1 bg-${theme.primary}-500/20 text-${theme.primary}-300 border border-${theme.primary}-500/30 rounded-full text-sm cursor-pointer hover:bg-${theme.primary}-500/30 transition-colors`}>Active <Target className="w-4 h-4 inline" /></span>
-                </div>
-              </div>
-            </div>
-
-            {/* Profile Card */}
+            
+            {/* Play Section */}
             <div className={`${theme.surface} rounded-2xl p-6 shadow-xl`}>
-              <h3 className="text-lg font-semibold mb-4">Player Profile</h3>
-              <div className="space-y-4 text-center">
-                <div className={`w-16 h-16 mx-auto bg-${theme.primary}-500/20 rounded-full flex items-center justify-center border-2 border-${theme.primary}-500/50`}>
-                  <User size={32} className={`text-${theme.primary}-400`} />
+              <div className="flex items-center mb-6">
+                <div className={`p-3 ${colors.bgLight} rounded-lg mr-4`}>
+                  <Gamepad2 size={24} className={colors.primary} />
                 </div>
-                <div>
-                  <div className="text-lg font-bold">Chess Master</div>
-                  <div className="opacity-60">Intermediate Player</div>
-                </div>
-                <div className="flex justify-center space-x-2">
-                  <span className={`px-3 py-1 bg-${theme.primary}-500/20 text-${theme.primary}-300 border border-${theme.primary}-500/30 rounded-full text-sm`}>Level 12</span>
-                  <span className="px-3 py-1 bg-orange-500/20 text-orange-300 border border-orange-500/30 rounded-full text-sm">Tournament Ready</span>
-                </div>
+                <h3 className="text-xl font-bold">Play Chess</h3>
               </div>
-            </div>
-
-            {/* Controls Card */}
-            <div className={`${theme.surface} rounded-2xl p-6 shadow-xl`}>
-              <h3 className="text-lg font-semibold mb-4">Game Controls</h3>
               <div className="space-y-3">
-                <button className={`w-full flex items-center justify-center space-x-2 px-4 py-3 bg-${theme.primary}-500 hover:bg-${theme.primary}-600 text-white rounded-lg transition-all shadow-lg hover:shadow-xl`}>
-                  <Star size={16} />
-                  <span>Start Game</span>
-                </button>
-                <button className={`w-full px-4 py-3 bg-${theme.primary}-500/20 border border-${theme.primary}-500/50 text-${theme.primary}-300 hover:bg-${theme.primary}-500/30 rounded-lg transition-colors`}>
-                  Training Mode
-                </button>
-                <button className="w-full px-4 py-3 bg-white/10 hover:bg-white/20 rounded-lg transition-colors">
-                  Practice Puzzles
-                </button>
-                <div className="w-full bg-black/20 rounded-full h-2">
-                  <div className="bg-orange-500 h-2 rounded-full shadow-lg" style={{width: '60%'}}></div>
+                <Link to="/play/computer" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <PlayCircle size={18} className={`${colors.primary} mr-3`} />
+                    <span>Play vs Computer</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/play/analysis" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Search size={18} className={`${colors.primary} mr-3`} />
+                    <span>Analysis Board</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/play/review" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Clock size={18} className={`${colors.primary} mr-3`} />
+                    <span>Game Review</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Puzzles Section */}
+            <div className={`${theme.surface} rounded-2xl p-6 shadow-xl`}>
+              <div className="flex items-center mb-6">
+                <div className={`p-3 ${colors.bgLight} rounded-lg mr-4`}>
+                  <Puzzle size={24} className={colors.primary} />
                 </div>
-                <p className="text-sm opacity-60 text-center">Training Progress: 60%</p>
+                <h3 className="text-xl font-bold">Puzzle Training</h3>
+              </div>
+              <div className="space-y-3">
+                <Link to="/puzzles/tactical" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Target size={18} className={`${colors.primary} mr-3`} />
+                    <span>Tactical Puzzles</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/puzzles/opening" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Lightbulb size={18} className={`${colors.primary} mr-3`} />
+                    <span>Opening Puzzles</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/puzzles/endgame" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Shield size={18} className={`${colors.primary} mr-3`} />
+                    <span>Endgame Puzzles</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/puzzles/custom" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <User size={18} className={`${colors.primary} mr-3`} />
+                    <span>Custom Puzzles</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Study Section */}
+            <div className={`${theme.surface} rounded-2xl p-6 shadow-xl`}>
+              <div className="flex items-center mb-6">
+                <div className={`p-3 ${colors.bgLight} rounded-lg mr-4`}>
+                  <BookOpen size={24} className={colors.primary} />
+                </div>
+                <h3 className="text-xl font-bold">Study Materials</h3>
+              </div>
+              <div className="space-y-3">
+                <Link to="/study/plans" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <BookOpen size={18} className={`${colors.primary} mr-3`} />
+                    <span>Study Plans</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/study/openings" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Lightbulb size={18} className={`${colors.primary} mr-3`} />
+                    <span>Opening Explorer</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/study/endgames" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Database size={18} className={`${colors.primary} mr-3`} />
+                    <span>Endgame Library</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/study/masters" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Users size={18} className={`${colors.primary} mr-3`} />
+                    <span>Master Games</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Progress Section */}
+            <div className={`${theme.surface} rounded-2xl p-6 shadow-xl`}>
+              <div className="flex items-center mb-6">
+                <div className={`p-3 ${colors.bgLight} rounded-lg mr-4`}>
+                  <BarChart3 size={24} className={colors.primary} />
+                </div>
+                <h3 className="text-xl font-bold">Progress Tracking</h3>
+              </div>
+              <div className="space-y-3">
+                <Link to="/progress/overview" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <BarChart3 size={18} className={`${colors.primary} mr-3`} />
+                    <span>Overview</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/progress/detailed-stats" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <TrendingUp size={18} className={`${colors.primary} mr-3`} />
+                    <span>Detailed Stats</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/progress/achievements" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Trophy size={18} className={`${colors.primary} mr-3`} />
+                    <span>Achievements</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/progress/learning-path" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Brain size={18} className={`${colors.primary} mr-3`} />
+                    <span>Learning Path</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Settings Section */}
+            <div className={`${theme.surface} rounded-2xl p-6 shadow-xl`}>
+              <div className="flex items-center mb-6">
+                <div className={`p-3 ${colors.bgLight} rounded-lg mr-4`}>
+                  <Settings size={24} className={colors.primary} />
+                </div>
+                <h3 className="text-xl font-bold">Settings & Account</h3>
+              </div>
+              <div className="space-y-3">
+                <Link to="/profile" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <User size={18} className={`${colors.primary} mr-3`} />
+                    <span>Profile</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/settings/account" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Settings size={18} className={`${colors.primary} mr-3`} />
+                    <span>Account Settings</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/settings/preferences" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <User size={18} className={`${colors.primary} mr-3`} />
+                    <span>Preferences</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/settings/board" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Gamepad2 size={18} className={`${colors.primary} mr-3`} />
+                    <span>Board Settings</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Help Section */}
+            <div className={`${theme.surface} rounded-2xl p-6 shadow-xl`}>
+              <div className="flex items-center mb-6">
+                <div className={`p-3 ${colors.bgLight} rounded-lg mr-4`}>
+                  <HelpCircle size={24} className={colors.primary} />
+                </div>
+                <h3 className="text-xl font-bold">Help & Support</h3>
+              </div>
+              <div className="space-y-3">
+                <Link to="/help/center" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <HelpCircle size={18} className={`${colors.primary} mr-3`} />
+                    <span>Help Center</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/help/tutorials" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <BookOpen size={18} className={`${colors.primary} mr-3`} />
+                    <span>Tutorials</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
+                <Link to="/help/contact" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+                  <div className="flex items-center">
+                    <Users size={18} className={`${colors.primary} mr-3`} />
+                    <span>Contact Support</span>
+                  </div>
+                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                </Link>
               </div>
             </div>
           </div>
 
-          {/* Theme System Demo */}
-          <div className={`${theme.surface} rounded-2xl p-6 shadow-xl mt-8`}>
+          {/* Theme System Demo - Moved to bottom */}
+          <div className={`${theme.surface} rounded-2xl p-6 shadow-xl mt-12`}>
             <h3 className="text-lg font-semibold mb-6 text-center">Gaming Theme Showcase</h3>
             <div className="space-y-6">
               <div className="flex justify-center mb-4">
