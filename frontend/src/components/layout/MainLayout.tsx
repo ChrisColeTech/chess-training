@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { useThemeStore } from '../../stores/themeStore'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
+import { StatusBar } from './StatusBar'
 
 interface MainLayoutProps {
   children: React.ReactNode
@@ -47,6 +48,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             {children}
           </div>
         </main>
+        
+        {/* Status Bar */}
+        <StatusBar />
       </div>
     </div>
   )

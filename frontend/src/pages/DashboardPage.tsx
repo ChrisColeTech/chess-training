@@ -1,7 +1,7 @@
 import { 
   CheckCircle, Flame, TestTube, Info, LogOut, Moon, Star, Sun, Target, TrendingUp, User, Zap,
   PlayCircle, Trophy, BookOpen, Settings, BarChart3, Puzzle, Brain, Shield, HelpCircle,
-  ChevronRight, Clock, Award, Users, Search, Database, Gamepad2, Lightbulb
+  ChevronRight, Clock, Users, Search, Database, Gamepad2, Lightbulb
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useThemeStore, themes } from '../stores/themeStore'

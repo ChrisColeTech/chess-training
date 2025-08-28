@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Bell, LogOut, User, Settings, Menu } from 'lucide-react'
-import { useThemeStore } from '../../stores/themeStore'
 import { useAuthStore } from '../../stores/authStore'
 import { ThemeSwitcher } from '../ui/ThemeSwitcher'
 import { soundFX } from '../../utils/soundEffects'
@@ -42,12 +41,10 @@ const getPageTitle = (pathname: string): string => {
   return routes[pathname] || 'Chess Training'
 }
 
-export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollapsed }) => {
+export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
-  const { getCurrentTheme } = useThemeStore()
   const { logout } = useAuthStore()
-  const theme = getCurrentTheme()
   const location = useLocation()
   
   const pageTitle = getPageTitle(location.pathname)

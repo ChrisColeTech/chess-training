@@ -6,7 +6,6 @@ import {
   Gamepad2, Search, Clock, Target, Lightbulb, Shield, User as UserIcon,
   Trophy, TrendingUp, Brain, Database, Users, User, Zap
 } from 'lucide-react'
-import { useThemeStore } from '../../stores/themeStore'
 import { soundFX } from '../../utils/soundEffects'
 
 interface SidebarProps {
@@ -98,8 +97,6 @@ const navigationItems: NavItem[] = [
 
 export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['play', 'puzzles', 'study', 'progress']))
-  const { getCurrentTheme } = useThemeStore()
-  const theme = getCurrentTheme()
   const location = useLocation()
 
   const toggleSection = (sectionId: string) => {
