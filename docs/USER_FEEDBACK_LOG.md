@@ -132,6 +132,136 @@ All requirements properly implemented and verified against documented specificat
 - ✅ Check for architectural consistency
 - ❌ Never rely on code existence alone
 
+## 🔍 **CHESS BOARD IMPLEMENTATION ANALYSIS - MAIN vs DEVELOPMENT**
+
+**Date:** 2025-08-28  
+**Analysis:** Compared working POC chess board (main branch) vs broken development implementation
+
+### **ORIGINAL WORKING IMPLEMENTATION (main branch)**
+
+**File:** `/frontend/src/components/ChessBoard.tsx` (POC version)
+
+**Key Working Features:**
+```typescript
+// ✅ WORKING: Click-to-move with proper move validation
+const onSquareClick = useCallback((square: Square) => {
+  // Proper move validation with chess.js
+  const moves = chessInstance.moves({ square: moveFrom, verbose: true })
+  const foundMove = moves.find((m: any) => m.from === moveFrom && m.to === square)
+  if (!foundMove) return // Invalid move handling
+  makeMove(moveData) // Clean move execution
+}, [chessInstance, moveFrom, getMoveOptions, makeMove])
+
+// ✅ WORKING: Visual move indicators
+const getMoveOptions = useCallback((square: Square) => {
+  const moves = chessInstance.moves({ square, verbose: true })
+  const newSquares: { [key: string]: any } = {}
+  moves.map((move: any) => {
+    newSquares[move.to] = {
+      background: 'radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)',
+      borderRadius: '50%' // ✅ Proper move dots
+    }
+  })
+  setOptionSquares(newSquares)
+}, [chessInstance])
+
+// ✅ WORKING: Last move highlighting
+customSquareStyles={{
+  ...optionSquares,        // Move indicators
+  ...rightClickedSquares,  // Right-click analysis
+  ...(lastMove && {        // Last move highlighting
+    [lastMove.from]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' },
+    [lastMove.to]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+  })
+}}
+
+// ✅ WORKING: Proper board sizing
+<Chessboard
+  boardWidth={width} // Controlled width prop
+  arePiecesDraggable={false} // Click-to-move, not drag
+  areArrowsAllowed={true}    // Analysis arrows
+/>
+```
+
+### **CURRENT BROKEN IMPLEMENTATION (development branch)**
+
+**Files:** Various puzzle pages with inconsistent approaches
+
+**Problems Identified:**
+
+#### **1. Inconsistent Board Components**
+- **TacticalPuzzlesPage:** Direct `<Chessboard>` from react-chessboard
+- **EndgamePuzzlesPage:** Direct `<Chessboard>` from react-chessboard  
+- **OpeningPuzzlesPage:** Custom `<PuzzleBoard>` wrapper
+- **CustomPuzzlesPage:** Custom `<PuzzleBoard>` wrapper
+
+#### **2. Missing Move Validation Logic**
+```typescript
+// ❌ BROKEN: Simple drop handler without proper validation
+const onDrop = (sourceSquare: string, targetSquare: string) => {
+  const move = game.move({
+    from: sourceSquare,
+    to: targetSquare,
+    promotion: 'q', // Always queen promotion
+  })
+  if (move === null) return false // No move validation feedback
+  // No visual indicators, no move options, no highlighting
+}
+```
+
+#### **3. Missing Visual Feedback Systems**
+- ❌ No move option indicators (dots showing valid moves)
+- ❌ No last move highlighting 
+- ❌ No right-click analysis squares
+- ❌ No visual feedback for invalid moves
+
+#### **4. Board Sizing Issues**
+```typescript
+// ❌ BROKEN: Uncontrolled aspect-ratio sizing
+<div className="aspect-square max-w-2xl mx-auto">
+  <Chessboard position={boardPosition} />
+</div>
+// Result: Board too big, cuts off back row, no width control
+```
+
+#### **5. Architecture Problems**
+- ❌ Mock data hardcoded in UI components
+- ❌ No proper separation of chess logic vs UI
+- ❌ Inconsistent state management across puzzle pages
+
+### **LESSONS LEARNED**
+
+#### **Chess Board Implementation Principles**
+1. **Use controlled board sizing** with explicit `boardWidth` prop
+2. **Implement proper move validation** with visual feedback
+3. **Add move indicators** showing valid moves as dots/highlights
+4. **Include last move highlighting** to show previous move
+5. **Use click-to-move** instead of drag-and-drop for reliability
+6. **Separate chess logic** from UI presentation layer
+
+#### **Original POC Success Factors**
+- Simple, focused implementation (221 lines total)
+- Clear separation: gameStore for logic, ChessBoard for UI
+- Proper chess.js integration with move validation
+- Comprehensive visual feedback system
+- Material-UI for consistent styling
+- Single board component used consistently
+
+#### **Development Branch Failures**
+- Over-engineering with multiple board implementations
+- Missing chess game logic integration
+- No move validation or visual feedback
+- Inconsistent component patterns
+- Mock data architectural anti-patterns
+
+### **RECOMMENDED FIXES**
+1. **Standardize on single board component** based on original POC pattern
+2. **Implement proper move validation** with chess.js integration
+3. **Add visual move indicators** and last move highlighting
+4. **Use controlled board sizing** to prevent overflow issues
+5. **Extract chess logic** from UI components to proper services
+6. **Remove mock data** from UI components, use proper data layer
+
 ---
 
 ## 🎯 Feedback Entry #001: Play vs Computer Page Over-Engineering
