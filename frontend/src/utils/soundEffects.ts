@@ -74,6 +74,16 @@ class SoundEffects {
     setTimeout(() => this.createBeep(550, 0.1, 0.04), 80)
   }
 
+  // Chess piece capture sound
+  playCapture() {
+    this.createBeep(320, 0.2, 0.07)
+  }
+
+  // Check sound
+  playCheck() {
+    this.createBeep(700, 0.15, 0.06)
+  }
+
   // Enable/disable sounds
   toggle() {
     this.enabled = !this.enabled

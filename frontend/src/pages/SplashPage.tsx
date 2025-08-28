@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useThemeStore } from '../stores/themeStore'
+import { FaChessKing } from 'react-icons/fa'
+import { FaChessQueen } from 'react-icons/fa'
+import { FaChessRook } from 'react-icons/fa'
+import { FaChessBishop } from 'react-icons/fa'
+import { FaChessKnight } from 'react-icons/fa'
+import { FaChessPawn } from 'react-icons/fa'
 
 interface SplashPageProps {
   onLoadingComplete: () => void
@@ -82,7 +88,7 @@ export const SplashPage: React.FC<SplashPageProps> = ({ onLoadingComplete }) => 
         {/* Game Logo/Title */}
         <div className="space-y-2">
           <div className={`text-6xl font-bold bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
-            ♔ ♕ ♖ ♗ ♘ ♙
+            <FaChessKing className="w-4 h-4 inline" /> <FaChessQueen className="w-4 h-4 inline" /> <FaChessRook className="w-4 h-4 inline" /> <FaChessBishop className="w-4 h-4 inline" /> <FaChessKnight className="w-4 h-4 inline" /> <FaChessPawn className="w-4 h-4 inline" />
           </div>
           <h1 className="text-4xl font-bold">
             Chess Training Game

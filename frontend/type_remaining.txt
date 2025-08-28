@@ -1,0 +1,156 @@
+src/components/help/tutorials/TutorialGrid.tsx(119,55): error TS2322: Type 'string | { name: string; title: string; avatar?: string | undefined; }' is not assignable to type 'ReactNode'.
+src/components/help/tutorials/TutorialPlayer.tsx(78,63): error TS2322: Type 'string | { name: string; title: string; avatar?: string | undefined; }' is not assignable to type 'ReactNode'.
+src/components/play/computer/ChessGameBoard.tsx(43,5): error TS2322: Type 'void' is not assignable to type 'boolean'.
+src/components/progress/achievements/AchievementCard.tsx(106,9): error TS2322: Type '{ key: number; size: number; weight: string; className: string; }' is not assignable to type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+src/components/progress/achievements/AchievementStats.tsx(133,17): error TS2322: Type '{ key: number; size: number; weight: string; className: string; }' is not assignable to type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+src/components/progress/achievements/BadgeDetails.tsx(163,13): error TS2322: Type '{ size: number; className: string; weight: string; }' is not assignable to type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+src/components/progress/learning/StudyPlanner.tsx(208,27): error TS2322: Type '{ children: Element[]; key: string; initial: { opacity: number; x: number; }; animate: { opacity: number; x: number; }; transition: { delay: number; }; className: string; }' is not assignable to type 'IntrinsicAttributes & AnimatedProps<{ children?: ReactNode; className?: string | undefined; style?: { accentColor?: AccentColor | undefined; ... 843 more ...; matrix3d?: readonly [...] | undefined; } | undefined; ... 262 more ...; ref?: ((instance: HTMLDivElement | null) => void) | ... 2 more ... | undefined; }> & {...'.
+src/components/progress/learning/StudyPlanner.tsx(266,23): error TS2322: Type '{ children: Element[]; key: string; initial: { opacity: number; y: number; }; animate: { opacity: number; y: number; }; transition: { delay: number; }; className: string; onClick: () => void; }' is not assignable to type 'IntrinsicAttributes & AnimatedProps<{ children?: ReactNode; className?: string | undefined; style?: { accentColor?: AccentColor | undefined; ... 843 more ...; matrix3d?: readonly [...] | undefined; } | undefined; ... 262 more ...; ref?: ((instance: HTMLDivElement | null) => void) | ... 2 more ... | undefined; }> & {...'.
+src/components/progress/learning/StudyPlanner.tsx(381,21): error TS2322: Type '{ children: Element[]; key: string; initial: { opacity: number; y: number; }; animate: { opacity: number; y: number; }; transition: { delay: number; }; className: string; }' is not assignable to type 'IntrinsicAttributes & AnimatedProps<{ children?: ReactNode; className?: string | undefined; style?: { accentColor?: AccentColor | undefined; ... 843 more ...; matrix3d?: readonly [...] | undefined; } | undefined; ... 262 more ...; ref?: ((instance: HTMLDivElement | null) => void) | ... 2 more ... | undefined; }> & {...'.
+src/components/puzzles/custom/CustomPuzzleBoard.tsx(30,13): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+src/components/puzzles/custom/CustomPuzzleBoard.tsx(33,13): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+src/components/settings/account/DataManagement.tsx(336,23): error TS2322: Type '{ checked: boolean; onCheckedChange: (checked: boolean) => void; size: string; }' is not assignable to type 'IntrinsicAttributes & Omit<SwitchProps & RefAttributes<HTMLButtonElement>, "ref"> & RefAttributes<HTMLButtonElement>'.
+src/components/settings/board/PieceSelector.tsx(130,15): error TS2322: Type '{ id: PieceSet; name: string; preview: string; description?: string | undefined; }' is not assignable to type '{ id: PieceSet; name: string; preview: string; description: string; }'.
+src/components/study/endgames/EndgameCategories.tsx(11,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/components/study/endgames/EndgameCategories.tsx(12,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/components/study/endgames/EndgameCategories.tsx(13,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/components/study/endgames/EndgameCategories.tsx(18,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/components/study/endgames/EndgameCategories.tsx(19,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/components/study/endgames/EndgameCategories.tsx(20,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/components/study/endgames/EndgameCategories.tsx(21,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/components/study/endgames/EndgameCategories.tsx(22,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/components/study/endgames/EndgameCategories.tsx(23,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/components/study/endgames/PositionViewer.tsx(219,15): error TS2322: Type '{ from: string; to: string; color: string; brush: string; }[]' is not assignable to type 'Arrow[]'.
+src/components/study/explorer/OpeningBoard.tsx(70,11): error TS2322: Type '[string, string, string][]' is not assignable to type 'Arrow[]'.
+src/components/study/explorer/OpeningInfo.tsx(55,31): error TS2322: Type '(tab: ExplorerTab) => void' is not assignable to type '(value: string) => void'.
+src/components/study/explorer/OpeningSearch.tsx(161,79): error TS2322: Type '{ children: OpeningDifficulty; className: string; size: string; }' is not assignable to type 'IntrinsicAttributes & BadgeProps'.
+src/components/ui/ThemeSwitcher.tsx(7,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ className?: string | undefined; size?: number | undefined; weight?: string | undefined; }>'.
+src/components/ui/ThemeSwitcher.tsx(8,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ className?: string | undefined; size?: number | undefined; weight?: string | undefined; }>'.
+src/components/ui/ThemeSwitcher.tsx(9,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ className?: string | undefined; size?: number | undefined; weight?: string | undefined; }>'.
+src/components/ui/ThemeSwitcher.tsx(10,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ className?: string | undefined; size?: number | undefined; weight?: string | undefined; }>'.
+src/components/ui/ThemeSwitcher.tsx(11,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ className?: string | undefined; size?: number | undefined; weight?: string | undefined; }>'.
+src/data/puzzleCategories.ts(2,10): error TS1484: 'PuzzleCategory' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/puzzleCategories.ts(2,26): error TS1484: 'PuzzleStats' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/puzzleCategories.ts(2,39): error TS1484: 'RecentPuzzle' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/puzzleCategories.ts(2,53): error TS1484: 'Achievement' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/registration.ts(3,10): error TS1484: 'SkillLevelOption' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(7,3): error TS1484: 'PerformanceAnalytics' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(8,3): error TS1484: 'StudyStreak' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(9,3): error TS1484: 'SkillProgression' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(10,3): error TS1484: 'Achievement' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(11,3): error TS1484: 'Goal' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(12,3): error TS1484: 'LearningPath' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(13,3): error TS1484: 'TrainingSession' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(14,3): error TS1484: 'ActivityDataPoint' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(15,3): error TS1484: 'RatingDataPoint' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(16,3): error TS1484: 'TimePeriod' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(17,3): error TS1484: 'SkillCategory' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(18,3): error TS1484: 'SessionType' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(19,3): error TS1484: 'AchievementStatus' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/data/userProgress.ts(20,3): error TS1484: 'MockDataConfig' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/useAccount.ts(47,5): error TS2322: Type 'Promise<{ success: true; data?: unknown; }>' is not assignable to type 'Promise<{ success: false; error: string; }>'.
+src/hooks/useAccount.ts(399,33): error TS2339: Property 'error' does not exist on type '{ success: boolean; data: { secret: string; qrCode: string; }; }'.
+src/hooks/useAccount.ts(844,33): error TS2339: Property 'error' does not exist on type '{ success: boolean; data: { requestId: string; estimatedTime: string; downloadUrl: string; }; }'.
+src/hooks/useAccount.ts(877,25): error TS2339: Property 'error' does not exist on type '{ success: boolean; data: { requestId: string; cancellationDeadline: number; }; }'.
+src/hooks/useLearningPath.ts(235,38): error TS2339: Property 'expectedBenefit' does not exist on type 'LearningRecommendation'.
+src/hooks/useOpeningExplorer.ts(439,5): error TS2322: Type '(from: string, to: string) => Promise<boolean>' is not assignable to type '(from: string, to: string) => boolean'.
+src/hooks/usePreferences.ts(82,9): error TS2322: Type 'any' is not assignable to type 'never'.
+src/hooks/usePreferences.ts(87,9): error TS2322: Type 'any' is not assignable to type 'never'.
+src/hooks/usePreferences.ts(236,11): error TS2322: Type 'string | number | GeneralPreferences | AppearancePreferences | LanguagePreferences | AccessibilityPreferences | ... 5 more ... | SoundAnimationPreferences' is not assignable to type 'undefined'.
+src/hooks/useProgressOverview.ts(122,5): error TS2322: Type '({ id: string; title: string; value: string; change: string; trend: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; priority: number; } | { ...; })[]' is not assignable to type 'StatCard[]'.
+src/hooks/usePuzzleSelection.ts(5,3): error TS1484: 'PuzzleCategory' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/usePuzzleSelection.ts(6,3): error TS1484: 'PuzzleStats' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/usePuzzleSelection.ts(7,3): error TS1484: 'RecentPuzzle' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/usePuzzleSelection.ts(8,3): error TS1484: 'Achievement' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/usePuzzleSelection.ts(9,3): error TS1484: 'PuzzleSelectionFilters' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/useRegister.ts(7,26): error TS1484: 'RegisterForm' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/useRegister.ts(16,11): error TS2339: Property 'register' does not exist on type 'AuthState'.
+src/hooks/useResetPassword.ts(11,3): error TS1484: 'ResetPasswordForm' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/useResetPassword.ts(12,3): error TS1484: 'ResetPasswordState' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/useResetPassword.ts(13,3): error TS1484: 'UseResetPasswordReturn' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/useResetPassword.ts(14,3): error TS1484: 'ResetPasswordConfig' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/pages/DashboardPage.tsx(9,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/pages/DashboardPage.tsx(10,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/pages/DashboardPage.tsx(11,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/pages/DashboardPage.tsx(12,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/pages/DashboardPage.tsx(13,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>' is not assignable to type 'ComponentType<{ size?: number | undefined; weight?: string | undefined; className?: string | undefined; }>'.
+src/pages/LoginPage.tsx(36,5): error TS2322: Type 'Resolver<{ email: string; password: string; rememberMe?: boolean | undefined; }, any, { email: string; password: string; rememberMe: boolean; }>' is not assignable to type 'Resolver<{ email: string; password: string; rememberMe: boolean; }, any, { email: string; password: string; rememberMe: boolean; }>'.
+src/pages/PlayComputerPage.tsx(270,23): error TS2322: Type 'PlayerColor' is not assignable to type '"black" | "white"'.
+src/pages/auth/ForgotPasswordPage.tsx(84,29): error TS2322: Type 'string | null' is not assignable to type 'string'.
+src/pages/help/HelpCenterPage.tsx(286,15): error TS2322: Type '(HelpArticle | Tutorial)[]' is not assignable to type 'HelpArticle[]'.
+src/pages/play/AnalysisBoardPage.tsx(36,5): error TS2339: Property 'handlePieceDrop' does not exist on type '{ state: AnalysisBoardState; actions: AnalysisBoardActions; derived: { isGameOver: boolean; canUndo: boolean; canRedo: boolean; currentPlayer: string; inCheck: boolean; legalMoves: Move[]; gameStatus: string; }; }'.
+src/pages/play/AnalysisBoardPage.tsx(37,5): error TS2339: Property 'handleFlipBoard' does not exist on type '{ state: AnalysisBoardState; actions: AnalysisBoardActions; derived: { isGameOver: boolean; canUndo: boolean; canRedo: boolean; currentPlayer: string; inCheck: boolean; legalMoves: Move[]; gameStatus: string; }; }'.
+src/pages/play/AnalysisBoardPage.tsx(38,5): error TS2339: Property 'handleBackToDashboard' does not exist on type '{ state: AnalysisBoardState; actions: AnalysisBoardActions; derived: { isGameOver: boolean; canUndo: boolean; canRedo: boolean; currentPlayer: string; inCheck: boolean; legalMoves: Move[]; gameStatus: string; }; }'.
+src/pages/play/GameReviewPage.tsx(53,5): error TS2339: Property 'handleGameSelect' does not exist on type 'GameReviewHookReturn'.
+src/pages/play/GameReviewPage.tsx(54,5): error TS2339: Property 'handleImportGame' does not exist on type 'GameReviewHookReturn'.
+src/pages/play/GameReviewPage.tsx(55,5): error TS2339: Property 'handleMoveNavigation' does not exist on type 'GameReviewHookReturn'.
+src/pages/play/GameReviewPage.tsx(56,5): error TS2339: Property 'toggleAutoPlay' does not exist on type 'GameReviewHookReturn'.
+src/pages/play/GameReviewPage.tsx(57,5): error TS2339: Property 'getCurrentPosition' does not exist on type 'GameReviewHookReturn'.
+src/pages/play/GameReviewPage.tsx(58,5): error TS2339: Property 'getCurrentMove' does not exist on type 'GameReviewHookReturn'.
+src/pages/play/PlayComputerPage.tsx(347,23): error TS2322: Type 'PlayerColor' is not assignable to type '"black" | "white"'.
+src/pages/progress/AchievementsPage.tsx(44,5): error TS2339: Property 'handleAchievementClick' does not exist on type 'AchievementsHookReturn'.
+src/pages/progress/AchievementsPage.tsx(45,5): error TS2339: Property 'handleShare' does not exist on type 'AchievementsHookReturn'.
+src/pages/progress/AchievementsPage.tsx(46,5): error TS2339: Property 'handleBackToProgress' does not exist on type 'AchievementsHookReturn'.
+src/pages/progress/DetailedStatsPage.tsx(51,5): error TS2339: Property 'handleNavigation' does not exist on type 'DetailedStatsHookReturn'.
+src/pages/progress/DetailedStatsPage.tsx(52,5): error TS2339: Property 'handleTimePeriodChange' does not exist on type 'DetailedStatsHookReturn'.
+src/pages/progress/DetailedStatsPage.tsx(53,5): error TS2339: Property 'handleRefresh' does not exist on type 'DetailedStatsHookReturn'.
+src/pages/progress/DetailedStatsPage.tsx(54,5): error TS2339: Property 'handleExport' does not exist on type 'DetailedStatsHookReturn'.
+src/pages/progress/DetailedStatsPage.tsx(55,5): error TS2339: Property 'handleRecommendationClick' does not exist on type 'DetailedStatsHookReturn'.
+src/pages/progress/DetailedStatsPage.tsx(56,5): error TS2339: Property 'getDataQualityBadge' does not exist on type 'DetailedStatsHookReturn'.
+src/pages/progress/LearningPathPage.tsx(49,5): error TS2339: Property 'handleTabChange' does not exist on type 'LearningPathHookReturn'.
+src/pages/progress/LearningPathPage.tsx(334,19): error TS2322: Type 'string' is not assignable to type '"tree" | "timeline" | "analytics" | "planning"'.
+src/pages/progress/LearningPathPage.tsx(348,23): error TS2322: Type 'string' is not assignable to type '"progress" | "overview" | "category" | "recommendations"'.
+src/pages/progress/ProgressOverviewPage.tsx(50,5): error TS2339: Property 'handleTimePeriodChange' does not exist on type 'ProgressOverviewHookReturn'.
+src/pages/progress/ProgressOverviewPage.tsx(51,5): error TS2339: Property 'handleRefresh' does not exist on type 'ProgressOverviewHookReturn'.
+src/pages/progress/ProgressOverviewPage.tsx(52,5): error TS2339: Property 'handleNavigation' does not exist on type 'ProgressOverviewHookReturn'.
+src/pages/puzzles/CustomPuzzlesPage.tsx(21,3): error TS1484: 'CustomPuzzleFilters' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/pages/settings/AccountPage.tsx(34,5): error TS2339: Property 'handleSectionChange' does not exist on type 'AccountHookReturn'.
+src/pages/settings/AccountPage.tsx(35,5): error TS2339: Property 'getAccountTypeColor' does not exist on type 'AccountHookReturn'.
+src/pages/settings/AccountPage.tsx(36,5): error TS2339: Property 'getAccountTypeIcon' does not exist on type 'AccountHookReturn'.
+src/pages/settings/AccountPage.tsx(161,17): error TS2322: Type '(tier: SubscriptionTier, cycle: "monthly" | "yearly") => Promise<boolean>' is not assignable to type '(tier: SubscriptionTier, cycle: "monthly" | "yearly") => Promise<void>'.
+src/pages/settings/AccountPage.tsx(162,17): error TS2322: Type '() => Promise<boolean>' is not assignable to type '() => Promise<void>'.
+src/pages/settings/AccountPage.tsx(163,17): error TS2322: Type '(method: any) => Promise<boolean>' is not assignable to type '(method: any) => Promise<void>'.
+src/pages/settings/AccountPage.tsx(176,17): error TS2322: Type '(format: ExportFormat, dataTypes: string[]) => Promise<string>' is not assignable to type '(format: ExportFormat, dataTypes: string[]) => Promise<void>'.
+src/pages/settings/AccountPage.tsx(177,17): error TS2322: Type '(reason: string, exportData: boolean) => Promise<boolean>' is not assignable to type '(reason: string, exportData: boolean) => Promise<void>'.
+src/pages/settings/BoardSettingsPage.tsx(43,5): error TS2339: Property 'handleSave' does not exist on type 'BoardSettingsHookReturn'.
+src/pages/settings/BoardSettingsPage.tsx(44,5): error TS2339: Property 'handleExport' does not exist on type 'BoardSettingsHookReturn'.
+src/pages/settings/BoardSettingsPage.tsx(45,5): error TS2339: Property 'handleImport' does not exist on type 'BoardSettingsHookReturn'.
+src/pages/settings/BoardSettingsPage.tsx(46,5): error TS2339: Property 'handleReset' does not exist on type 'BoardSettingsHookReturn'.
+src/pages/settings/NotificationsPage.tsx(56,5): error TS2339: Property 'handleSave' does not exist on type 'NotificationsHookReturn'.
+src/pages/settings/NotificationsPage.tsx(57,5): error TS2339: Property 'handleNotificationClick' does not exist on type 'NotificationsHookReturn'.
+src/pages/settings/NotificationsPage.tsx(58,5): error TS2339: Property 'handleTestNotification' does not exist on type 'NotificationsHookReturn'.
+src/pages/settings/NotificationsPage.tsx(59,5): error TS2339: Property 'handleRunDiagnostics' does not exist on type 'NotificationsHookReturn'.
+src/pages/settings/NotificationsPage.tsx(60,5): error TS2339: Property 'handleExportSettings' does not exist on type 'NotificationsHookReturn'.
+src/pages/settings/NotificationsPage.tsx(61,5): error TS2339: Property 'handleImportSettings' does not exist on type 'NotificationsHookReturn'.
+src/pages/settings/PreferencesPage.tsx(40,5): error TS2339: Property 'handleBack' does not exist on type 'PreferencesHookReturn'.
+src/pages/settings/PreferencesPage.tsx(41,5): error TS2339: Property 'handleSave' does not exist on type 'PreferencesHookReturn'.
+src/pages/settings/PreferencesPage.tsx(42,5): error TS2339: Property 'handleDiscard' does not exist on type 'PreferencesHookReturn'.
+src/pages/settings/PreferencesPage.tsx(43,5): error TS2339: Property 'handleReset' does not exist on type 'PreferencesHookReturn'.
+src/pages/settings/PreferencesPage.tsx(44,5): error TS2339: Property 'handleExport' does not exist on type 'PreferencesHookReturn'.
+src/pages/settings/PreferencesPage.tsx(45,5): error TS2339: Property 'handleQuickPreset' does not exist on type 'PreferencesHookReturn'.
+src/pages/settings/PreferencesPage.tsx(46,5): error TS2339: Property 'getSectionInfo' does not exist on type 'PreferencesHookReturn'.
+src/pages/study/EndgameLibraryPage.tsx(66,5): error TS2339: Property 'handleBack' does not exist on type 'EndgameLibraryHookReturn'.
+src/pages/study/EndgameLibraryPage.tsx(67,5): error TS2339: Property 'handleTabChange' does not exist on type 'EndgameLibraryHookReturn'.
+src/pages/study/EndgameLibraryPage.tsx(68,5): error TS2339: Property 'handleStartPractice' does not exist on type 'EndgameLibraryHookReturn'.
+src/pages/study/EndgameLibraryPage.tsx(69,5): error TS2339: Property 'getCategoryProgress' does not exist on type 'EndgameLibraryHookReturn'.
+src/pages/study/EndgameLibraryPage.tsx(447,23): error TS2322: Type '(fen: string) => Promise<void>' is not assignable to type '(fen: string) => Promise<TablebaseQueryResult>'.
+src/pages/study/MasterGamesPage.tsx(57,5): error TS2339: Property 'handleBackClick' does not exist on type 'MasterGamesHookReturn'.
+src/pages/study/MasterGamesPage.tsx(58,5): error TS2339: Property 'handleFlipBoard' does not exist on type 'MasterGamesHookReturn'.
+src/pages/study/OpeningExplorerPage.tsx(57,5): error TS2339: Property 'handleOpeningSelect' does not exist on type 'OpeningExplorerHookReturn'.
+src/pages/study/OpeningExplorerPage.tsx(58,5): error TS2339: Property 'handleVariationSelect' does not exist on type 'OpeningExplorerHookReturn'.
+src/pages/study/OpeningExplorerPage.tsx(59,5): error TS2339: Property 'handleGameSelect' does not exist on type 'OpeningExplorerHookReturn'.
+src/pages/study/OpeningExplorerPage.tsx(239,15): error TS2322: Type 'ChessOpening | null' is not assignable to type 'ChessOpening'.
+src/pages/study/OpeningExplorerPage.tsx(249,15): error TS2322: Type 'ChessOpening | null' is not assignable to type 'ChessOpening'.
+src/pages/study/StudyPlansPage.tsx(58,5): error TS2339: Property 'handleTabChange' does not exist on type 'StudyPlansHookReturn'.
+src/pages/study/StudyPlansPage.tsx(59,5): error TS2339: Property 'handleLessonComplete' does not exist on type 'StudyPlansHookReturn'.
+src/pages/study/StudyPlansPage.tsx(60,5): error TS2339: Property 'getTabIcon' does not exist on type 'StudyPlansHookReturn'.
+src/services/playComputerService.ts(86,9): error TS2322: Type 'Color' is not assignable to type '"black" | "white"'.
+src/services/playComputerService.ts(160,9): error TS2322: Type 'Color' is not assignable to type '"black" | "white"'.
+src/services/playComputerService.ts(286,9): error TS2322: Type 'Color' is not assignable to type '"black" | "white"'.
+src/services/puzzleSelectionService.ts(2,10): error TS1484: 'PuzzleCategory' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/puzzleSelectionService.ts(2,26): error TS1484: 'PuzzleStats' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/puzzleSelectionService.ts(2,39): error TS1484: 'RecentPuzzle' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/puzzleSelectionService.ts(2,53): error TS1484: 'Achievement' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/services/puzzleSelectionService.ts(2,66): error TS1484: 'PuzzleSelectionFilters' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/types/achievements.ts(6,10): error TS1484: 'ReactElement' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/types/contact.ts(1,10): error TS1484: 'ComponentType' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.

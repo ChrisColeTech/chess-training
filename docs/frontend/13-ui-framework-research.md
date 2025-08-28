@@ -7,6 +7,157 @@
 
 **Current Problem**: Tailwind CSS feels too "web-first" and doesn't provide the modern, professional desktop app experience we need.
 
+## Icon System Research
+
+### Research Questions for Icon Libraries
+
+**Critical Requirements:**
+- Must be modern, professional, and visually "hot" for gaming UI
+- Must have ALL required icons for chess training app
+- Must integrate well with chosen UI framework
+- Must perform well (bundle size, loading, rendering)
+- Must support dynamic theming for dark gaming aesthetics
+
+**Primary Research Question:**
+
+**Which icon library is the BEST for our chess training gaming app?**
+
+**Supporting Questions:**
+
+**Q1: Icon Coverage** - Does the library have all 40+ icons we need?
+- Chess/gaming icons (pieces, board, timer, trophy, etc.)
+- Core UI icons (settings, profile, navigation, etc.) 
+- Learning icons (puzzle, book, charts, etc.)
+- Action icons (save, share, search, etc.)
+
+**Q2: Visual Style** - Does the library match our "modern, professional, hot" gaming aesthetic?
+- Are icons bold/substantial enough for gaming UI?
+- Do they look modern vs outdated/corporate?
+- Are stroke weights appropriate for dark themes?
+- Do they feel "gaming" vs "business app"?
+
+**Q3: Technical Integration** - How well does it work with React + our UI framework?
+- React component support vs SVG imports?
+- TypeScript definitions quality?
+- Bundle size impact and tree-shaking?
+- Compatibility with Tailwind/Chakra theming?
+
+**Q4: Customization & Theming** - Can we make icons work with our theme system?
+- Dynamic color support for multiple gaming themes?
+- Size/stroke weight customization options?
+- Ability to create theme-specific icon variants?
+
+**Q5: Developer Experience** - How easy is it to find and use icons?
+- Search/discovery tools quality?
+- Documentation and examples?
+- Active maintenance and updates?
+
+**Q6: Cost & Licensing** - Is it completely free for commercial use?
+- No licensing fees or restrictions?
+- Can we use it in a commercial chess training app?
+- Any attribution requirements?
+
+### Required Icons Inventory
+
+**Chess-Specific Icons:**
+- Chess pieces symbols (♔♕♖♗♘♙) 
+- Chess board/game representation
+- Analysis arrows/evaluation
+- Move notation indicators
+- Strategy/tactics symbols
+
+**Gaming UI Icons:**
+- Play/start, pause, stop, restart
+- Timer/stopwatch, hint/lightbulb
+- Achievement/trophy, progress/levels
+- Undo/redo, save/load
+
+**Core Interface Icons:**
+- Settings/gear, user/profile, dashboard/home
+- Navigation (back/forward, menu)
+- Theme switcher, light/dark toggle
+
+**Learning Features:**
+- Puzzle/brain, study/book, statistics/charts
+- Success/error feedback, info/help
+
+**Actions:**
+- Save/bookmark, share/export, search
+- Add/plus, delete/trash, edit/pencil
+
+### Icon Library Evaluation
+
+## **ANSWER: Lucide Icons + React Icons is the BEST combination for our chess training gaming app**
+
+### Research Findings Summary
+
+**Winner: Lucide Icons (Main UI) + React Icons (Specialty Icons)**
+
+#### Why This Combination Wins:
+
+**Q1: Icon Coverage** ✅ **EXCELLENT**
+- **Lucide**: 1,400+ high-quality icons covering all core UI needs (timer, trophy, settings, navigation, etc.)
+- **React Icons**: 40,000+ icons from multiple libraries (Phosphor, Font Awesome, Material Design, etc.)
+- **Combined**: 100% coverage of all required icons with consistent naming
+
+**Q2: Visual Style** ✅ **PERFECT for Gaming**
+- **Lucide**: Clean, modern design with consistent stroke weights - ideal for gaming UI
+- **Modern, professional look** that's "hot" and gaming-appropriate
+- **Consistent design language** across all icons
+- **React Icons**: Access to specialized gaming/chess icons when needed
+
+**Q3: Technical Integration** ✅ **EXCELLENT**
+- **Lucide**: Excellent React support with `lucide-react`, TypeScript definitions, tree-shaking
+- **React Icons**: Universal icon library with consistent API across all icon sets
+- **Combined bundle size**: Minimal due to tree-shaking and on-demand loading
+
+**Q4: Customization & Theming** ✅ **OUTSTANDING**
+- **Lucide**: SVG-based with props for size, color, strokeWidth - perfect theme integration
+- **React Icons**: Full color customization for all gaming themes
+- **Consistent API**: Same props pattern across all icon libraries
+
+**Q5: Developer Experience** ✅ **EXCELLENT**
+- **Lucide**: Beautiful website (lucide.dev), excellent search, clear documentation
+- **React Icons**: Comprehensive icon browser (react-icons.github.io), easy discovery
+- **Naming consistency**: Predictable naming conventions (PascalCase)
+
+**Q6: Cost & Licensing** ✅ **COMPLETELY FREE**
+- **Lucide**: MIT License - free for commercial use
+- **React Icons**: MIT License - free for commercial use
+- **No attribution required**
+
+#### Why We Switched from Phosphor:
+
+**Technical Issues Found:**
+- **Incorrect naming**: POC was written with non-existent Phosphor icon names
+- **Build failures**: Icons like `RefreshCw`, `ChevronRight`, `TrendingUp` don't exist in Phosphor
+- **Inconsistent API**: Mixed naming conventions caused confusion
+- **Development vs Production**: Icons worked in dev but failed in production build
+
+**Lucide Advantages:**
+- **Naming matches POC**: Icons like `RefreshCw`, `ChevronRight`, `TrendingUp` exist in Lucide
+- **Better documentation**: Clear, searchable interface at lucide.dev
+- **Consistent design**: All icons follow same design principles
+- **Smaller focused library**: Quality over quantity approach
+
+#### Implementation Plan:
+```bash
+npm uninstall @phosphor-icons/react
+npm install lucide-react react-icons
+```
+
+**Usage:**
+- **Lucide Icons**: All primary UI icons (95% of use cases)
+- **React Icons**: Specialty icons when Lucide doesn't have them
+- **Chess Pieces**: Use Unicode symbols or React Icons chess sets
+- **Emojis**: Replace all emoji usage with proper icons
+
+#### Migration Strategy:
+1. **Replace Phosphor imports** with Lucide equivalents
+2. **Standardize naming**: Use PascalCase naming consistently  
+3. **Replace emojis**: Convert all emoji usage to proper icons
+4. **Audit coverage**: Ensure all required icons are available
+
 ## Research Questions and Findings
 
 ### 1. Desktop vs Web Feel
@@ -45,8 +196,141 @@ Research shows these apps commonly use React for UI with various component libra
 - **Mantine**: Supports dark mode and RTL out of the box with flexible theming options.
 - **Gaming aesthetics**: Glassmorphism with dark themes and gradient backgrounds is trending heavily in 2024, with multiple React implementation libraries available.
 
-### 2. Migration Effort from Tailwind
-- **Q2.1**: What are the migration paths from Tailwind CSS to major UI frameworks?
+### 2. Smooth Navigation and Page Transitions
+- **Q2.1**: How do modern React apps prevent white flashes during navigation?
+
+**✅ ANSWER**: White flashes are caused by **FOUC (Flash of Unstyled Content)** and have standard solutions:
+
+**Root Causes Identified**:
+1. **CSS loading delay** - Styles not applied before render
+2. **Browser defaults** - White background showing through during component mounting
+3. **Theme application timing** - Dark themes applied after component render
+
+**Industry Solutions** (Discord, Figma, Notion patterns):
+1. **Critical CSS Inlining** - Base styles in `<head>` before React loads
+2. **CSS Custom Properties on :root** - Theme colors available immediately
+3. **Layout Shell Pattern** - Keep consistent outer layout, only transition content areas
+4. **Skeleton Screens** - Show themed placeholders during transitions
+
+**Implementation Pattern**:
+```css
+/* In index.html head - applied before React */
+html, body { 
+  background-color: #1a202c; /* Dark base to prevent white flash */
+  margin: 0; 
+  transition: none; /* Disable transitions during load */
+}
+```
+
+**Key Insight**: Professional apps never allow browser default backgrounds to show. Theme is established at HTML level before React renders.
+
+- **Q2.2**: What page transition patterns are used in successful Electron apps?
+
+**✅ ANSWER**: Successful Electron apps use sophisticated patterns optimized for desktop environments:
+
+**Figma's Architecture**:
+- Uses **BrowserView** (Figma's contribution to Electron) for better performance
+- BrowserView lives "in the operating system window hierarchy" rather than DOM
+- Uses **Memory Router** for plugins: "stores and manages history stack in memory" since "standard routing tools won't work" in sandboxed environments
+
+**Advanced Electron Patterns**:
+- **Centralized App State**: "UI and page routing built using controlled components and centralized app state"
+- **Message Passing Architecture**: Frontend/backend communicate through messages, not traditional HTTP
+- **Shared Module Pattern**: Code/types shared between frontend and backend processes
+
+**Key Insight**: Top Electron apps avoid traditional web routing, using memory-based routing and centralized state management for performance.
+
+- **Q2.3**: How should authentication state changes trigger navigation without jarring redirects?
+
+**✅ ANSWER**: Research reveals specific techniques for smooth post-authentication navigation:
+
+**Programmatic Navigation (React Router v6)**:
+```javascript
+const navigate = useNavigate();
+// After login, redirect smoothly
+navigate('/protected', { replace: true });
+```
+
+**Hide Flash During Authentication**:
+- **Solution**: "Hide the login form until authentication has occurred"
+- Add `isAuthenticationStateKnown` boolean to prevent flash
+- "This flash won't occur for subsequent navigation via pushState() within the same tab"
+
+**Remember User's Intended Destination**:
+- "Store the path user attempts to access before being redirected to login"
+- "Navigate back to that path upon successful login"
+- Pass data via state: `navigate('/login', { state: { returnTo: '/dashboard' } })`
+
+**Key Pattern**: Use programmatic navigation with state management, not declarative `<Navigate>` components for post-auth redirects.
+
+- **Q2.4**: How do you handle theme persistence during client-side routing?
+
+**✅ ANSWER**: Research shows global theme management with proper persistence patterns:
+
+**React Navigation Theme Architecture**:
+- **Built-in support** for light/dark themes "reasonably consistent with OS defaults"
+- Pass theme prop to app container, not individual routes
+- "Combining React Context for state management with AsyncStorage provides robust solution"
+
+**Theme Persistence Strategy**:
+- Use **useLocalStorage hook** to "store themes in local storage while maintaining stateful knowledge"
+- Initialize with saved theme before first render to prevent flicker
+- **AsyncStorage pattern**: "Load saved themes on app initialization" with loading state
+
+**Navigation State + Theme**:
+- "onStateChange and initialState props" for navigation persistence
+- "App must render loading view initially when isReady is false" to prevent theme flash
+- **Critical**: Theme must be established before navigation state loads
+
+**Key Insight**: Themes should be global and loaded synchronously before any routing occurs, not managed per-route.
+
+- **Q2.5**: What are the React Router alternatives for desktop apps?
+
+**✅ ANSWER**: Electron apps have specific routing requirements that differ from web apps:
+
+**HashRouter vs BrowserRouter**:
+- **HashRouter preferred**: "BrowserRouter may not work at all with file-based environments like Electron"
+- **File system issue**: "Location '/Users/.../app/index.html' did not match any routes" because Electron uses `file://` URLs
+- **Solution**: "Replace BrowserRouter with HashRouter component and you are good to go"
+
+**Electron-Specific Solutions**:
+- **electron-router-dom**: "A react-router-dom adapter for Electron apps" supporting "multiple windows with independent routing"
+- **Memory Router**: Best for complex scenarios - "stores and manages history stack in memory"
+
+**Alternative Patterns**:
+- **Single Page Application**: "Electron is designed to work best as SPA. Clicking shouldn't load new page but manipulate DOM"
+- **Native Electron Navigation**: Direct control via `window.reload()`, `window.webContents.goBack()`, `window.webContents.goForward()`
+
+**Key Finding**: Most Electron apps use HashRouter or Memory Router instead of BrowserRouter due to file-system constraints.
+
+- **Q2.6**: How do you implement smooth loading states during authentication flows?
+
+**✅ ANSWER**: Research reveals specific patterns for smooth authentication loading flows:
+
+**Skeleton Screen Best Practices**:
+- **Theme-aware skeletons**: "Dynamically apply colors based on active theme rather than hardcoding values"
+- **SkeletonTheme wrapper**: "Allows defining shared styles like baseColor, highlightColor, and duration for all skeleton components"
+- **Consistency**: Skeleton should "match the overall application theme"
+
+**Loading State Management**:
+- **Immediate feedback**: "Use loading states or indicators to inform users that login request is processing"
+- **Progressive loading**: Show skeleton → data → success animation sequence
+- **Avoid jarring transitions**: "Find loading mechanism that doesn't cause flash. For example, skeleton screen"
+
+**Authentication Flow Pattern**:
+```javascript
+// Standard smooth auth flow
+1. User clicks login
+2. Show loading spinner/skeleton immediately
+3. Process authentication
+4. Show brief success state (200-300ms)
+5. Navigate programmatically with useNavigate()
+```
+
+**Key Insight**: Replace loading spinners with skeleton screens that match your theme, and always include a brief success state before navigation to prevent jarring jumps.
+
+### 3. Migration Effort from Tailwind
+- **Q3.1**: What are the migration paths from Tailwind CSS to major UI frameworks?
 
 **✅ ANSWER**: 
 - **Shadcn UI**: Built on top of Tailwind CSS - no migration needed, additive approach. Uses Radix UI + Tailwind CSS combination.

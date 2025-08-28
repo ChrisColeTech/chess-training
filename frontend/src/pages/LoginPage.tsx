@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import { Eye, EyeOff } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,11 +11,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useThemeStore } from '@/stores/themeStore'
 import { useAuthStore } from '@/stores/authStore'
 import { soundFX } from '@/utils/soundEffects'
+import { FaChessKing } from 'react-icons/fa'
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  rememberMe: z.boolean().default(false),
+  rememberMe: z.boolean(),
 })
 
 type LoginForm = z.infer<typeof loginSchema>
@@ -48,6 +49,10 @@ export const LoginPage: React.FC = () => {
     if (success) {
       soundFX.playSuccess()
       console.log('Login successful')
+      // Small delay to show success state before navigation
+      await new Promise(resolve => setTimeout(resolve, 300))
+      // Navigate programmatically instead of using Navigate component
+      navigate('/dashboard', { replace: true })
     } else {
       soundFX.playError()
     }
@@ -56,6 +61,13 @@ export const LoginPage: React.FC = () => {
   const handleDemoLogin = async () => {
     soundFX.playClick()
     clearError() // Clear any previous errors
+    
+    // Set loading state for smooth transition
+    const authState = useAuthStore.getState()
+    authState.setLoading(true)
+    
+    // Brief delay to show loading state
+    await new Promise(resolve => setTimeout(resolve, 500))
     
     // For demo purposes, simulate a successful login without hitting the API
     // In a real app, you would create a demo user in the database
@@ -75,7 +87,6 @@ export const LoginPage: React.FC = () => {
     const mockRefreshToken = 'demo-refresh-token'
     
     // Manually set the auth state for demo mode
-    const authState = useAuthStore.getState()
     authState.setTokens(mockAccessToken, mockRefreshToken)
     authState.setUser(mockUser)
     authState.setLoading(false)
@@ -86,6 +97,11 @@ export const LoginPage: React.FC = () => {
     
     soundFX.playSuccess()
     console.log('Demo login successful - bypassing API')
+    
+    // Small delay to show success state before navigation
+    await new Promise(resolve => setTimeout(resolve, 300))
+    // Navigate programmatically instead of relying on AuthNavigator
+    navigate('/dashboard', { replace: true })
   }
 
   return (
@@ -111,11 +127,11 @@ export const LoginPage: React.FC = () => {
       </div>
 
       {/* Login Card with Gaming Enhancement */}
-      <Card className="w-full max-w-md relative z-10 backdrop-blur-xl bg-black/20 border-white/10 shadow-2xl hover:shadow-cyan-500/25 hover:border-white/20 transition-all duration-500 hover:scale-[1.02] animate-card-entrance">
+      <Card className="w-full max-w-md relative z-10 bg-gray-900 border-gray-700 shadow-2xl transition-all duration-300">
         <CardHeader className="space-y-4 text-center">
           <div className={`mx-auto w-16 h-16 bg-gradient-to-br ${theme.primary} rounded-xl flex items-center justify-center shadow-lg`}>
             <div className={`text-2xl font-bold bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>
-              ♔
+              <FaChessKing className="w-4 h-4 inline" />
             </div>
           </div>
           <CardTitle className={`text-2xl font-bold bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>
@@ -144,7 +160,7 @@ export const LoginPage: React.FC = () => {
                 id="email"
                 type="email"
                 placeholder="chess.master@example.com"
-                className={`bg-black/30 border-white/20 ${theme.text} placeholder:text-gray-400 focus:border-white/40 focus:ring-2 focus:ring-white/20 transition-all duration-300`}
+                className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-colors"
                 {...register('email')}
               />
               {errors.email && (
@@ -164,7 +180,7 @@ export const LoginPage: React.FC = () => {
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••••"
-                  className={`bg-black/30 border-white/20 ${theme.text} placeholder:text-gray-400 focus:border-white/40 focus:ring-2 focus:ring-white/20 transition-all duration-300 pr-10`}
+                  className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-colors pr-10"
                   {...register('password')}
                 />
                 <button
@@ -173,9 +189,9 @@ export const LoginPage: React.FC = () => {
                   className={`absolute right-3 top-1/2 -translate-y-1/2 ${theme.text} hover:opacity-70 transition-opacity`}
                 >
                   {showPassword ? (
-                    <EyeSlashIcon className="h-4 w-4" />
+                    <EyeOff size={16} />
                   ) : (
-                    <EyeIcon className="h-4 w-4" />
+                    <Eye size={16} />
                   )}
                 </button>
               </div>
@@ -211,7 +227,10 @@ export const LoginPage: React.FC = () => {
                   <span>Signing In...</span>
                 </div>
               ) : (
-                'Sign In'
+                <span className="flex items-center justify-center space-x-2">
+                  <span>Sign In</span>
+                  <span className="text-lg">🚀</span>
+                </span>
               )}
             </Button>
           </form>

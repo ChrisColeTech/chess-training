@@ -23,6 +23,7 @@ interface AuthState {
 
   // Actions
   login: (email: string, password: string) => Promise<boolean>
+  register: (userData: any) => Promise<boolean>
   logout: () => Promise<void>
   refreshAccessToken: () => Promise<boolean>
   updateUserPreferences: (preferences: Record<string, any>) => Promise<boolean>
@@ -92,6 +93,45 @@ export const useAuthStore = create<AuthState>()(
           }
         } catch (error: any) {
           const errorMessage = error.response?.data?.error || 'Network error during login'
+          set({ 
+            isLoading: false, 
+            error: errorMessage 
+          })
+          return false
+        }
+      },
+
+      register: async (userData: any): Promise<boolean> => {
+        set({ isLoading: true, error: null })
+        
+        try {
+          const response = await apiClient.post('/auth/register', userData)
+
+          if (response.data.success) {
+            const { accessToken, refreshToken, user } = response.data
+            
+            set({
+              isAuthenticated: true,
+              user,
+              accessToken,
+              refreshToken,
+              isLoading: false,
+              error: null
+            })
+
+            // Setup axios interceptor with new token
+            setupAxiosInterceptors(get)
+            
+            return true
+          } else {
+            set({ 
+              isLoading: false, 
+              error: response.data.error || 'Registration failed' 
+            })
+            return false
+          }
+        } catch (error: any) {
+          const errorMessage = error.response?.data?.error || 'Network error during registration'
           set({ 
             isLoading: false, 
             error: errorMessage 

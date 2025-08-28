@@ -65,6 +65,37 @@
   }
 }
 
+@keyframes fade-in {
+  0% { 
+    opacity: 0; 
+  }
+  100% { 
+    opacity: 1; 
+  }
+}
+
+@keyframes slide-in-right {
+  0% { 
+    opacity: 0; 
+    transform: translateX(20px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
+@keyframes slide-in-left {
+  0% { 
+    opacity: 0; 
+    transform: translateX(-20px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
 @keyframes level-up {
   0% { transform: scale(1) rotate(0deg); }
   25% { transform: scale(1.1) rotate(-5deg); }
@@ -115,13 +146,25 @@
   animation: level-up 0.8s ease-in-out;
 }
 
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.5s ease-out;
+}
+
 /* Hover Effects */
 .hover-grow {
   transition: transform 0.2s ease-in-out;
 }
 
 .hover-grow:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .hover-glow:hover {

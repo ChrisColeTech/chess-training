@@ -1,126 +1,112 @@
-import { Fragment } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import { 
-  SwatchIcon, 
-  CheckIcon,
-  SunIcon,
-  MoonIcon,
-  SparklesIcon,
-  HomeIcon,
-  BeakerIcon
-} from '@heroicons/react/24/outline'
+import { useState } from 'react'
+import { Settings, ChevronDown, Star, Sun, Moon, Zap, TestTube, Flame } from 'lucide-react'
 import { useThemeStore, themes } from '../../stores/themeStore'
-import { clsx } from 'clsx'
+import { soundFX } from '../../utils/soundEffects'
 
-const themeIcons: Record<string, React.ComponentType<{ className?: string }>> = {
-  'cyber-neon': SparklesIcon,
-  'dragon-gold': SunIcon,
-  'shadow-knight': MoonIcon,
-  'emerald-matrix': BeakerIcon,
-  'crimson-war': HomeIcon,
+const themeIcons: Record<string, React.ComponentType<any>> = {
+  'cyber-neon': Zap,          // Electric/cyber theme - more dynamic than bolt
+  'dragon-gold': Sun,         // Gold/warm theme  
+  'shadow-knight': Moon,      // Dark theme
+  'emerald-matrix': TestTube, // Tech/matrix theme - scientific/experimental
+  'crimson-war': Flame,       // War/battle theme
+}
+
+// Helper function to get theme colors (moved from dashboard)
+const getThemeColors = (primary: string) => {
+  const colorMap = {
+    cyan: {
+      primary: 'text-cyan-400',
+      bg: 'bg-cyan-500',
+      bgLight: 'bg-cyan-500/20',
+      text: 'text-cyan-300',
+      border: 'border-cyan-500/30',
+    },
+    yellow: {
+      primary: 'text-yellow-400', 
+      bg: 'bg-yellow-500',
+      bgLight: 'bg-yellow-500/20',
+      text: 'text-yellow-300',
+      border: 'border-yellow-500/30',
+    },
+    purple: {
+      primary: 'text-purple-400',
+      bg: 'bg-purple-500', 
+      bgLight: 'bg-purple-500/20',
+      text: 'text-purple-300',
+      border: 'border-purple-500/30',
+    },
+    green: {
+      primary: 'text-green-400',
+      bg: 'bg-green-500',
+      bgLight: 'bg-green-500/20', 
+      text: 'text-green-300',
+      border: 'border-green-500/30',
+    },
+    red: {
+      primary: 'text-red-400',
+      bg: 'bg-red-500',
+      bgLight: 'bg-red-500/20',
+      text: 'text-red-300', 
+      border: 'border-red-500/30',
+    }
+  }
+  return colorMap[primary as keyof typeof colorMap] || colorMap.cyan
 }
 
 export function ThemeSwitcher() {
   const { currentTheme, setTheme, getCurrentTheme } = useThemeStore()
-  const current = getCurrentTheme()
+  const [showThemeMenu, setShowThemeMenu] = useState(false)
+  const theme = getCurrentTheme()
+  const colors = getThemeColors(theme.primary)
 
-  const handleThemeChange = (themeId: string) => {
+  const handleThemeChange = (themeId: keyof typeof themes) => {
+    soundFX.playThemeSwitch()
     setTheme(themeId)
+    setShowThemeMenu(false)
   }
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
-      <div>
-        <Menu.Button className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-          <SwatchIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-        </Menu.Button>
-      </div>
-
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
-      >
-        <Menu.Items className="absolute right-0 z-50 mt-2 w-80 origin-top-right rounded-xl bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none border border-gray-200 dark:border-gray-700">
-          <div className="p-4">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">
-              Choose Theme
-            </h3>
-            
-            <div className="space-y-2">
-              {Object.entries(themes).map(([themeId, theme]) => {
-                const IconComponent = themeIcons[themeId] || SunIcon
-                const isSelected = currentTheme === themeId
-                
-                return (
-                  <Menu.Item key={themeId}>
-                    {({ active }) => (
-                      <button
-                        onClick={() => handleThemeChange(themeId)}
-                        className={clsx(
-                          'w-full flex items-center justify-between p-3 rounded-lg text-left transition-all duration-200',
-                          isSelected
-                            ? 'bg-blue-50 dark:bg-gray-700 border-2 border-blue-200 dark:border-gray-600'
-                            : 'hover:bg-gray-50 dark:hover:bg-gray-700 border-2 border-transparent',
-                          active && 'bg-gray-50 dark:bg-gray-700'
-                        )}
-                      >
-                        <div className="flex items-center space-x-3">
-                          <div className="flex items-center space-x-2">
-                            <IconComponent className={clsx(
-                              'w-5 h-5',
-                              isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'
-                            )} />
-                            <div className="flex space-x-1">
-                              <div 
-                                className="w-4 h-4 rounded-full border border-gray-300"
-                                style={{ backgroundColor: theme.chessLight }}
-                              />
-                              <div 
-                                className="w-4 h-4 rounded-full border border-gray-300"
-                                style={{ backgroundColor: theme.chessDark }}
-                              />
-                            </div>
-                          </div>
-                          
-                          <div>
-                            <div className={clsx(
-                              'font-medium text-sm',
-                              isSelected ? 'text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'
-                            )}>
-                              {theme.name}
-                            </div>
-                            <div className={clsx(
-                              'text-xs',
-                              isSelected ? 'text-blue-600 dark:text-blue-300' : 'text-gray-500 dark:text-gray-400'
-                            )}>
-                              {theme.description}
-                            </div>
-                          </div>
-                        </div>
-                        
-                        {isSelected && (
-                          <CheckIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                        )}
-                      </button>
-                    )}
-                  </Menu.Item>
-                )
-              })}
-            </div>
-            
-            <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
-              <div className="text-xs text-gray-500 dark:text-gray-400">
-                Current: {current.name} • {current.isDark ? 'Dark' : 'Light'} mode
-              </div>
-            </div>
+    <div className="flex items-center space-x-4">
+      <span className={`px-3 py-1 rounded-full text-sm ${colors.bgLight} ${colors.text} ${colors.border} border`}>
+        {theme.name}
+      </span>
+      <div className="relative">
+        <button
+          onClick={() => setShowThemeMenu(!showThemeMenu)}
+          className="flex items-center space-x-2 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-700 transition-colors text-white shadow-lg"
+        >
+          <Settings size={16} />
+          <span>Themes</span>
+          <ChevronDown size={16} />
+        </button>
+        {showThemeMenu && (
+          <div className="absolute right-0 mt-2 w-64 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50">
+            {Object.entries(themes).map(([themeId, themeOption]) => {
+              const IconComponent = themeIcons[themeId] || Sun
+              const isSelected = currentTheme === themeId
+              
+              return (
+                <button
+                  key={themeId}
+                  onClick={() => handleThemeChange(themeId as keyof typeof themes)}
+                  className={`w-full px-4 py-3 flex items-center justify-between hover:bg-gray-700 transition-colors text-white ${
+                    isSelected ? 'bg-gray-700' : ''
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    {isSelected && <Star size={16} className="text-yellow-500" />}
+                    <IconComponent size={16} className="text-gray-300" />
+                    <span className="font-medium">{themeOption.name}</span>
+                  </div>
+                  <span className={`px-2 py-1 rounded text-xs ${getThemeColors(themeOption.primary).bgLight} ${getThemeColors(themeOption.primary).text} ${getThemeColors(themeOption.primary).border} border`}>
+                    {themeOption.description || 'Gaming theme'}
+                  </span>
+                </button>
+              )
+            })}
           </div>
-        </Menu.Items>
-      </Transition>
-    </Menu>
+        )}
+      </div>
+    </div>
   )
 }

@@ -55,7 +55,24 @@
   
   body {
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    @apply antialiased;
+    @apply antialiased bg-gray-900 text-gray-100;
+  }
+  
+  html {
+    @apply bg-gray-900;
+  }
+
+  /* Hide browser input decorations/clear buttons */
+  input::-webkit-search-decoration,
+  input::-webkit-search-cancel-button,
+  input::-webkit-search-results-button,
+  input::-webkit-search-results-decoration {
+    display: none;
+  }
+
+  /* Hide IE clear button */
+  input::-ms-clear {
+    display: none;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -172,5 +189,18 @@
   
   .glass-card {
     @apply glass rounded-2xl shadow-large p-6;
+  }
+
+  /* Enhanced glass morphism utilities */
+  .glass-button {
+    @apply bg-white/10 backdrop-blur-md border border-white/10 backdrop-saturate-150;
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+  }
+  
+  .glass-panel {
+    @apply bg-gray-900/20 backdrop-blur-xl border border-white/10 backdrop-saturate-150;
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
   }
 }

@@ -5,6 +5,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 export const themes = {
   'cyber-neon': {
     name: 'Cyber Neon',
+    description: 'Electric blue gaming',
     isDark: true,
     primary: 'from-cyan-400 to-blue-500',
     secondary: 'from-purple-400 to-pink-400',
@@ -16,9 +17,14 @@ export const themes = {
     chessLight: '#4a9eff',
     chessDark: '#1e40af',
     chessBorder: '#0ea5e9',
+    surface: 'bg-slate-800/50',
+    glassMorphism: 'backdrop-blur-sm bg-white/10 border border-white/20',
+    success: 'text-green-400',
+    destructive: 'text-red-400',
   },
   'dragon-gold': {
     name: 'Dragon Gold',
+    description: 'Legendary treasure',
     isDark: true,
     primary: 'from-yellow-400 to-orange-500',
     secondary: 'from-red-400 to-yellow-400',
@@ -30,9 +36,14 @@ export const themes = {
     chessLight: '#fbbf24',
     chessDark: '#d97706',
     chessBorder: '#f59e0b',
+    surface: 'bg-slate-800/50',
+    glassMorphism: 'backdrop-blur-sm bg-white/10 border border-white/20',
+    success: 'text-green-400',
+    destructive: 'text-red-400',
   },
   'shadow-knight': {
     name: 'Shadow Knight',
+    description: 'Dark & mysterious',
     isDark: true,
     primary: 'from-gray-400 to-slate-600',
     secondary: 'from-indigo-400 to-gray-500',
@@ -44,9 +55,14 @@ export const themes = {
     chessLight: '#9ca3af',
     chessDark: '#4b5563',
     chessBorder: '#6b7280',
+    surface: 'bg-slate-800/50',
+    glassMorphism: 'backdrop-blur-sm bg-white/10 border border-white/20',
+    success: 'text-green-400',
+    destructive: 'text-red-400',
   },
   'emerald-matrix': {
     name: 'Emerald Matrix',
+    description: 'Digital forest',
     isDark: true,
     primary: 'from-green-400 to-emerald-600',
     secondary: 'from-teal-400 to-green-500',
@@ -58,9 +74,14 @@ export const themes = {
     chessLight: '#10b981',
     chessDark: '#047857',
     chessBorder: '#059669',
+    surface: 'bg-slate-800/50',
+    glassMorphism: 'backdrop-blur-sm bg-white/10 border border-white/20',
+    success: 'text-green-400',
+    destructive: 'text-red-400',
   },
   'crimson-war': {
     name: 'Crimson War',
+    description: 'Battle-tested fury',
     isDark: true,
     primary: 'from-red-400 to-rose-600',
     secondary: 'from-pink-400 to-red-500',
@@ -72,6 +93,10 @@ export const themes = {
     chessLight: '#ef4444',
     chessDark: '#b91c1c',
     chessBorder: '#dc2626',
+    surface: 'bg-slate-800/50',
+    glassMorphism: 'backdrop-blur-sm bg-white/10 border border-white/20',
+    success: 'text-green-400',
+    destructive: 'text-red-400',
   }
 } as const
 
@@ -167,15 +192,19 @@ export const useThemeStore = create<ThemeState>()(
       },
 
       initializeTheme: async (): Promise<void> => {
+        // Apply default theme immediately to prevent flash
+        const defaultTheme = themes['shadow-knight']
+        get().applyThemeToDOM(defaultTheme)
+        
         // Load theme from Electron config
         if (typeof window !== 'undefined' && (window as any).electronAPI?.config) {
           try {
             const savedThemeData = await (window as any).electronAPI.config.get('chess-theme-storage')
-            if (savedThemeData?.state?.currentTheme && themes[savedThemeData.state.currentTheme]) {
-              const themeId = savedThemeData.state.currentTheme
+            if (savedThemeData?.state?.currentTheme && savedThemeData.state.currentTheme in themes) {
+              const themeId = savedThemeData.state.currentTheme as keyof typeof themes
               console.log('Theme loaded from Electron config:', themeId)
               
-              // Apply theme immediately
+              // Apply saved theme immediately
               const theme = themes[themeId]
               get().applyThemeToDOM(theme)
               
@@ -187,10 +216,8 @@ export const useThemeStore = create<ThemeState>()(
           }
         }
         
-        // Fallback to default theme
+        // Fallback to default theme (already applied)
         console.log('Using default theme: shadow-knight')
-        const defaultTheme = themes['shadow-knight']
-        get().applyThemeToDOM(defaultTheme)
         set({ isInitialized: true })
       },
 

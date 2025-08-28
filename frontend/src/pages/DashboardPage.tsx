@@ -1,16 +1,17 @@
-import { 
-  ChevronDownIcon,
-  CogIcon,
-  StarIcon,
-  CheckCircleIcon,
-  InformationCircleIcon,
-  UserIcon,
-  ArrowRightOnRectangleIcon
-} from '@heroicons/react/24/outline'
-import { useState } from 'react'
+import { CheckCircle, Flame, TestTube, Info, LogOut, Moon, Star, Sun, Target, TrendingUp, User, Zap } from 'lucide-react'
 import { useThemeStore, themes } from '../stores/themeStore'
 import { useAuthStore } from '../stores/authStore'
 import { soundFX } from '../utils/soundEffects'
+import { ThemeSwitcher } from '../components/ui/ThemeSwitcher'
+
+// Theme icons mapping - using Lucide icons
+const themeIcons: Record<string, React.ComponentType<any>> = {
+  'cyber-neon': Zap,          // Electric/cyber theme - dynamic and energetic
+  'dragon-gold': Sun,         // Gold/warm theme - radiant and powerful
+  'shadow-knight': Moon,      // Dark theme - mysterious and elegant  
+  'emerald-matrix': TestTube, // Tech/matrix theme - scientific and experimental
+  'crimson-war': Flame,       // War/battle theme - fierce and intense
+}
 
 // Helper function to get theme colors
 const getThemeColors = (primary: string) => {
@@ -61,9 +62,8 @@ const getThemeColors = (primary: string) => {
 
 export const DashboardPage: React.FC = () => {
   const { currentTheme, setTheme, getCurrentTheme } = useThemeStore()
-  const { user, logout } = useAuthStore()
+  const { logout } = useAuthStore()
   const theme = getCurrentTheme()
-  const [showThemeMenu, setShowThemeMenu] = useState(false)
   const colors = getThemeColors(theme.primary)
 
   const handleLogout = async () => {
@@ -77,49 +77,12 @@ export const DashboardPage: React.FC = () => {
       <header className="w-full px-6 py-4 bg-black/20 backdrop-blur-sm border-b border-white/10 flex justify-between items-center">
         <h1 className={`text-2xl font-bold ${colors.primary}`}>Chess Training Game</h1>
         <div className="flex items-center space-x-4">
-          <span className={`px-3 py-1 rounded-full text-sm ${colors.bgLight} ${colors.text} ${colors.border} border`}>
-            {theme.name}
-          </span>
-          <div className="relative">
-            <button
-              onClick={() => setShowThemeMenu(!showThemeMenu)}
-              className="flex items-center space-x-2 px-4 py-2 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 backdrop-blur-sm transition-colors"
-            >
-              <CogIcon className="w-4 h-4" />
-              <span>Themes</span>
-              <ChevronDownIcon className="w-4 h-4" />
-            </button>
-            {showThemeMenu && (
-              <div className="absolute right-0 mt-2 w-64 bg-black/90 backdrop-blur-lg rounded-lg shadow-2xl border border-white/20 z-50">
-                {Object.entries(themes).map(([themeId, themeOption]) => (
-                  <button
-                    key={themeId}
-                    onClick={() => {
-                      soundFX.playThemeSwitch()
-                      setTheme(themeId as keyof typeof themes)
-                      setShowThemeMenu(false)
-                    }}
-                    className={`w-full px-4 py-3 flex items-center justify-between hover:bg-white/10 transition-colors ${
-                      currentTheme === themeId ? 'bg-white/10' : ''
-                    }`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      {currentTheme === themeId && <StarIcon className="w-4 h-4 text-yellow-500" />}
-                      <span className="font-medium">{themeOption.name}</span>
-                    </div>
-                    <span className={`px-2 py-1 rounded text-xs ${getThemeColors(themeOption.primary).bgLight} ${getThemeColors(themeOption.primary).text} ${getThemeColors(themeOption.primary).border} border`}>
-                      {themeOption.description || 'Gaming theme'}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <ThemeSwitcher />
           <button
             onClick={handleLogout}
             className="flex items-center space-x-2 px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 backdrop-blur-sm transition-colors text-red-200 hover:text-red-100"
           >
-            <ArrowRightOnRectangleIcon className="w-4 h-4" />
+            <LogOut size={16} />
             <span>Logout</span>
           </button>
         </div>
@@ -136,17 +99,17 @@ export const DashboardPage: React.FC = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className={`flex items-center justify-center space-x-2 px-8 py-4 bg-${theme.primary}-600 hover:bg-${theme.primary}-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover-grow active:animate-button-press transition-all duration-300 gpu-accelerated group`}>
-              <StarIcon className="w-5 h-5 group-hover:animate-pulse" />
+            <button className={`flex items-center justify-center space-x-2 px-8 py-4 bg-${theme.primary}-600 hover:bg-${theme.primary}-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl active:animate-button-press transition-all duration-300 gpu-accelerated group`}>
+              <Star size={20} className="group-hover:animate-pulse" />
               <span>Start Training</span>
             </button>
-            <button className={`px-8 py-4 border-2 border-${theme.primary}-600 text-${theme.primary}-600 hover:bg-${theme.primary}-50 dark:hover:bg-${theme.primary}-900/20 font-semibold rounded-xl hover-grow active:animate-button-press transition-all duration-300 gpu-accelerated`}>
+            <button className={`px-8 py-4 border-2 border-${theme.primary}-600 text-${theme.primary}-600 hover:bg-${theme.primary}-50 dark:hover:bg-${theme.primary}-900/20 font-semibold rounded-xl active:animate-button-press transition-all duration-300 gpu-accelerated`}>
               View Features
             </button>
           </div>
 
           <div className="flex items-center space-x-3 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-6 py-4 rounded-lg max-w-md">
-            <CheckCircleIcon className="w-5 h-5 text-green-500 flex-shrink-0" />
+            <CheckCircle size={20} className="text-green-500 flex-shrink-0" />
             <span>All systems ready! Game architecture and UI framework properly configured.</span>
           </div>
         </div>
@@ -157,13 +120,13 @@ export const DashboardPage: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Enhanced Stats Card */}
-            <div className={`${theme.surface} rounded-2xl p-6 shadow-xl hover:shadow-2xl hover-grow transition-all duration-300 gpu-accelerated group`}>
+            <div className={`${theme.surface} rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 gpu-accelerated group`}>
               <h3 className="text-lg font-semibold mb-4 group-hover:text-cyan-400 transition-colors">Player Statistics</h3>
               <div className="space-y-4">
                 <div className="text-center">
                   <div className="text-sm opacity-60">Chess Rating</div>
                   <div className="text-3xl font-bold hover:animate-level-up cursor-default">1,450</div>
-                  <div className={`text-sm text-${theme.primary}-400 animate-success-bounce`}>+25 this week ⚡</div>
+                  <div className={`text-sm text-${theme.primary}-400 animate-success-bounce`}>+25 this week <Zap className="w-4 h-4 inline" /></div>
                 </div>
                 <div className="w-full bg-black/20 rounded-full h-3 overflow-hidden">
                   <div className={`bg-gradient-to-r ${theme.primary} h-3 rounded-full shadow-lg transition-all duration-1000 ease-out animate-pulse-glow`} 
@@ -175,8 +138,8 @@ export const DashboardPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex justify-center space-x-2">
-                  <span className="px-3 py-1 bg-green-500/20 text-green-300 border border-green-500/30 rounded-full text-sm hover-grow cursor-pointer">Improving 📈</span>
-                  <span className={`px-3 py-1 bg-${theme.primary}-500/20 text-${theme.primary}-300 border border-${theme.primary}-500/30 rounded-full text-sm hover-grow cursor-pointer`}>Active 🎯</span>
+                  <span className="px-3 py-1 bg-green-500/20 text-green-300 border border-green-500/30 rounded-full text-sm cursor-pointer hover:bg-green-500/30 transition-colors">Improving <TrendingUp className="w-4 h-4 inline" /></span>
+                  <span className={`px-3 py-1 bg-${theme.primary}-500/20 text-${theme.primary}-300 border border-${theme.primary}-500/30 rounded-full text-sm cursor-pointer hover:bg-${theme.primary}-500/30 transition-colors`}>Active <Target className="w-4 h-4 inline" /></span>
                 </div>
               </div>
             </div>
@@ -186,7 +149,7 @@ export const DashboardPage: React.FC = () => {
               <h3 className="text-lg font-semibold mb-4">Player Profile</h3>
               <div className="space-y-4 text-center">
                 <div className={`w-16 h-16 mx-auto bg-${theme.primary}-500/20 rounded-full flex items-center justify-center border-2 border-${theme.primary}-500/50`}>
-                  <UserIcon className={`w-8 h-8 text-${theme.primary}-400`} />
+                  <User size={32} className={`text-${theme.primary}-400`} />
                 </div>
                 <div>
                   <div className="text-lg font-bold">Chess Master</div>
@@ -204,7 +167,7 @@ export const DashboardPage: React.FC = () => {
               <h3 className="text-lg font-semibold mb-4">Game Controls</h3>
               <div className="space-y-3">
                 <button className={`w-full flex items-center justify-center space-x-2 px-4 py-3 bg-${theme.primary}-500 hover:bg-${theme.primary}-600 text-white rounded-lg transition-all shadow-lg hover:shadow-xl`}>
-                  <StarIcon className="w-4 h-4" />
+                  <Star size={16} />
                   <span>Start Game</span>
                 </button>
                 <button className={`w-full px-4 py-3 bg-${theme.primary}-500/20 border border-${theme.primary}-500/50 text-${theme.primary}-300 hover:bg-${theme.primary}-500/30 rounded-lg transition-colors`}>
@@ -223,46 +186,61 @@ export const DashboardPage: React.FC = () => {
 
           {/* Theme System Demo */}
           <div className={`${theme.surface} rounded-2xl p-6 shadow-xl mt-8`}>
-            <h3 className="text-lg font-semibold mb-6 text-center">Theme System Demonstration</h3>
+            <h3 className="text-lg font-semibold mb-6 text-center">Gaming Theme Showcase</h3>
             <div className="space-y-6">
+              <div className="flex justify-center mb-4">
+                <ThemeSwitcher />
+              </div>
+              
               <p className="text-center opacity-70">
                 Immersive gaming themes with dark atmospheres and rich visual effects. 
-                Use the theme menu above to switch between different gaming aesthetics.
+                Click any theme below to experience the full aesthetic transformation.
               </p>
               
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                {Object.entries(themes).map(([themeId, themeOption]) => (
-                  <button
-                    key={themeId}
-                    onClick={() => {
-                      soundFX.playThemeSwitch()
-                      setTheme(themeId as keyof typeof themes)
-                    }}
-                    className={`p-4 rounded-lg border-2 transition-all duration-200 hover:-translate-y-1 hover:shadow-md ${
-                      currentTheme === themeId 
-                        ? `bg-white/20 border-white/40` 
-                        : 'bg-white/5 border-white/20'
-                    }`}
-                  >
-                    <div className="flex flex-col items-center space-y-3">
-                      <div 
-                        className={`w-10 h-10 bg-${themeOption.primary}-500 rounded-lg`}
-                      />
-                      <span className="text-sm font-bold text-center">
-                        {themeOption.name}
-                      </span>
-                      {currentTheme === themeId && (
-                        <span className={`px-2 py-1 bg-${theme.primary}-600 text-white text-xs rounded-full`}>
-                          Active
+                {Object.entries(themes).map(([themeId, themeOption]) => {
+                  const IconComponent = themeIcons[themeId] || Sun
+                  const isActive = currentTheme === themeId
+                  return (
+                    <button
+                      key={themeId}
+                      onClick={() => {
+                        soundFX.playThemeSwitch()
+                        setTheme(themeId as keyof typeof themes)
+                      }}
+                      className={`p-4 rounded-lg border-2 transition-all duration-200 hover:-translate-y-1 hover:shadow-md relative overflow-hidden group ${
+                        isActive 
+                          ? 'ring-2 ring-white/50 scale-105 shadow-lg' 
+                          : 'hover:scale-102'
+                      }`}
+                      style={{
+                        background: `linear-gradient(135deg, ${themeOption.background.replace('from-', '').replace(' via-', ', ').replace(' to-', ', ')})`,
+                        borderColor: isActive ? themeOption.chessLight : 'rgba(255, 255, 255, 0.2)'
+                      }}
+                    >
+                      <div className="flex flex-col items-center space-y-3 relative z-10">
+                        <div 
+                          className="flex items-center justify-center w-10 h-10 rounded-lg shadow-md"
+                          style={{ backgroundColor: themeOption.chessLight }}
+                        >
+                          <IconComponent size={24} className="text-gray-900" />
+                        </div>
+                        <span className={`text-sm font-bold text-center ${themeOption.text}`}>
+                          {themeOption.name}
                         </span>
-                      )}
-                    </div>
-                  </button>
-                ))}
+                        {isActive && (
+                          <span className="px-2 py-1 bg-white/20 text-white text-xs rounded-full border border-white/30">
+                            Active
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  )
+                })}
               </div>
 
               <div className="flex items-center space-x-3 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-6 py-4 rounded-lg">
-                <InformationCircleIcon className="w-5 h-5 text-blue-500 flex-shrink-0" />
+                <Info size={20} className="text-blue-500 flex-shrink-0" />
                 <div>
                   <div className="font-bold">Current Theme: {theme.name}</div>
                   <div className="text-sm">{theme.description}</div>

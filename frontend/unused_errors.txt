@@ -1,0 +1,93 @@
+src/components/progress/achievements/AchievementFilters.tsx(39,9): error TS6133: 'handleStatusToggle' is declared but its value is never read.
+src/components/progress/learning/RecommendationEngine.tsx(8,42): error TS6196: 'LearningRecommendation' is declared but never used.
+src/components/progress/learning/RecommendationEngine.tsx(8,66): error TS6196: 'WeakArea' is declared but never used.
+src/components/progress/learning/StudyPlanner.tsx(9,34): error TS6196: 'StudySessionPlan' is declared but never used.
+src/components/settings/notifications/AlertSettings.tsx(18,3): error TS6133: 'availableSounds' is declared but its value is never read.
+src/components/study/masters/GameLibrary.tsx(21,3): error TS6133: 'onBookmarkToggle' is declared but its value is never read.
+src/components/study/plans/AchievementBadges.tsx(34,9): error TS6133: 'getBadgeIcon' is declared but its value is never read.
+src/components/study/plans/LessonViewer.tsx(23,10): error TS6133: 'currentSection' is declared but its value is never read.
+src/components/study/plans/LessonViewer.tsx(23,26): error TS6133: 'setCurrentSection' is declared but its value is never read.
+src/components/study/plans/ProgressTracker.tsx(5,78): error TS6133: 'PieChart' is declared but its value is never read.
+src/components/study/plans/ProgressTracker.tsx(5,102): error TS6133: 'TrendingUp' is declared but its value is never read.
+src/components/study/plans/StudyScheduler.tsx(438,54): error TS6133: 'index' is declared but its value is never read.
+src/data/adaptiveLearning.ts(14,1): error TS6192: All imports in import declaration are unused.
+src/data/aiOpponents.ts(2,1): error TS6192: All imports in import declaration are unused.
+src/data/gamificationData.ts(15,1): error TS6192: All imports in import declaration are unused.
+src/data/helpContent.ts(13,3): error TS6196: 'TutorialStep' is declared but never used.
+src/data/helpContent.ts(19,1): error TS6133: 'FaBrain' is declared but its value is never read.
+src/data/helpContent.ts(718,50): error TS6133: 'filters' is declared but its value is never read.
+src/data/historicGames.ts(11,3): error TS6196: 'GameAnalysis' is declared but never used.
+src/data/historicGames.ts(12,3): error TS6196: 'MoveAnnotation' is declared but never used.
+src/data/landingContent.ts(6,22): error TS6133: 'GraduationCap' is declared but its value is never read.
+src/data/landingContent.ts(7,1): error TS6133: 'FaBrain' is declared but its value is never read.
+src/data/learningPaths.ts(7,1): error TS6192: All imports in import declaration are unused.
+src/data/notificationSettings.ts(12,3): error TS6196: 'NotificationRule' is declared but never used.
+src/data/notificationSettings.ts(14,3): error TS6196: 'NotificationDiagnostics' is declared but never used.
+src/data/notificationSettings.ts(16,1): error TS6133: 'Trophy' is declared but its value is never read.
+src/data/openingsDatabase.ts(15,3): error TS6196: 'OpeningCategory' is declared but never used.
+src/data/openingsDatabase.ts(17,3): error TS6196: 'OpeningPopularity' is declared but never used.
+src/data/openingsDatabase.ts(533,48): error TS6133: 'eco' is declared but its value is never read.
+src/data/puzzleCategories.ts(3,1): error TS6192: All imports in import declaration are unused.
+src/data/puzzleCategories.ts(4,1): error TS6133: 'GiSwordsPower' is declared but its value is never read.
+src/data/puzzleCategories.ts(5,1): error TS6133: 'FaChessKing' is declared but its value is never read.
+src/data/tutorials.ts(18,1): error TS6192: All imports in import declaration are unused.
+src/data/tutorials.ts(19,1): error TS6133: 'GiSwordsPower' is declared but its value is never read.
+src/data/tutorials.ts(20,1): error TS6133: 'FaChessKing' is declared but its value is never read.
+src/data/userAccount.ts(13,1): error TS6192: All imports in import declaration are unused.
+src/data/userAccount.ts(14,1): error TS6133: 'FaChessKing' is declared but its value is never read.
+src/data/userProgress.ts(507,40): error TS6133: 'skillLevel' is declared but its value is never read.
+src/hooks/useAchievements.ts(30,23): error TS6133: 'setLeaderboard' is declared but its value is never read.
+src/hooks/useContact.ts(11,3): error TS6133: 'quickHelpOptions' is declared but its value is never read.
+src/hooks/useContact.ts(32,5): error TS6133: 'autoFillUserInfo' is declared but its value is never read.
+src/hooks/useEndgameLibrary.ts(1,44): error TS6133: 'useRef' is declared but its value is never read.
+src/hooks/useEndgameLibrary.ts(218,21): error TS6133: 'setIsLoading' is declared but its value is never read.
+src/hooks/useEndgameLibrary.ts(219,30): error TS6133: 'setIsLoadingPositions' is declared but its value is never read.
+src/hooks/useHelpCenter.ts(11,3): error TS6133: 'getFAQById' is declared but its value is never read.
+src/hooks/useHelpCenter.ts(29,3): error TS6196: 'ContentType' is declared but never used.
+src/hooks/useLearningPath.ts(10,3): error TS6196: 'LearningMilestone' is declared but never used.
+src/hooks/useNotifications.ts(30,29): error TS6133: 'setNotificationStats' is declared but its value is never read.
+src/hooks/useOpeningExplorer.ts(6,3): error TS6133: 'getOpeningByECO' is declared but its value is never read.
+src/hooks/usePlayComputer.ts(4,10): error TS6133: 'mockAIOpponents' is declared but its value is never read.
+src/hooks/usePlayComputer.ts(12,3): error TS6196: 'PlayerColor' is declared but never used.
+src/hooks/useProfile.ts(5,27): error TS6196: 'ProfileUser' is declared but never used.
+src/hooks/useProfile.ts(5,53): error TS6196: 'RecentActivity' is declared but never used.
+src/hooks/useProfile.ts(5,69): error TS6196: 'QuickAction' is declared but never used.
+src/hooks/useProfile.ts(11,28): error TS6133: 'options' is declared but its value is never read.
+src/hooks/useProgressOverview.ts(19,22): error TS6133: 'TrendingDown' is declared but its value is never read.
+src/hooks/useProgressOverview.ts(20,1): error TS6133: 'FaCrown' is declared but its value is never read.
+src/hooks/useStudyPlans.ts(16,1): error TS6192: All imports in import declaration are unused.
+src/hooks/useTutorials.ts(1,20): error TS6133: 'useEffect' is declared but its value is never read.
+src/hooks/useTutorials.ts(9,3): error TS6133: 'filterTutorials' is declared but its value is never read.
+src/hooks/useTutorials.ts(12,1): error TS6192: All imports in import declaration are unused.
+src/hooks/useTutorials.ts(49,21): error TS6133: 'setIsLoading' is declared but its value is never read.
+src/pages/help/HelpCenterPage.tsx(85,22): error TS6133: 'setActiveView' is declared but its value is never read.
+src/pages/help/TutorialsPage.tsx(17,21): error TS6133: 'CheckCircle' is declared but its value is never read.
+src/pages/help/TutorialsPage.tsx(45,5): error TS6133: 'tutorials' is declared but its value is never read.
+src/pages/help/TutorialsPage.tsx(48,5): error TS6133: 'currentTutorial' is declared but its value is never read.
+src/pages/play/AnalysisBoardPage.tsx(8,1): error TS6133: 'Badge' is declared but its value is never read.
+src/pages/play/AnalysisBoardPage.tsx(34,5): error TS6133: 'derived' is declared but its value is never read.
+src/pages/progress/ProgressOverviewPage.tsx(7,1): error TS6133: 'soundFX' is declared but its value is never read.
+src/pages/progress/ProgressOverviewPage.tsx(41,5): error TS6133: 'setTimePeriod' is declared but its value is never read.
+src/pages/progress/ProgressOverviewPage.tsx(42,5): error TS6133: 'refreshData' is declared but its value is never read.
+src/pages/progress/ProgressOverviewPage.tsx(47,5): error TS6133: 'weeklyProgress' is declared but its value is never read.
+src/pages/puzzles/EndgamePuzzlesPage.tsx(5,33): error TS6133: 'SkipForward' is declared but its value is never read.
+src/pages/puzzles/EndgamePuzzlesPage.tsx(5,99): error TS6133: 'Play' is declared but its value is never read.
+src/pages/puzzles/EndgamePuzzlesPage.tsx(5,105): error TS6133: 'Pause' is declared but its value is never read.
+src/pages/puzzles/OpeningPuzzlesPage.tsx(39,5): error TS6133: 'setActiveTab' is declared but its value is never read.
+src/pages/puzzles/PuzzleSelectionPage.tsx(3,41): error TS6133: 'Flame' is declared but its value is never read.
+src/pages/puzzles/PuzzleSelectionPage.tsx(9,1): error TS6133: 'soundFX' is declared but its value is never read.
+src/pages/puzzles/PuzzleSelectionPage.tsx(32,5): error TS6133: 'formattedStats' is declared but its value is never read.
+src/pages/puzzles/TacticalPuzzlesPage.tsx(5,80): error TS6133: 'Star' is declared but its value is never read.
+src/pages/puzzles/TacticalPuzzlesPage.tsx(5,108): error TS6133: 'Play' is declared but its value is never read.
+src/pages/puzzles/TacticalPuzzlesPage.tsx(5,114): error TS6133: 'Pause' is declared but its value is never read.
+src/pages/settings/AccountPage.tsx(3,1): error TS6133: 'FaCrown' is declared but its value is never read.
+src/pages/settings/AccountPage.tsx(25,5): error TS6133: 'disableTwoFactor' is declared but its value is never read.
+src/pages/study/EndgameLibraryPage.tsx(5,1): error TS6133: 'soundFX' is declared but its value is never read.
+src/pages/study/EndgameLibraryPage.tsx(55,5): error TS6133: 'setActiveTab' is declared but its value is never read.
+src/pages/study/EndgameLibraryPage.tsx(63,5): error TS6133: 'startPracticeSession' is declared but its value is never read.
+src/services/customPuzzleService.ts(4,3): error TS6196: 'CustomPuzzleCollection' is declared but never used.
+src/services/playComputerService.ts(11,3): error TS6196: 'AIOpponent' is declared but never used.
+src/services/puzzleSelectionService.ts(3,43): error TS6133: 'getRarityColor' is declared but its value is never read.
+src/services/puzzleSelectionService.ts(166,49): error TS6133: 'categories' is declared but its value is never read.
+src/services/puzzleService.ts(148,11): error TS6133: 'chess' is declared but its value is never read.
+src/services/puzzleService.ts(216,5): error TS6133: 'currentMoveIndex' is declared but its value is never read.

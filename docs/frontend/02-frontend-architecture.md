@@ -29,6 +29,31 @@ Eliminate code duplication through:
 ### 3. Separation of Concerns
 Clear boundaries between different aspects of the application:
 
+### 4. **Navigation Architecture (Research-Validated)**
+**Critical Finding**: Electron apps require different routing patterns than web apps to prevent white flash and ensure smooth transitions.
+
+**✅ Research-Based Navigation Decisions**:
+- **HashRouter over BrowserRouter**: "BrowserRouter may not work at all with file-based environments like Electron" due to `file://` URL constraints
+- **Programmatic Navigation**: Use `useNavigate()` hooks instead of declarative `<Navigate>` components for authentication flows
+- **Critical CSS**: Inline styles in HTML `<head>` to prevent FOUC (Flash of Unstyled Content) before React loads
+- **Theme-First Loading**: Theme applied synchronously before any routing occurs to prevent flicker
+
+**Navigation Flow Pattern**:
+```
+User Action → Loading State (500ms) → Success Animation (300ms) → navigate('/route', {replace: true})
+```
+
+### 5. **Design System & Style Guide (Golden Standard)**
+**Reference Implementation**: The Login Page (`src/pages/LoginPage.tsx`) serves as the **golden standard** for all design patterns and technical implementations.
+
+**✅ Comprehensive Style Guide**: See `15-style-guide-golden-standard.md` for:
+- **Visual design patterns** (glass morphism, gaming aesthetics, theme integration)  
+- **Animation standards** (GPU-accelerated, performance-optimized)
+- **Sound design integration** (click feedback, success/error audio)
+- **Accessibility requirements** (focus states, reduced motion support)
+- **Technical implementation** (component structure, error handling)
+- **Quality gates** (checklist for new components)
+
 - **Presentation Layer**: React components focused on UI rendering
 - **Business Logic Layer**: Custom hooks and services for chess logic
 - **State Management Layer**: Zustand stores for global state
