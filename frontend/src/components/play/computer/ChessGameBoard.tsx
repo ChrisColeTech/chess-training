@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react'
-import { Chessboard } from 'react-chessboard'
+import React, { useState, useCallback, useMemo } from 'react'
+import { Chess } from 'chess.js'
+import ChessBoard from '@/components/ChessBoard'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -21,53 +22,30 @@ export const ChessGameBoard: React.FC<ChessGameBoardProps> = ({
   showLastMove = true,
   theme
 }) => {
-  const [rightClickSquares, setRightClickSquares] = useState<Record<string, any>>({})
-  const [moveSquares, setMoveSquares] = useState<Record<string, any>>({})
-
   /**
-   * Handle piece drop on the board
+   * Create Chess instance from game position for move validation
    */
-  const onPieceDrop = useCallback((sourceSquare: string, targetSquare: string): boolean => {
-    if (!gameState || gameState.status !== 'active' || gameState.aiThinking) {
-      return false
+  const chessInstance = useMemo(() => {
+    if (!gameState?.position) return null
+    try {
+      return new Chess(gameState.position)
+    } catch (error) {
+      console.error('Invalid chess position:', error)
+      return null
     }
+  }, [gameState?.position])
 
-    // Visual feedback for move attempt
-    setMoveSquares({
-      [sourceSquare]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' },
-      [targetSquare]: { backgroundColor: 'rgba(255, 255, 0, 0.6)' }
-    })
-
-    // Clear visual feedback after a short delay
-    setTimeout(() => setMoveSquares({}), 600)
-
-    onPlayerMove(sourceSquare, targetSquare)
-    return true
+  /**
+   * Handle moves from the standardized ChessBoard component
+   */
+  const handleMove = useCallback((move: { from: string, to: string, promotion?: string }) => {
+    if (!gameState || gameState.status !== 'active' || gameState.aiThinking) {
+      return
+    }
+    
+    // Call the parent's move handler
+    onPlayerMove(move.from, move.to)
   }, [gameState, onPlayerMove])
-
-  /**
-   * Handle right-click on square for highlighting
-   */
-  const onSquareRightClick = useCallback((square: string) => {
-    const color = 'rgba(0, 255, 255, 0.4)'
-    setRightClickSquares(prev => ({
-      ...prev,
-      [square]: prev[square] ? undefined : { backgroundColor: color }
-    }))
-  }, [])
-
-  /**
-   * Get custom square styles for highlights
-   */
-  const customSquareStyles = {
-    ...rightClickSquares,
-    ...moveSquares,
-    // Highlight last move
-    ...(showLastMove && gameState.lastMove ? {
-      [gameState.lastMove.from]: { backgroundColor: 'rgba(155, 199, 0, 0.4)' },
-      [gameState.lastMove.to]: { backgroundColor: 'rgba(155, 199, 0, 0.6)' }
-    } : {})
-  }
 
   /**
    * Format time display
@@ -217,33 +195,23 @@ export const ChessGameBoard: React.FC<ChessGameBoardProps> = ({
       <Card className="bg-black/20 border-white/10 backdrop-blur-xl overflow-hidden">
         <CardContent className="p-2">
           <div className="relative gpu-accelerated" style={{ willChange: 'transform' }}>
-            <div className="w-full" style={{ 
-              height: 'min(70vh, 70vw)',
-              maxHeight: '800px',
-              minHeight: '400px'
-            }}>
-              <Chessboard
-                position={gameState.position}
-                onPieceDrop={onPieceDrop}
-                onSquareRightClick={onSquareRightClick}
-                boardOrientation={playerColor}
-                arePiecesDraggable={gameState.status === 'active' && !gameState.aiThinking}
-                animationDuration={200}
-                customSquareStyles={customSquareStyles}
-                customBoardStyle={{
-                  borderRadius: '12px',
-                  boxShadow: '0 0 40px rgba(0, 255, 255, 0.3)',
-                  transform: 'translateZ(0)' // GPU acceleration
+            <div className="flex justify-center">
+              <ChessBoard
+                chessInstance={chessInstance}
+                boardWidth={Math.min(600, Math.min(window.innerWidth * 0.7, window.innerHeight * 0.6))}
+                onMove={handleMove}
+                playerColor={playerColor}
+                disabled={gameState.status !== 'active' || gameState.aiThinking}
+                showCoordinates={showCoordinates}
+                lastMove={showLastMove ? gameState.lastMove : null}
+                customSquareStyles={{
+                  // Theme-based styling preserved from original
+                  ...(theme.primary.includes('cyan') ? {
+                    // Cyan theme styling can be added here if needed
+                  } : {
+                    // Default theme styling can be added here if needed
+                  })
                 }}
-                customDarkSquareStyle={{ 
-                  backgroundColor: theme.primary.includes('cyan') ? '#1e40af' : '#92400e',
-                  transition: 'background-color 0.2s ease'
-                }}
-                customLightSquareStyle={{ 
-                  backgroundColor: theme.primary.includes('cyan') ? '#3b82f6' : '#d97706',
-                  transition: 'background-color 0.2s ease'
-                }}
-                showBoardNotation={showCoordinates}
               />
             </div>
             

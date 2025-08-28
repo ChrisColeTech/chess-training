@@ -148,6 +148,120 @@ const onSquareClick = useCallback((square: Square) => {
   // Proper move validation with chess.js
   const moves = chessInstance.moves({ square: moveFrom, verbose: true })
   const foundMove = moves.find((m: any) => m.from === moveFrom && m.to === square)
+  
+  if (!foundMove) {
+    // Invalid move, try to select new piece
+    resetFirstMove(square)
+    return
+  }
+  
+  // Make the move with proper data structure
+  const moveData = { from: moveFrom, to: square, promotion: foundMove.promotion || undefined }
+  makeMove(moveData)
+}, [chessInstance, moveFrom, getMoveOptions, makeMove])
+
+// ✅ WORKING: Visual move indicators
+const getMoveOptions = useCallback((square: Square) => {
+  const moves = chessInstance.moves({ square, verbose: true })
+  const newSquares: { [key: string]: any } = {}
+  moves.map((move: any) => {
+    newSquares[move.to] = {
+      background: chessInstance.get(move.to) && chessInstance.get(move.to)?.color !== chessInstance.get(square)?.color
+        ? 'radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)'  // Capture highlight
+        : 'radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)',  // Move highlight
+      borderRadius: '50%'
+    }
+  })
+  newSquares[square] = { background: 'rgba(255, 255, 0, 0.4)' }  // Selected piece
+  setOptionSquares(newSquares)
+}, [chessInstance])
+
+// ✅ WORKING: Last move highlighting
+customSquareStyles={{
+  ...optionSquares,
+  ...rightClickedSquares,
+  ...(lastMove && {
+    [lastMove.from]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' },
+    [lastMove.to]: { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+  })
+}}
+
+// ✅ WORKING: Controlled board sizing
+<Chessboard
+  boardWidth={width}  // Controlled sizing prevents overflow
+  arePiecesDraggable={false}  // Click-to-move only
+/>
+```
+
+### **BROKEN CURRENT IMPLEMENTATION (development branch)**
+
+**File:** `/frontend/src/components/play/computer/ChessGameBoard.tsx`
+
+**Problems Identified:**
+
+1. **❌ BROKEN: No move validation**
+```typescript
+// Missing proper chess.js integration for move validation
+const onPieceDrop = useCallback((sourceSquare: string, targetSquare: string): boolean => {
+  // No move validation - just calls onPlayerMove
+  onPlayerMove(sourceSquare, targetSquare)
+  return true  // Always returns true regardless of validity
+}, [gameState, onPlayerMove])
+```
+
+2. **❌ BROKEN: No visual move indicators**
+```typescript
+// No getMoveOptions function
+// No optionSquares state management  
+// No move highlighting system
+```
+
+3. **❌ BROKEN: Uncontrolled board sizing**
+```typescript
+// Uses aspect-ratio instead of controlled width
+<div className="w-full" style={{ 
+  height: 'min(70vh, 70vw)',  // Uncontrolled sizing
+  maxHeight: '800px',
+  minHeight: '400px'
+}}>
+  <Chessboard />  // No boardWidth prop
+</div>
+```
+
+4. **❌ BROKEN: Drag-only interface**
+```typescript
+arePiecesDraggable={gameState.status === 'active' && !gameState.aiThinking}
+// No onSquareClick handler - only drag interface
+```
+
+### **LESSONS LEARNED FROM CHESS BOARD ANALYSIS**
+
+1. **Click-to-move > Drag-and-drop**: Original POC used reliable click-to-move pattern
+2. **Move validation is essential**: Must use chess.js moves() to validate before allowing moves  
+3. **Visual feedback systems**: Move indicators, capture highlights, selected piece highlighting
+4. **Controlled sizing**: Use boardWidth prop instead of CSS aspect-ratio for predictable sizing
+5. **State management patterns**: Separate states for moveFrom, optionSquares, rightClickedSquares
+6. **Last move highlighting**: Essential UX feature for tracking game progress
+7. **Chess.js integration**: Deep integration required, not just position management
+
+### **IMPLEMENTATION REQUIREMENTS**
+
+**Must implement from working POC pattern:**
+- Click-to-move with move validation using chess.js
+- Visual move indicators (dots for moves, different highlight for captures)  
+- Selected piece highlighting (yellow background)
+- Last move highlighting (from/to squares)
+- Controlled board sizing with boardWidth prop
+- Right-click square highlighting for analysis
+- Proper state management for all highlight systems
+
+**Must avoid from broken implementation:**
+- Drag-only interfaces without click support
+- Unvalidated move handling
+- Uncontrolled CSS sizing that causes overflow  
+- Missing visual feedback systems
+- Mock data architecture in UI components
+  const foundMove = moves.find((m: any) => m.from === moveFrom && m.to === square)
   if (!foundMove) return // Invalid move handling
   makeMove(moveData) // Clean move execution
 }, [chessInstance, moveFrom, getMoveOptions, makeMove])

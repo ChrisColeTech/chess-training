@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Chessboard } from 'react-chessboard'
+import ChessBoard from '@/components/ChessBoard'
 import { Chess } from 'chess.js'
 import { ArrowLeft, RotateCcw, Copy, FileDown } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -20,24 +20,23 @@ export const AnalysisBoardPage: React.FC = () => {
   const [boardOrientation, setBoardOrientation] = useState<'white' | 'black'>('white')
   const [fenInput, setFenInput] = useState('')
 
-  const handlePieceDrop = (sourceSquare: string, targetSquare: string) => {
+  const handleMove = useCallback((move: { from: string, to: string, promotion?: string }) => {
     try {
-      const move = chess.move({
-        from: sourceSquare,
-        to: targetSquare,
-        promotion: 'q' // Auto-promote to queen for simplicity
+      const result = chess.move({
+        from: move.from,
+        to: move.to,
+        promotion: move.promotion || 'q' // Auto-promote to queen for simplicity
       })
       
-      if (move) {
+      if (result) {
         setPosition(chess.fen())
         soundFX.playClick()
-        return true
       }
     } catch (e) {
-      // Invalid move
+      // Invalid move - chess.js validation already handled in ChessBoard
+      console.error('Move error:', e)
     }
-    return false
-  }
+  }, [chess])
 
   const handleLoadFen = () => {
     if (!fenInput.trim()) return
@@ -165,23 +164,15 @@ export const AnalysisBoardPage: React.FC = () => {
           {/* Chess board */}
           <div className="lg:col-span-3">
             <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
-              <div className="aspect-square max-w-2xl mx-auto">
-                <Chessboard
-                  position={position}
-                  onPieceDrop={handlePieceDrop}
-                  boardOrientation={boardOrientation}
-                  areArrowsAllowed
-                  showBoardNotation
-                  customBoardStyle={{
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-                  }}
-                  customLightSquareStyle={{ 
-                    backgroundColor: '#f0d9b5',
-                  }}
-                  customDarkSquareStyle={{ 
-                    backgroundColor: '#b58863',
-                  }}
+              <div className="flex justify-center">
+                <ChessBoard
+                  chessInstance={chess}
+                  boardWidth={Math.min(600, Math.min(window.innerWidth * 0.6, window.innerHeight * 0.6))}
+                  onMove={handleMove}
+                  playerColor={boardOrientation}
+                  disabled={false}
+                  showCoordinates={true}
+                  lastMove={null} // Analysis board doesn't track last move
                 />
               </div>
               
