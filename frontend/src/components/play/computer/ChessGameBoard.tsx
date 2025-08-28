@@ -220,18 +220,7 @@ export const ChessGameBoard: React.FC<ChessGameBoardProps> = ({
               <div className="absolute inset-0 pointer-events-none rounded-lg border-2 border-red-500 animate-pulse" />
             )}
             
-            {gameState.aiThinking && (
-              <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] rounded-lg flex items-center justify-center">
-                <div className="bg-black/60 px-6 py-3 rounded-lg border border-white/20">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
-                    <span className={`text-sm font-medium ${theme.text}`}>
-                      {gameState.setup.opponent.name} calculating...
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* Removed disruptive full-board overlay - AI thinking status shown in header only */}
           </div>
         </CardContent>
       </Card>

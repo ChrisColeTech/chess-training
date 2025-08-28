@@ -12,6 +12,7 @@ interface ChessBoardProps {
   showCoordinates?: boolean;
   customSquareStyles?: { [square: string]: React.CSSProperties };
   lastMove?: { from: string, to: string } | null;
+  arePiecesDraggable?: boolean;
 }
 
 /**
@@ -26,7 +27,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   disabled = false,
   showCoordinates = true,
   customSquareStyles = {},
-  lastMove = null
+  lastMove = null,
+  arePiecesDraggable = true
 }) => {
   const [moveFrom, setMoveFrom] = useState<Square | null>(null);
   const [rightClickedSquares, setRightClickedSquares] = useState<{ [key: string]: any }>({});
@@ -125,6 +127,35 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
     });
   }, [rightClickedSquares]);
 
+  const onPieceDrop = useCallback((sourceSquare: Square, targetSquare: Square): boolean => {
+    if (!chessInstance || disabled) return false;
+
+    // Check if it's a valid move
+    const moves = chessInstance.moves({
+      square: sourceSquare,
+      verbose: true,
+    });
+    
+    const foundMove = moves.find((m: any) => m.from === sourceSquare && m.to === targetSquare);
+    
+    if (!foundMove) {
+      return false; // Invalid move
+    }
+
+    // Make the move
+    const moveData = {
+      from: sourceSquare,
+      to: targetSquare,
+      promotion: foundMove.promotion || undefined
+    };
+
+    if (onMove) {
+      onMove(moveData);
+    }
+    
+    return true;
+  }, [chessInstance, disabled, onMove]);
+
   if (!chessInstance) {
     return (
       <div className="w-full h-96 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700">
@@ -163,7 +194,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
         }}
         customSquareStyles={allSquareStyles}
         areArrowsAllowed={true}
-        arePiecesDraggable={false} // Use click-to-move for consistency
+        arePiecesDraggable={!disabled && arePiecesDraggable}
+        onPieceDrop={onPieceDrop}
         showBoardNotation={showCoordinates}
         customDarkSquareStyle={{
           backgroundColor: '#b58863'
