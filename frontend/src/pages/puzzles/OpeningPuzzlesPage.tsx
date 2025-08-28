@@ -86,18 +86,19 @@ export const OpeningPuzzlesPage: React.FC = () => {
           theme={theme}
         />
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* Chess Board Component */}
-          <div className="xl:col-span-2">
-            <PuzzleBoard
-              position={session.boardPosition}
-              onPieceDrop={onPieceDrop}
-            />
-            
-            {/* Board Controls Component */}
-            <div className="mt-6">
-              <PuzzleControls
-                currentPuzzleIndex={session.currentPuzzleIndex}
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Chess Board Component - Prominent & Board-Centric (70% width) */}
+          <div className="lg:w-[70%] flex justify-center">
+            <div className="w-full max-w-none">
+              <PuzzleBoard
+                position={session.boardPosition}
+                onPieceDrop={onPieceDrop}
+              />
+              
+              {/* Board Controls Component */}
+              <div className="mt-6">
+                <PuzzleControls
+                  currentPuzzleIndex={session.currentPuzzleIndex}
                 totalPuzzles={mockOpeningPuzzles.length}
                 canGoPrevious={canGoPrevious}
                 canGoNext={canGoNext}
@@ -106,11 +107,12 @@ export const OpeningPuzzlesPage: React.FC = () => {
                 onReset={resetPuzzle}
                 onSkip={skipPuzzle}
               />
+              </div>
             </div>
           </div>
 
-          {/* Right Panel with Components */}
-          <div className="space-y-6">
+          {/* Right Panel with Components - Compact Side Panel (30% width) */}
+          <div className="lg:w-[30%] lg:max-w-sm space-y-6">
             <Card className="backdrop-blur-xl bg-black/20 border-white/10 hover:shadow-cyan-500/25 hover:border-white/20 transition-all duration-500">
               <div className="p-4">
                 {session.activeTab === 'puzzle' ? (

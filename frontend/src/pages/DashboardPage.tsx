@@ -242,82 +242,74 @@ export const DashboardPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Study Section */}
+            {/* Progress Summary - Consolidated */}
             <div className={`${theme.surface} rounded-2xl p-6 shadow-xl`}>
-              <div className="flex items-center mb-6">
-                <div className={`p-3 ${colors.bgLight} rounded-lg mr-4`}>
-                  <BookOpen size={24} className={colors.primary} />
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center">
+                  <div className={`p-3 ${colors.bgLight} rounded-lg mr-4`}>
+                    <BarChart3 size={24} className={colors.primary} />
+                  </div>
+                  <h3 className="text-xl font-bold">Your Progress</h3>
                 </div>
-                <h3 className="text-xl font-bold">Study Materials</h3>
-              </div>
-              <div className="space-y-3">
-                <Link to="/study/plans" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
-                  <div className="flex items-center">
-                    <BookOpen size={18} className={`${colors.primary} mr-3`} />
-                    <span>Study Plans</span>
-                  </div>
-                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
-                </Link>
-                <Link to="/study/openings" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
-                  <div className="flex items-center">
-                    <Lightbulb size={18} className={`${colors.primary} mr-3`} />
-                    <span>Opening Explorer</span>
-                  </div>
-                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
-                </Link>
-                <Link to="/study/endgames" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
-                  <div className="flex items-center">
-                    <Database size={18} className={`${colors.primary} mr-3`} />
-                    <span>Endgame Library</span>
-                  </div>
-                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
-                </Link>
-                <Link to="/study/masters" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
-                  <div className="flex items-center">
-                    <Users size={18} className={`${colors.primary} mr-3`} />
-                    <span>Master Games</span>
-                  </div>
-                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                <Link 
+                  to="/progress/overview" 
+                  className={`text-sm ${colors.primary} hover:opacity-80 transition-opacity`}
+                >
+                  View Details
                 </Link>
               </div>
-            </div>
-
-            {/* Progress Section */}
-            <div className={`${theme.surface} rounded-2xl p-6 shadow-xl`}>
-              <div className="flex items-center mb-6">
-                <div className={`p-3 ${colors.bgLight} rounded-lg mr-4`}>
-                  <BarChart3 size={24} className={colors.primary} />
+              
+              {/* Key Progress Metrics */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className={`p-4 ${colors.bgLight} rounded-lg`}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm opacity-70">Current Rating</p>
+                      <p className="text-2xl font-bold">1,247</p>
+                    </div>
+                    <TrendingUp size={20} className="text-green-500" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold">Progress Tracking</h3>
+                <div className={`p-4 ${colors.bgLight} rounded-lg`}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm opacity-70">Puzzle Accuracy</p>
+                      <p className="text-2xl font-bold">87%</p>
+                    </div>
+                    <Target size={20} className="text-blue-500" />
+                  </div>
+                </div>
+                <div className={`p-4 ${colors.bgLight} rounded-lg`}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm opacity-70">Study Streak</p>
+                      <p className="text-2xl font-bold">12 days</p>
+                    </div>
+                    <Zap size={20} className="text-orange-500" />
+                  </div>
+                </div>
+                <div className={`p-4 ${colors.bgLight} rounded-lg`}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm opacity-70">Achievements</p>
+                      <p className="text-2xl font-bold">24/50</p>
+                    </div>
+                    <Trophy size={20} className="text-yellow-500" />
+                  </div>
+                </div>
               </div>
-              <div className="space-y-3">
-                <Link to="/progress/overview" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
+              
+              {/* Quick Progress Actions */}
+              <div className="space-y-2">
+                <Link 
+                  to="/progress/achievements" 
+                  className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}
+                >
                   <div className="flex items-center">
-                    <BarChart3 size={18} className={`${colors.primary} mr-3`} />
-                    <span>Overview</span>
+                    <Trophy size={16} className={`${colors.primary} mr-3`} />
+                    <span className="text-sm">View All Achievements</span>
                   </div>
-                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
-                </Link>
-                <Link to="/progress/detailed-stats" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
-                  <div className="flex items-center">
-                    <TrendingUp size={18} className={`${colors.primary} mr-3`} />
-                    <span>Detailed Stats</span>
-                  </div>
-                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
-                </Link>
-                <Link to="/progress/achievements" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
-                  <div className="flex items-center">
-                    <Trophy size={18} className={`${colors.primary} mr-3`} />
-                    <span>Achievements</span>
-                  </div>
-                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
-                </Link>
-                <Link to="/progress/learning-path" className={`flex items-center justify-between p-3 rounded-lg hover:${colors.bgLight} transition-colors group`}>
-                  <div className="flex items-center">
-                    <Brain size={18} className={`${colors.primary} mr-3`} />
-                    <span>Learning Path</span>
-                  </div>
-                  <ChevronRight size={16} className="opacity-50 group-hover:opacity-100" />
+                  <ChevronRight size={14} className="opacity-50 group-hover:opacity-100" />
                 </Link>
               </div>
             </div>

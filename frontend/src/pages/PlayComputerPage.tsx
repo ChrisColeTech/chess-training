@@ -235,10 +235,11 @@ export const PlayComputerPage: React.FC = () => {
           {/* Tab Content */}
           <div className="space-y-6">
             
-            {/* Setup Tab */}
+            {/* Setup Tab - Board-Centric Layout */}
             <TabsContent value="setup" className="space-y-6">
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                <div className="xl:col-span-2">
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* Opponent Selection - Primary Element (70% width) */}
+                <div className="lg:w-[70%]">
                   <OpponentSelector
                     opponents={availableOpponents}
                     selectedOpponent={gameSetup.opponent || null}
@@ -247,7 +248,8 @@ export const PlayComputerPage: React.FC = () => {
                     theme={theme}
                   />
                 </div>
-                <div>
+                {/* Game Setup - Compact Side Panel (30% width) */}
+                <div className="lg:w-[30%] lg:max-w-sm">
                   <GameSetup
                     setup={gameSetup}
                     onSetupChange={updateSetup}
@@ -259,21 +261,25 @@ export const PlayComputerPage: React.FC = () => {
               </div>
             </TabsContent>
 
-            {/* Game Tab */}
+            {/* Game Tab - Board-Centric Layout */}
             <TabsContent value="game">
               {gameState ? (
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                  <div className="xl:col-span-2">
-                    <ChessGameBoard
-                      gameState={gameState}
-                      onPlayerMove={handlePlayerMove}
-                      playerColor={playerColor}
-                      showCoordinates={true}
-                      showLastMove={true}
-                      theme={theme}
-                    />
+                <div className="flex flex-col lg:flex-row gap-6">
+                  {/* Chess Board - Dominant Element (70% width on large screens) */}
+                  <div className="lg:w-[70%] flex justify-center">
+                    <div className="w-full max-w-none">
+                      <ChessGameBoard
+                        gameState={gameState}
+                        onPlayerMove={handlePlayerMove}
+                        playerColor={playerColor}
+                        showCoordinates={true}
+                        showLastMove={true}
+                        theme={theme}
+                      />
+                    </div>
                   </div>
-                  <div>
+                  {/* Side Panel - Compact (30% width) */}
+                  <div className="lg:w-[30%] lg:max-w-sm">
                     <MoveHistory
                       moves={gameState.moves}
                       currentMoveIndex={currentMoveIndex}

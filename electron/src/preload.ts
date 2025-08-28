@@ -31,6 +31,28 @@ const electronAPI = {
     clear: () => ipcRenderer.invoke('config:clear')
   },
   
+  // Window control methods
+  window: {
+    minimize: () => ipcRenderer.invoke('window:minimize'),
+    maximize: () => ipcRenderer.invoke('window:maximize'),
+    close: () => ipcRenderer.invoke('window:close'),
+    isMaximized: () => ipcRenderer.invoke('window:is-maximized'),
+    onMaximized: (callback: (maximized: boolean) => void) => {
+      ipcRenderer.on('window:maximized', (_, maximized) => callback(maximized))
+      return () => ipcRenderer.removeAllListeners('window:maximized')
+    }
+  },
+  
+  // Legacy aliases for compatibility
+  minimizeWindow: () => ipcRenderer.invoke('window:minimize'),
+  maximizeWindow: () => ipcRenderer.invoke('window:maximize'),
+  closeWindow: () => ipcRenderer.invoke('window:close'),
+  isWindowMaximized: () => ipcRenderer.invoke('window:is-maximized'),
+  onWindowMaximized: (callback: (maximized: boolean) => void) => {
+    ipcRenderer.on('window:maximized', (_, maximized) => callback(maximized))
+  },
+  removeAllListeners: () => ipcRenderer.removeAllListeners('window:maximized'),
+  
   // Check if running in Electron
   isElectron: true
 };

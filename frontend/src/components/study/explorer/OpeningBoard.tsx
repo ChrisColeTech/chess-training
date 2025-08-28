@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button"
 import type { OpeningBoardProps } from '@/types/openingExplorer'
 
 /**
- * Opening board component with position display and controls
- * Handles chess board visualization and basic interactions
+ * Board-centric opening board component with position display and controls
+ * Features prominent board design taking 60-70% of screen space
+ * GPU-optimized for smooth chess board visualization and interactions
  */
 const OpeningBoard: React.FC<OpeningBoardProps> = ({
   position,
@@ -52,17 +53,31 @@ const OpeningBoard: React.FC<OpeningBoardProps> = ({
   }
 
   return (
-    <div className="backdrop-blur-2xl bg-black/30 border-white/20 rounded-2xl border-2 p-8">
-      {/* Board container */}
-      <div className="aspect-square max-w-2xl mx-auto relative">
+    <div className="backdrop-blur-2xl bg-black/30 border-white/20 rounded-2xl border-2 p-4">
+      {/* Board container - Prominent & Board-Centric */}
+      <div className="gpu-accelerated relative" style={{
+        willChange: 'transform',
+        height: 'min(75vh, 75vw)',
+        maxHeight: '900px',
+        minHeight: '450px'
+      }}>
         <Chessboard
           position={position}
           onPieceDrop={handlePieceDrop}
           boardOrientation={orientation}
           areArrowsAllowed={true}
-          customBoardStyle={boardStyle}
-          customLightSquareStyle={lightSquareStyle}
-          customDarkSquareStyle={darkSquareStyle}
+          customBoardStyle={{
+            ...boardStyle,
+            transform: 'translateZ(0)' // GPU acceleration
+          }}
+          customLightSquareStyle={{
+            ...lightSquareStyle,
+            transition: 'background-color 0.2s ease'
+          }}
+          customDarkSquareStyle={{
+            ...darkSquareStyle,
+            transition: 'background-color 0.2s ease'
+          }}
           customSquareStyles={customSquareStyles}
           showBoardNotation={showCoordinates}
           arePiecesDraggable={allowMoves}

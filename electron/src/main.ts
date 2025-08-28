@@ -58,6 +58,33 @@ class ChessTrainingApp {
       return true;
     });
     
+    // Window control handlers
+    ipcMain.handle('window:minimize', () => {
+      if (this.mainWindow) {
+        this.mainWindow.minimize();
+      }
+    });
+
+    ipcMain.handle('window:maximize', () => {
+      if (this.mainWindow) {
+        if (this.mainWindow.isMaximized()) {
+          this.mainWindow.unmaximize();
+        } else {
+          this.mainWindow.maximize();
+        }
+      }
+    });
+
+    ipcMain.handle('window:close', () => {
+      if (this.mainWindow) {
+        this.mainWindow.close();
+      }
+    });
+
+    ipcMain.handle('window:is-maximized', () => {
+      return this.mainWindow?.isMaximized() || false;
+    });
+
     // Auth storage handlers
     ipcMain.handle('auth:set-tokens', async (_, accessToken: string, refreshToken: string) => {
       await secureStorage.setTokens(accessToken, refreshToken);

@@ -185,6 +185,24 @@
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
+  will-change: transform;
+}
+
+/* Chess Board Optimizations */
+.chess-board-container {
+  contain: layout style paint;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Reduced animation impact */
+.animate-bounce-subtle {
+  animation: bounce-subtle 3s ease-in-out infinite;
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-5px) scale(1.02); }
 }
 
 /* Reduced Motion Support */

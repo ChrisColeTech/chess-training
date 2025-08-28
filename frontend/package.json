@@ -45,6 +45,7 @@
     "@playwright/test": "^1.55.0",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
+    "@types/electron": "^1.4.38",
     "@types/howler": "^2.2.12",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^24.3.0",
@@ -52,10 +53,36 @@
     "@types/react-dom": "^18.2.23",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
+    "electron": "^37.4.0",
+    "electron-builder": "^26.0.12",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.4.3",
     "vite": "^5.2.8",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "wait-on": "^8.0.4"
+  },
+  "build": {
+    "appId": "com.chess-training.app",
+    "productName": "Chess Training",
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.games"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   }
 }

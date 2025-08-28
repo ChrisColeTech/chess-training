@@ -9,8 +9,9 @@ import type { ChessGameBoardProps } from '@/types/playComputer'
 import { soundFX } from '@/utils/soundEffects'
 
 /**
- * Gaming-themed chess board component for computer battles
- * Features live game board with battle arena aesthetics
+ * Board-centric gaming chess component for computer battles
+ * Features prominent, responsive board design with battle arena aesthetics
+ * Optimized for 60-70% screen space and smooth performance
  */
 export const ChessGameBoard: React.FC<ChessGameBoardProps> = ({
   gameState,
@@ -212,27 +213,39 @@ export const ChessGameBoard: React.FC<ChessGameBoardProps> = ({
         </CardContent>
       </Card>
 
-      {/* Chess Board */}
+      {/* Chess Board - Prominent & Board-Centric */}
       <Card className="bg-black/20 border-white/10 backdrop-blur-xl overflow-hidden">
-        <CardContent className="p-4">
-          <div className="relative">
-            <Chessboard
-              position={gameState.position}
-              onPieceDrop={onPieceDrop}
-              onSquareRightClick={onSquareRightClick}
-              boardOrientation={playerColor}
-              arePiecesDraggable={gameState.status === 'active' && !gameState.aiThinking}
-              animationDuration={200}
-              boardWidth={Math.min(600, window.innerWidth - 100)}
-              customSquareStyles={customSquareStyles}
-              customBoardStyle={{
-                borderRadius: '8px',
-                boxShadow: '0 0 20px rgba(0, 255, 255, 0.3)'
-              }}
-              customDarkSquareStyle={{ backgroundColor: theme.primary.includes('cyan') ? '#1e40af' : '#92400e' }}
-              customLightSquareStyle={{ backgroundColor: theme.primary.includes('cyan') ? '#3b82f6' : '#d97706' }}
-              showBoardNotation={showCoordinates}
-            />
+        <CardContent className="p-2">
+          <div className="relative gpu-accelerated" style={{ willChange: 'transform' }}>
+            <div className="w-full" style={{ 
+              height: 'min(70vh, 70vw)',
+              maxHeight: '800px',
+              minHeight: '400px'
+            }}>
+              <Chessboard
+                position={gameState.position}
+                onPieceDrop={onPieceDrop}
+                onSquareRightClick={onSquareRightClick}
+                boardOrientation={playerColor}
+                arePiecesDraggable={gameState.status === 'active' && !gameState.aiThinking}
+                animationDuration={200}
+                customSquareStyles={customSquareStyles}
+                customBoardStyle={{
+                  borderRadius: '12px',
+                  boxShadow: '0 0 40px rgba(0, 255, 255, 0.3)',
+                  transform: 'translateZ(0)' // GPU acceleration
+                }}
+                customDarkSquareStyle={{ 
+                  backgroundColor: theme.primary.includes('cyan') ? '#1e40af' : '#92400e',
+                  transition: 'background-color 0.2s ease'
+                }}
+                customLightSquareStyle={{ 
+                  backgroundColor: theme.primary.includes('cyan') ? '#3b82f6' : '#d97706',
+                  transition: 'background-color 0.2s ease'
+                }}
+                showBoardNotation={showCoordinates}
+              />
+            </div>
             
             {/* Game Overlay Effects */}
             {gameState.inCheck && (

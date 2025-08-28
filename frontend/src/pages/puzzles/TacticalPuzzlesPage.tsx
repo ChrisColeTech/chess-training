@@ -257,10 +257,10 @@ export const TacticalPuzzlesPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* Chess board */}
-          <div className="xl:col-span-2">
-            <Card className={`${theme.glassMorphism} border-0 p-6`}>
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Chess board - Prominent & Board-Centric (70% width) */}
+          <div className="lg:w-[70%] flex justify-center">
+            <Card className={`${theme.glassMorphism} border-0 p-2 w-full max-w-none`}>
               <div className="aspect-square max-w-2xl mx-auto">
                 <Chessboard
                   position={boardPosition}
@@ -268,10 +268,16 @@ export const TacticalPuzzlesPage: React.FC = () => {
                   boardOrientation="white"
                   customBoardStyle={{
                     borderRadius: '8px',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
                   }}
-                  customLightSquareStyle={{ backgroundColor: '#f0d9b5' }}
-                  customDarkSquareStyle={{ backgroundColor: '#b58863' }}
+                  customLightSquareStyle={{ 
+                    backgroundColor: '#f0d9b5',
+                    transition: 'background-color 0.2s ease'
+                  }}
+                  customDarkSquareStyle={{ 
+                    backgroundColor: '#b58863',
+                    transition: 'background-color 0.2s ease'
+                  }}
                 />
               </div>
 
@@ -322,8 +328,8 @@ export const TacticalPuzzlesPage: React.FC = () => {
             </Card>
           </div>
 
-          {/* Puzzle info and controls */}
-          <div className="space-y-6">
+          {/* Puzzle info and controls - Compact Side Panel (30% width) */}
+          <div className="lg:w-[30%] lg:max-w-sm space-y-6">
             {/* Puzzle details */}
             <Card className={`${theme.glassMorphism} border-0`}>
               <CardHeader>

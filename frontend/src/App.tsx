@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react'
 import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import { useThemeStore } from './stores/themeStore'
+import { useAuthStore } from './stores/authStore'
 import { SplashPage } from './pages/SplashPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/auth/RegisterPage'
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage'
 import { ResetPasswordPage } from './pages/auth/ResetPasswordPage'
-import { LandingPage } from './pages/LandingPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { PageTransition } from './components/PageTransition'
-import { AuthNavigator } from './components/AuthNavigator'
 import { MainLayout } from './components/layout/MainLayout'
+import { DesktopAppLayout } from './components/layout/DesktopAppLayout'
 
 // Puzzle pages
 import TacticalPuzzlesPage from './pages/puzzles/TacticalPuzzlesPage'
@@ -25,11 +25,6 @@ import PlayComputerPage from './pages/play/PlayComputerPage'
 import AnalysisBoardPage from './pages/play/AnalysisBoardPage'
 import GameReviewPage from './pages/play/GameReviewPage'
 
-// Study pages
-import OpeningExplorerPage from './pages/study/OpeningExplorerPage'
-import EndgameLibraryPage from './pages/study/EndgameLibraryPage'
-import MasterGamesPage from './pages/study/MasterGamesPage'
-import StudyPlansPage from './pages/study/StudyPlansPage'
 
 // Progress pages
 import ProgressOverviewPage from './pages/progress/ProgressOverviewPage'
@@ -50,13 +45,64 @@ import ContactPage from './pages/help/ContactPage'
 
 import './styles/gaming-animations.css'
 
+// Auth-aware home route component
+const AuthAwareHome: React.FC = () => {
+  const { isAuthenticated } = useAuthStore()
+  
+  // For authenticated users, show dashboard directly (no marketing flash)
+  if (isAuthenticated) {
+    return (
+      <PageTransition direction="fade">
+        <DashboardPage />
+      </PageTransition>
+    )
+  }
+  
+  // Desktop app - go directly to login (no marketing pages in desktop apps)
+  return (
+    <PageTransition direction="slide-right">
+      <LoginPage />
+    </PageTransition>
+  )
+}
+
+// Protected route for authenticated users only
+const AuthProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated } = useAuthStore()
+  
+  if (!isAuthenticated) {
+    return (
+      <PageTransition direction="slide-right">
+        <LoginPage />
+      </PageTransition>
+    )
+  }
+  
+  return <>{children}</>
+}
+
+// Public route for unauthenticated users only (redirect authenticated users to dashboard)
+const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated } = useAuthStore()
+  
+  if (isAuthenticated) {
+    return (
+      <PageTransition direction="fade">
+        <DashboardPage />
+      </PageTransition>
+    )
+  }
+  
+  return <>{children}</>
+}
+
 function App() {
   const [isLoading, setIsLoading] = useState(true)
   const [isInitialized, setIsInitialized] = useState(false)
   
   // Zustand stores
   const { initializeTheme } = useThemeStore()
-  // const { isAuthenticated } = useAuthStore() // Unused for now
+  const { isAuthenticated } = useAuthStore()
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -88,268 +134,282 @@ function App() {
 
   return (
     <Router>
-      <AuthNavigator />
-      <MainLayout>
-        <Routes>
-        {/* Landing page as home */}
+      <DesktopAppLayout>
+        <MainLayout>
+          <Routes>
+        {/* Auth-aware home route - no marketing flash for authenticated users */}
         <Route 
           path="/" 
-          element={
-            <PageTransition direction="fade">
-              <LandingPage />
-            </PageTransition>
-          } 
+          element={<AuthAwareHome />} 
         />
         
-        {/* Authentication routes */}
+        {/* Authentication routes - redirect authenticated users to dashboard */}
         <Route 
           path="/login" 
           element={
-            <PageTransition direction="slide-right">
-              <LoginPage />
-            </PageTransition>
+            <PublicOnlyRoute>
+              <PageTransition direction="slide-right">
+                <LoginPage />
+              </PageTransition>
+            </PublicOnlyRoute>
           } 
         />
         <Route 
           path="/auth/register" 
           element={
-            <PageTransition direction="slide-right">
-              <RegisterPage />
-            </PageTransition>
+            <PublicOnlyRoute>
+              <PageTransition direction="slide-right">
+                <RegisterPage />
+              </PageTransition>
+            </PublicOnlyRoute>
           } 
         />
         <Route 
           path="/auth/forgot-password" 
           element={
-            <PageTransition direction="slide-right">
-              <ForgotPasswordPage />
-            </PageTransition>
+            <PublicOnlyRoute>
+              <PageTransition direction="slide-right">
+                <ForgotPasswordPage />
+              </PageTransition>
+            </PublicOnlyRoute>
           } 
         />
         <Route 
           path="/auth/reset/:token" 
           element={
-            <PageTransition direction="slide-right">
-              <ResetPasswordPage />
-            </PageTransition>
+            <PublicOnlyRoute>
+              <PageTransition direction="slide-right">
+                <ResetPasswordPage />
+              </PageTransition>
+            </PublicOnlyRoute>
           } 
         />
         
-        {/* Main app routes */}
+        {/* Main app routes - require authentication */}
         <Route 
           path="/dashboard" 
           element={
-            <PageTransition direction="slide-left">
-              <DashboardPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <DashboardPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/profile" 
           element={
-            <PageTransition direction="slide-left">
-              <ProfilePage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <ProfilePage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
 
-        {/* Puzzle routes */}
+        {/* Puzzle routes - require authentication */}
         <Route 
           path="/puzzles" 
           element={
-            <PageTransition direction="slide-left">
-              <PuzzleSelectionPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <PuzzleSelectionPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/puzzles/tactical" 
           element={
-            <PageTransition direction="slide-left">
-              <TacticalPuzzlesPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <TacticalPuzzlesPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/puzzles/endgame" 
           element={
-            <PageTransition direction="slide-left">
-              <EndgamePuzzlesPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <EndgamePuzzlesPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/puzzles/opening" 
           element={
-            <PageTransition direction="slide-left">
-              <OpeningPuzzlesPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <OpeningPuzzlesPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/puzzles/custom" 
           element={
-            <PageTransition direction="slide-left">
-              <CustomPuzzlesPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <CustomPuzzlesPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
 
-        {/* Play routes */}
+        {/* Play routes - require authentication */}
         <Route 
           path="/play/computer" 
           element={
-            <PageTransition direction="slide-left">
-              <PlayComputerPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <PlayComputerPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/play/analysis" 
           element={
-            <PageTransition direction="slide-left">
-              <AnalysisBoardPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <AnalysisBoardPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/play/review" 
           element={
-            <PageTransition direction="slide-left">
-              <GameReviewPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <GameReviewPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
 
-        {/* Study routes */}
-        <Route 
-          path="/study/openings" 
-          element={
-            <PageTransition direction="slide-left">
-              <OpeningExplorerPage />
-            </PageTransition>
-          } 
-        />
-        <Route 
-          path="/study/endgames" 
-          element={
-            <PageTransition direction="slide-left">
-              <EndgameLibraryPage />
-            </PageTransition>
-          } 
-        />
-        <Route 
-          path="/study/masters" 
-          element={
-            <PageTransition direction="slide-left">
-              <MasterGamesPage />
-            </PageTransition>
-          } 
-        />
-        <Route 
-          path="/study/plans" 
-          element={
-            <PageTransition direction="slide-left">
-              <StudyPlansPage />
-            </PageTransition>
-          } 
-        />
 
-        {/* Progress routes */}
+        {/* Progress routes - require authentication */}
         <Route 
           path="/progress/overview" 
           element={
-            <PageTransition direction="slide-left">
-              <ProgressOverviewPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <ProgressOverviewPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/progress/detailed-stats" 
           element={
-            <PageTransition direction="slide-left">
-              <DetailedStatsPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <DetailedStatsPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/progress/achievements" 
           element={
-            <PageTransition direction="slide-left">
-              <AchievementsPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <AchievementsPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/progress/learning-path" 
           element={
-            <PageTransition direction="slide-left">
-              <LearningPathPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <LearningPathPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
 
-        {/* Settings routes */}
+        {/* Settings routes - require authentication */}
         <Route 
           path="/settings/preferences" 
           element={
-            <PageTransition direction="slide-left">
-              <PreferencesPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <PreferencesPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/settings/board" 
           element={
-            <PageTransition direction="slide-left">
-              <BoardSettingsPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <BoardSettingsPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/settings/notifications" 
           element={
-            <PageTransition direction="slide-left">
-              <NotificationsPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <NotificationsPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/settings/account" 
           element={
-            <PageTransition direction="slide-left">
-              <AccountPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <AccountPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
 
-        {/* Help routes */}
+        {/* Help routes - require authentication */}
         <Route 
           path="/help/center" 
           element={
-            <PageTransition direction="slide-left">
-              <HelpCenterPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <HelpCenterPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/help/tutorials" 
           element={
-            <PageTransition direction="slide-left">
-              <TutorialsPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <TutorialsPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
         <Route 
           path="/help/contact" 
           element={
-            <PageTransition direction="slide-left">
-              <ContactPage />
-            </PageTransition>
+            <AuthProtectedRoute>
+              <PageTransition direction="slide-left">
+                <ContactPage />
+              </PageTransition>
+            </AuthProtectedRoute>
           } 
         />
-        </Routes>
-      </MainLayout>
+          </Routes>
+        </MainLayout>
+      </DesktopAppLayout>
     </Router>
   )
 }

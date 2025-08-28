@@ -48,11 +48,9 @@ export const LoginPage: React.FC = () => {
     const success = await login(data.email, data.password)
     if (success) {
       soundFX.playSuccess()
-      console.log('Login successful')
-      // Small delay to show success state before navigation
-      await new Promise(resolve => setTimeout(resolve, 300))
-      // Navigate programmatically instead of using Navigate component
-      navigate('/dashboard', { replace: true })
+      console.log('Login successful - auth routing will handle navigation')
+      // Auth-aware routing in App.tsx will handle navigation automatically
+      // No manual navigation needed
     } else {
       soundFX.playError()
     }
@@ -96,12 +94,10 @@ export const LoginPage: React.FC = () => {
     useAuthStore.setState({ isAuthenticated: true })
     
     soundFX.playSuccess()
-    console.log('Demo login successful - bypassing API')
+    console.log('Demo login successful - auth routing will handle navigation')
     
-    // Small delay to show success state before navigation
-    await new Promise(resolve => setTimeout(resolve, 300))
-    // Navigate programmatically instead of relying on AuthNavigator
-    navigate('/dashboard', { replace: true })
+    // Auth-aware routing in App.tsx will handle navigation automatically
+    // No manual navigation needed
   }
 
   return (

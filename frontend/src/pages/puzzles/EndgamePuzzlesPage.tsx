@@ -320,7 +320,7 @@ export const EndgamePuzzlesPage: React.FC = () => {
                       boardOrientation="white"
                       customBoardStyle={{
                         borderRadius: '8px',
-                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
                       }}
                       customLightSquareStyle={{ backgroundColor: '#f0d9b5' }}
                       customDarkSquareStyle={{ backgroundColor: '#b58863' }}
