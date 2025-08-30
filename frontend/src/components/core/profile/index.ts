@@ -1,5 +1,0 @@
-export { ProfileHeader } from './ProfileHeader'
-export { ProfileTabs } from './ProfileTabs'
-export { ProfileOverview } from './ProfileOverview'
-export { ProfileAchievements } from './ProfileAchievements'
-export { ProfileActivity } from './ProfileActivity'

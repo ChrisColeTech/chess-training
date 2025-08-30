@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
-// Theme definitions (moved from old React Context implementation)
+// Theme definitions from established POC
 export const themes = {
   'cyber-neon': {
     name: 'Cyber Neon',
@@ -117,52 +117,8 @@ interface ThemeState {
   applyThemeToDOM: (theme: Theme) => void
 }
 
-// Custom storage for Electron config
-const electronStorage = createJSONStorage(() => ({
-  getItem: async (name: string): Promise<string | null> => {
-    if (typeof window !== 'undefined' && (window as any).electronAPI?.config) {
-      try {
-        const value = await (window as any).electronAPI.config.get(name)
-        return value ? JSON.stringify(value) : null
-      } catch (error) {
-        console.warn('Failed to get from Electron storage:', error)
-        return null
-      }
-    }
-    // Fallback to localStorage for development
-    return localStorage.getItem(name)
-  },
-  
-  setItem: async (name: string, value: string): Promise<void> => {
-    if (typeof window !== 'undefined' && (window as any).electronAPI?.config) {
-      try {
-        const parsedValue = JSON.parse(value)
-        await (window as any).electronAPI.config.set(name, parsedValue)
-        console.log('Theme saved to Electron config:', parsedValue)
-      } catch (error) {
-        console.warn('Failed to save to Electron storage:', error)
-        // Fallback to localStorage
-        localStorage.setItem(name, value)
-      }
-    } else {
-      // Fallback to localStorage for development
-      localStorage.setItem(name, value)
-    }
-  },
-  
-  removeItem: async (name: string): Promise<void> => {
-    if (typeof window !== 'undefined' && (window as any).electronAPI?.config) {
-      try {
-        await (window as any).electronAPI.config.delete(name)
-      } catch (error) {
-        console.warn('Failed to remove from Electron storage:', error)
-        localStorage.removeItem(name)
-      }
-    } else {
-      localStorage.removeItem(name)
-    }
-  },
-}))
+// Simple localStorage storage for web app
+const webStorage = createJSONStorage(() => localStorage)
 
 export const useThemeStore = create<ThemeState>()(
   persist(
@@ -192,33 +148,13 @@ export const useThemeStore = create<ThemeState>()(
       },
 
       initializeTheme: async (): Promise<void> => {
-        // Apply default theme immediately to prevent flash
-        const defaultTheme = themes['shadow-knight']
-        get().applyThemeToDOM(defaultTheme)
+        // Apply current theme to DOM
+        const { currentTheme } = get()
+        const theme = themes[currentTheme]
+        get().applyThemeToDOM(theme)
         
-        // Load theme from Electron config
-        if (typeof window !== 'undefined' && (window as any).electronAPI?.config) {
-          try {
-            const savedThemeData = await (window as any).electronAPI.config.get('chess-theme-storage')
-            if (savedThemeData?.state?.currentTheme && savedThemeData.state.currentTheme in themes) {
-              const themeId = savedThemeData.state.currentTheme as keyof typeof themes
-              console.log('Theme loaded from Electron config:', themeId)
-              
-              // Apply saved theme immediately
-              const theme = themes[themeId]
-              get().applyThemeToDOM(theme)
-              
-              set({ currentTheme: themeId, isInitialized: true })
-              return
-            }
-          } catch (error) {
-            console.error('Failed to load theme from Electron config:', error)
-          }
-        }
-        
-        // Fallback to default theme (already applied)
-        console.log('Using default theme: shadow-knight')
         set({ isInitialized: true })
+        console.log('Theme initialized:', theme.name)
       },
 
       applyThemeToDOM: (theme: Theme) => {
@@ -241,7 +177,7 @@ export const useThemeStore = create<ThemeState>()(
     }),
     {
       name: 'chess-theme-storage',
-      storage: electronStorage,
+      storage: webStorage,
       // Only persist the theme selection
       partialize: (state) => ({
         currentTheme: state.currentTheme,

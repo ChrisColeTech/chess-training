@@ -10,13 +10,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: "./",
-  build: {
-    outDir: "dist",
-    emptyOutDir: true,
-  },
   server: {
-    port: 5173,
-    host: "localhost"
+    watch: {
+      usePolling: true,
+      interval: 1000
+    },
+    hmr: {
+      overlay: true
+    }
   }
 })

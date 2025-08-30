@@ -1,35 +1,10 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chess Training</title>
-    
-    <!-- Critical CSS to prevent FOUC white flash -->
-    <style>
-      /* Applied before React loads to prevent white flash */
-      html, body {
-        background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #1a202c 100%);
-        margin: 0;
-        padding: 0;
-        transition: none; /* Disable transitions during load */
-        overflow-x: hidden;
-      }
-      
-      #root {
-        width: 100%;
-        min-height: 100vh;
-        background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #1a202c 100%);
-      }
-      
-      /* Ensure dark theme variables are available immediately */
-      :root {
-        --chess-light: #4a9eff;
-        --chess-dark: #1e40af;
-        --chess-border: #0ea5e9;
-      }
-    </style>
+    <title>Vite + React + TS</title>
   </head>
   <body>
     <div id="root"></div>

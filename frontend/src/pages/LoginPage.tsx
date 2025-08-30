@@ -1,281 +1,214 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Eye, EyeOff, LogIn, Crown, Zap } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Eye, EyeOff } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useThemeStore } from '@/stores/themeStore'
-import { useAuthStore } from '@/stores/authStore'
-import { soundFX } from '@/utils/soundEffects'
-import { FaChessKing } from 'react-icons/fa'
+import { useAuth } from '../hooks/auth/useAuth'
+import { useThemeStore } from '../stores/themeStore'
+import { soundFX } from '../utils/soundEffects'
+import { BackgroundEffects } from '../components/ui/BackgroundEffects'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Card, CardHeader, CardContent } from '@/components/ui/card'
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  rememberMe: z.boolean(),
+  password: z.string().min(6, 'Password must be at least 6 characters long')
 })
 
-type LoginForm = z.infer<typeof loginSchema>
+type LoginFormData = z.infer<typeof loginSchema>
 
 export const LoginPage: React.FC = () => {
-  const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState<string>('')
+  const { login, isLoading } = useAuth()
   const { getCurrentTheme } = useThemeStore()
-  const { login, isLoading, error, clearError } = useAuthStore()
+  const navigate = useNavigate()
   const theme = getCurrentTheme()
-  const [showPassword, setShowPassword] = React.useState(false)
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<LoginForm>({
+    formState: { errors, isValid },
+  } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-      rememberMe: false,
-    },
+    mode: 'onChange'
   })
 
-  const onSubmit = async (data: LoginForm) => {
+  const onSubmit = async (data: LoginFormData) => {
     soundFX.playClick()
-    clearError() // Clear any previous errors
+    setError('')
     
-    const success = await login(data.email, data.password)
-    if (success) {
+    try {
+      await login(data.email, data.password)
       soundFX.playSuccess()
-      console.log('Login successful - auth routing will handle navigation')
-      // Auth-aware routing in App.tsx will handle navigation automatically
-      // No manual navigation needed
-    } else {
+      navigate('/dashboard')
+    } catch (error) {
+      console.error('Login failed:', error)
+      setError(error instanceof Error ? error.message : 'Login failed. Please try again.')
       soundFX.playError()
     }
   }
 
   const handleDemoLogin = async () => {
     soundFX.playClick()
-    clearError() // Clear any previous errors
+    setError('')
     
-    // Set loading state for smooth transition
-    const authState = useAuthStore.getState()
-    authState.setLoading(true)
-    
-    // Brief delay to show loading state
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
-    // For demo purposes, simulate a successful login without hitting the API
-    // In a real app, you would create a demo user in the database
-    
-    // Create a mock user object
-    const mockUser = {
-      id: 'demo-user-123',
-      username: 'Demo Player',
-      email: 'demo@example.com',
-      chess_elo: 1200,
-      puzzle_rating: 1000,
-      preferences: {}
+    try {
+      await login('demo@chess-training.com', 'demo123')
+      soundFX.playSuccess()
+      navigate('/dashboard')
+    } catch (error) {
+      console.error('Demo login failed:', error)
+      setError(error instanceof Error ? error.message : 'Demo login failed. Please try again.')
+      soundFX.playError()
     }
-    
-    // Create mock tokens
-    const mockAccessToken = 'demo-access-token'
-    const mockRefreshToken = 'demo-refresh-token'
-    
-    // Manually set the auth state for demo mode
-    authState.setTokens(mockAccessToken, mockRefreshToken)
-    authState.setUser(mockUser)
-    authState.setLoading(false)
-    authState.setError(null)
-    
-    // Set authenticated state
-    useAuthStore.setState({ isAuthenticated: true })
-    
-    soundFX.playSuccess()
-    console.log('Demo login successful - auth routing will handle navigation')
-    
-    // Auth-aware routing in App.tsx will handle navigation automatically
-    // No manual navigation needed
   }
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.background} flex items-center justify-center p-4`}>
-      {/* Enhanced Gaming Background Effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Floating Particles */}
-        <div className={`absolute top-20 left-20 w-32 h-32 bg-gradient-to-br ${theme.accent} rounded-full opacity-20 blur-xl animate-pulse-glow`}></div>
-        <div className={`absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-br ${theme.highlight} rounded-full opacity-25 blur-2xl animate-pulse-glow animation-delay-1000`}></div>
-        <div className={`absolute top-1/2 left-10 w-24 h-24 bg-gradient-to-br ${theme.secondary} rounded-full opacity-15 blur-lg animate-pulse-glow animation-delay-2000`}></div>
-        
-        {/* Moving Orbs */}
-        <div className={`absolute top-10 right-1/3 w-16 h-16 bg-gradient-to-br ${theme.primary} rounded-full opacity-30 blur-md animate-float`}></div>
-        <div className={`absolute bottom-1/4 left-1/4 w-20 h-20 bg-gradient-to-br ${theme.accent} rounded-full opacity-20 blur-lg animate-float animation-delay-3000`}></div>
-        
-        {/* Sparkle Effect */}
-        <div className="absolute inset-0">
-          <div className={`absolute top-1/4 right-1/4 w-2 h-2 bg-white rounded-full animate-twinkle`}></div>
-          <div className={`absolute top-3/4 left-1/3 w-1 h-1 bg-white rounded-full animate-twinkle animation-delay-500`}></div>
-          <div className={`absolute top-1/2 right-1/2 w-1.5 h-1.5 bg-white rounded-full animate-twinkle animation-delay-1500`}></div>
-          <div className={`absolute bottom-1/3 left-1/5 w-1 h-1 bg-white rounded-full animate-twinkle animation-delay-2500`}></div>
-        </div>
-      </div>
-
-      {/* Login Card with Gaming Enhancement */}
-      <Card className="w-full max-w-md relative z-10 bg-gray-900 border-gray-700 shadow-2xl transition-all duration-300">
-        <CardHeader className="space-y-4 text-center">
-          <div className={`mx-auto w-16 h-16 bg-gradient-to-br ${theme.primary} rounded-xl flex items-center justify-center shadow-lg`}>
-            <div className={`text-2xl font-bold bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>
-              <FaChessKing className="w-4 h-4 inline" />
-            </div>
+      <BackgroundEffects />
+      
+      <Card className="w-full max-w-md relative z-10 shadow-2xl transition-all duration-300 backdrop-blur-xl bg-black/20 border-white/10 hover:shadow-cyan-500/25 hover:border-white/20 animate-card-entrance">
+        <CardHeader className="text-center space-y-4 pb-6">
+          <div className={`mx-auto w-20 h-20 rounded-full bg-gradient-to-br ${theme.accent} flex items-center justify-center shadow-xl`}>
+            <Crown size={32} className="text-white" />
           </div>
-          <CardTitle className={`text-2xl font-bold bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent`}>
-            Chess Training
-          </CardTitle>
-          <CardDescription className={`${theme.text} opacity-80`}>
-            Enter your credentials to access your training dashboard
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className="space-y-6">
-          {/* Error Display */}
-          {error && (
-            <div className="p-3 bg-red-500/20 border border-red-500/30 rounded-lg animate-slide-down">
-              <p className="text-sm text-red-400">{error}</p>
-            </div>
-          )}
           
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
+            <p className="text-white/70">Sign in to your chess training account</p>
+          </div>
+        </CardHeader>
+        
+        <CardContent className="space-y-6">
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* Login Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-4">
             {/* Email Field */}
             <div className="space-y-2">
-              <Label htmlFor="email" className={`text-sm font-medium ${theme.text}`}>
-                Email Address
+              <Label htmlFor="email" className="text-sm font-medium text-white/80">
+                Email
               </Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="chess.master@example.com"
-                className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-colors"
                 {...register('email')}
+                className={`bg-black/20 border-white/20 text-white placeholder-white/40 focus:border-transparent focus:ring-2 focus:ring-offset-transparent ${errors.email ? 'border-red-500/50' : ''}`}
+                style={{
+                  '--ring-color': errors.email ? 'rgb(239 68 68)' : theme.accent.includes('cyan') ? 'rgb(6 182 212)' : 
+                                 theme.accent.includes('amber') ? 'rgb(245 158 11)' : 
+                                 'rgb(59 130 246)'
+                } as React.CSSProperties}
+                placeholder="Enter your email"
               />
               {errors.email && (
-                <p className="text-sm text-red-400 animate-slide-down">
-                  {errors.email.message}
-                </p>
+                <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>
               )}
             </div>
 
             {/* Password Field */}
             <div className="space-y-2">
-              <Label htmlFor="password" className={`text-sm font-medium ${theme.text}`}>
+              <Label htmlFor="password" className="text-sm font-medium text-white/80">
                 Password
               </Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••••"
-                  className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-colors pr-10"
                   {...register('password')}
+                  className={`pr-12 bg-black/20 border-white/20 text-white placeholder-white/40 focus:border-transparent focus:ring-2 focus:ring-offset-transparent ${errors.password ? 'border-red-500/50' : ''}`}
+                  style={{
+                    '--ring-color': errors.password ? 'rgb(239 68 68)' : theme.accent.includes('cyan') ? 'rgb(6 182 212)' : 
+                                   theme.accent.includes('amber') ? 'rgb(245 158 11)' : 
+                                   'rgb(59 130 246)'
+                  } as React.CSSProperties}
+                  placeholder="Enter your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className={`absolute right-3 top-1/2 -translate-y-1/2 ${theme.text} hover:opacity-70 transition-opacity`}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/40 hover:text-white/60 transition-colors"
                 >
-                  {showPassword ? (
-                    <EyeOff size={16} />
-                  ) : (
-                    <Eye size={16} />
-                  )}
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-sm text-red-400 animate-slide-down">
-                  {errors.password.message}
-                </p>
+                <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>
               )}
-            </div>
-
-            {/* Remember Me */}
-            <div className="flex items-center space-x-2">
-              <input
-                id="rememberMe"
-                type="checkbox"
-                className="rounded border-white/20 bg-black/30 text-white focus:ring-white/20"
-                {...register('rememberMe')}
-              />
-              <Label htmlFor="rememberMe" className={`text-sm ${theme.text} opacity-80`}>
-                Remember me for 30 days
-              </Label>
-            </div>
-
-            {/* Login Button */}
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className={`w-full bg-gradient-to-r ${theme.primary} hover:opacity-90 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl hover-glow active:animate-button-press transition-all duration-300 border-0 gpu-accelerated`}
-            >
-              {isLoading ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  <span>Signing In...</span>
-                </div>
-              ) : (
-                <span className="flex items-center justify-center space-x-2">
-                  <span>Sign In</span>
-                  <span className="text-lg">🚀</span>
-                </span>
-              )}
-            </Button>
-          </form>
-
-          {/* Demo Login */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/10"></div>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className={`px-2 bg-black/20 ${theme.text} opacity-60`}>
-                Or continue with
-              </span>
             </div>
           </div>
 
+          {/* Login Button */}
           <Button
-            type="button"
-            variant="outline"
-            onClick={handleDemoLogin}
+            type="submit"
             disabled={isLoading}
-            className={`w-full bg-black/20 border-white/20 ${theme.text} hover:bg-black/30 hover:border-white/30 hover-grow active:animate-button-press transition-all duration-300 gpu-accelerated`}
+            className={`w-full bg-gradient-to-r ${theme.primary} hover:opacity-90 text-white font-semibold shadow-lg hover:shadow-xl hover-glow active:animate-button-press transition-all duration-300 gpu-accelerated disabled:opacity-50 disabled:cursor-not-allowed`}
+            size="lg"
           >
-            Demo Login (Skip Authentication)
+            {isLoading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <>
+                <LogIn size={20} className="mr-2" />
+                <span>Sign In</span>
+              </>
+            )}
           </Button>
 
-          {/* Footer Links */}
-          <div className="text-center space-y-2">
-            <p className={`text-sm ${theme.text} opacity-60`}>
-              Don't have an account?{' '}
-              <button className={`bg-gradient-to-r ${theme.gradient} bg-clip-text text-transparent font-semibold hover:opacity-80 transition-opacity`}>
-                Create one now
-              </button>
-            </p>
-            <p className={`text-xs ${theme.text} opacity-40`}>
-              Powered by Shadcn UI + Tailwind CSS
-            </p>
+          {/* Demo Login Button */}
+          <Button
+            type="button"
+            onClick={handleDemoLogin}
+            disabled={isLoading}
+            variant="outline"
+            className={`w-full bg-black/20 border-white/20 ${theme.text} hover:bg-black/30 hover:border-white/30 hover-grow active:animate-button-press transition-all duration-300 gpu-accelerated disabled:opacity-50 disabled:cursor-not-allowed font-medium`}
+            size="lg"
+          >
+            <Zap size={20} className="text-amber-400 mr-2" />
+            <span>Demo Login</span>
+          </Button>
+        </form>
+
+        {/* Footer Links */}
+        <div className="text-center space-y-4">
+          <div className="text-sm text-white/60">
+            <span>Don't have an account? </span>
+            <Link 
+              to="/register" 
+              className={`font-medium ${theme.accent.includes('cyan') ? 'text-cyan-400 hover:text-cyan-300' : theme.accent.includes('amber') ? 'text-amber-400 hover:text-amber-300' : 'text-blue-400 hover:text-blue-300'} transition-colors`}
+            >
+              Sign up
+            </Link>
           </div>
+          
+          <Link 
+            to="/forgot-password" 
+            className="block text-sm text-white/60 hover:text-white/80 transition-colors"
+          >
+            Forgot your password?
+          </Link>
+        </div>
+
+        {/* Theme Indicator */}
+        <div className="text-center">
+          <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full ${theme.glassMorphism} text-xs text-white/60`}>
+            <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${theme.accent}`}></div>
+            <span>{theme.name}</span>
+          </div>
+        </div>
         </CardContent>
       </Card>
-
-      {/* Gaming Visual Effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Animated Chess Pieces Background */}
-        <div className="absolute top-10 right-10 text-6xl opacity-5 animate-bounce-subtle delay-500">♜</div>
-        <div className="absolute bottom-10 left-10 text-5xl opacity-5 animate-bounce-subtle delay-1000">♞</div>
-        <div className="absolute top-1/3 right-1/4 text-4xl opacity-5 animate-bounce-subtle delay-1500">♝</div>
-        <div className="absolute bottom-1/3 left-1/4 text-7xl opacity-5 animate-bounce-subtle delay-2000">♛</div>
-      </div>
     </div>
   )
 }
