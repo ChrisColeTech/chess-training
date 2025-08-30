@@ -1,20 +1,40 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { queryClient } from './lib/query-client'
 import { useAuthStore } from './stores/authStore'
 import { useThemeStore } from './stores/themeStore'
 import { MainLayout } from './components/layout/MainLayout'
 import { SplashScreen } from './pages/SplashScreen'
-import { LoginPage } from './pages/LoginPage'
-import { DashboardPage } from './pages/DashboardPage'
-import { TailwindTest } from './TailwindTest'
+import { LoginPage } from './pages/auth/LoginPage'
+import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage'
+import { RegisterPage } from './pages/auth/RegisterPage'
+import { DashboardPage } from './pages/dashboard/DashboardPage'
 
-// Route guards following research-compliant auth pattern
+// Auth navigator - handles auth redirects programmatically
+function AuthNavigator() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  
+  useEffect(() => {
+    if (isAuthenticated && (location.pathname === '/login' || location.pathname === '/auth/login' || location.pathname === '/auth/forgot-password' || location.pathname === '/auth/register')) {
+      navigate('/dashboard', { replace: true })
+    }
+    if (!isAuthenticated && location.pathname !== '/login' && location.pathname !== '/auth/login' && location.pathname !== '/auth/forgot-password' && location.pathname !== '/auth/register' && location.pathname !== '/') {
+      navigate('/auth/login', { replace: true })
+    }
+  }, [isAuthenticated, navigate, location.pathname])
+  
+  return null
+}
+
+// Route guards - now just check auth without Navigate components
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
+    return null // AuthNavigator handles the redirect
   }
   
   return <MainLayout>{children}</MainLayout>
@@ -24,7 +44,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />
+    return null // AuthNavigator handles the redirect
   }
   
   return <>{children}</>
@@ -38,6 +58,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <div className={`min-h-screen bg-gradient-to-br ${theme.background}`}>
         <Router>
+          <AuthNavigator />
           <Routes>
             {/* Splash Screen - Entry point */}
             <Route path="/" element={<SplashScreen />} />
@@ -46,6 +67,21 @@ function App() {
             <Route path="/login" element={
               <PublicRoute>
                 <LoginPage />
+              </PublicRoute>
+            } />
+            <Route path="/auth/login" element={
+              <PublicRoute>
+                <LoginPage />
+              </PublicRoute>
+            } />
+            <Route path="/auth/forgot-password" element={
+              <PublicRoute>
+                <ForgotPasswordPage />
+              </PublicRoute>
+            } />
+            <Route path="/auth/register" element={
+              <PublicRoute>
+                <RegisterPage />
               </PublicRoute>
             } />
             
@@ -123,8 +159,8 @@ function App() {
               </ProtectedRoute>
             } />
             
-            {/* Catch all - redirect to splash */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* Catch all - redirect to splash handled by AuthNavigator */}
+            <Route path="*" element={<SplashScreen />} />
           </Routes>
         </Router>
       </div>

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Menu, ChevronRight, ChevronDown, User, Home, Play, Puzzle, BookOpen, BarChart3, Settings, HelpCircle, Trophy } from 'lucide-react'
 import { useThemeStore } from '../../stores/themeStore'
 import { useAuth } from '../../hooks/auth/useAuth'
+import { SidebarUserAvatar } from '../ui/UserAvatar'
 
 // Navigation items matching POC structure
 interface NavItem {
@@ -224,11 +225,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
         <div className="flex items-center justify-between">
           {!isCollapsed && user && (
             <div className="flex items-center space-x-3">
-              <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${theme.accent} flex items-center justify-center`}>
-                <span className="text-sm font-bold text-white">
-                  {user.username?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || 'U'}
-                </span>
-              </div>
+              <SidebarUserAvatar />
               <div>
                 <p className="text-sm font-medium text-white">{user.username || 'Player'}</p>
                 <p className="text-xs text-white/70">ELO: {user.chess_elo || 1200}</p>

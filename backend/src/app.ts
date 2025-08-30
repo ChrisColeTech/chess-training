@@ -57,13 +57,66 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Request logging in development
-if (process.env.NODE_ENV === 'development') {
-  app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
-    next();
-  });
-}
+// Comprehensive logging for troubleshooting - ALL requests, responses, and errors
+app.use((req, res, next) => {
+  const timestamp = new Date().toISOString();
+  const requestId = Math.random().toString(36).substring(7);
+  
+  console.log(`\n🌐 [${timestamp}] [${requestId}] ${req.method} ${req.path}`);
+  console.log(`📋 [${requestId}] Headers:`, JSON.stringify({
+    'content-type': req.headers['content-type'],
+    'authorization': req.headers.authorization ? '***Bearer token present***' : 'No auth header',
+    'origin': req.headers.origin,
+    'user-agent': req.headers['user-agent']?.substring(0, 80),
+    'accept': req.headers.accept,
+    'cache-control': req.headers['cache-control']
+  }, null, 2));
+  
+  // Log ALL request bodies
+  if (req.body && Object.keys(req.body).length > 0) {
+    console.log(`📦 [${requestId}] Request Body:`, JSON.stringify(req.body, (key, value) => 
+      key.toLowerCase().includes('password') ? '***hidden***' : value, 2));
+  }
+  
+  // Log query parameters
+  if (Object.keys(req.query).length > 0) {
+    console.log(`🔍 [${requestId}] Query Params:`, JSON.stringify(req.query, null, 2));
+  }
+  
+  // Store request ID for response logging
+  (req as any).requestId = requestId;
+  
+  // Intercept ALL responses
+  const originalSend = res.send;
+  res.send = function(data) {
+    const responseTime = Date.now() - new Date(timestamp).getTime();
+    console.log(`\n📤 [${requestId}] Response ${res.statusCode} ${req.method} ${req.path} (${responseTime}ms)`);
+    
+    // Log ALL response bodies (truncate if too long)
+    try {
+      const responseData = typeof data === 'string' ? data : JSON.stringify(data);
+      if (responseData.length > 1000) {
+        console.log(`📄 [${requestId}] Response Body (truncated):`, responseData.substring(0, 1000) + '...');
+      } else {
+        console.log(`📄 [${requestId}] Response Body:`, responseData);
+      }
+    } catch (e) {
+      console.log(`📄 [${requestId}] Response Body: [Unable to stringify response]`);
+    }
+    
+    // Mark errors clearly
+    if (res.statusCode >= 400) {
+      console.log(`❌ [${requestId}] ERROR RESPONSE ${res.statusCode}`);
+    } else {
+      console.log(`✅ [${requestId}] SUCCESS RESPONSE ${res.statusCode}`);
+    }
+    
+    console.log(`─────────────────────────────────────────────────────`);
+    return originalSend.call(this, data);
+  };
+  
+  next();
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -145,7 +198,48 @@ app.use('/api/*', (req, res) => {
 });
 
 // Error handling middleware (must be last)
+// Global error handler - catch ALL unhandled errors
+app.use((err: any, req: any, res: any, next: any) => {
+  const requestId = req.requestId || 'unknown';
+  console.log(`\n💥 [${requestId}] UNHANDLED ERROR:`, {
+    name: err.name,
+    message: err.message,
+    stack: err.stack?.split('\n').slice(0, 5), // First 5 lines of stack trace
+    url: req.url,
+    method: req.method,
+    timestamp: new Date().toISOString()
+  });
+  
+  if (!res.headersSent) {
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+      requestId: requestId,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 app.use(errorHandler);
+
+// Process-level error handling
+process.on('uncaughtException', (error) => {
+  console.log('\n🚨 UNCAUGHT EXCEPTION:', {
+    name: error.name,
+    message: error.message,
+    stack: error.stack?.split('\n').slice(0, 10),
+    timestamp: new Date().toISOString()
+  });
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.log('\n🚨 UNHANDLED PROMISE REJECTION:', {
+    reason: reason,
+    promise: promise,
+    timestamp: new Date().toISOString()
+  });
+});
 
 // Initialize database and start server
 async function startServer() {

@@ -50,10 +50,10 @@ export class AuthService {
   }> {
     const { email, password } = loginData;
 
-    // Get user with password hash
+    // Get user with password hash - check both email and username
     const user = await this.db.db.get(
-      'SELECT * FROM users WHERE email = ?',
-      [email]
+      'SELECT * FROM users WHERE email = ? OR username = ?',
+      [email, email]
     );
 
     if (!user || !await bcrypt.compare(password, user.password_hash)) {
@@ -153,42 +153,15 @@ export class AuthService {
     );
   }
 
-  async forgotPassword(email: string): Promise<{ resetToken: string }> {
+  async resetPassword(email: string, newPassword: string): Promise<void> {
     // Check if user exists
     const user = await this.db.db.get(
-      'SELECT id, email FROM users WHERE email = ?',
+      'SELECT id FROM users WHERE email = ?',
       [email]
     );
 
     if (!user) {
       throw new Error('User not found');
-    }
-
-    // Generate reset token
-    const resetToken = uuidv4();
-    const expiresAt = new Date();
-    expiresAt.setMinutes(expiresAt.getMinutes() + 30); // 30 minutes
-
-    // Store reset token
-    await this.db.db.run(
-      `INSERT OR REPLACE INTO password_reset_tokens (user_id, token, expires_at, created_at)
-       VALUES (?, ?, ?, datetime("now"))`,
-      [user.id, resetToken, expiresAt.toISOString()]
-    );
-
-    return { resetToken };
-  }
-
-  async resetPassword(resetToken: string, newPassword: string): Promise<void> {
-    // Verify reset token
-    const tokenRecord = await this.db.db.get(
-      `SELECT user_id FROM password_reset_tokens 
-       WHERE token = ? AND expires_at > datetime("now")`,
-      [resetToken]
-    );
-
-    if (!tokenRecord) {
-      throw new Error('Invalid or expired reset token');
     }
 
     // Hash new password
@@ -197,19 +170,13 @@ export class AuthService {
     // Update user password
     await this.db.db.run(
       'UPDATE users SET password_hash = ?, updated_at = datetime("now") WHERE id = ?',
-      [passwordHash, tokenRecord.user_id]
+      [passwordHash, user.id]
     );
 
-    // Remove used reset token
-    await this.db.db.run(
-      'DELETE FROM password_reset_tokens WHERE token = ?',
-      [resetToken]
-    );
-
-    // Invalidate all user sessions
+    // Invalidate all user sessions (force re-login with new password)
     await this.db.db.run(
       'DELETE FROM user_sessions WHERE user_id = ?',
-      [tokenRecord.user_id]
+      [user.id]
     );
   }
 

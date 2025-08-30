@@ -1,20 +1,19 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Eye, EyeOff, LogIn, Crown, Zap } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { useAuth } from '../hooks/auth/useAuth'
-import { useThemeStore } from '../stores/themeStore'
-import { soundFX } from '../utils/soundEffects'
-import { BackgroundEffects } from '../components/ui/BackgroundEffects'
+import { useLogin } from '../../hooks/auth/useLogin'
+import { useThemeStore } from '../../stores/themeStore'
+import { BackgroundEffects } from '../../components/ui/BackgroundEffects'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 
 const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string().min(1, 'Email or username is required'),
   password: z.string().min(6, 'Password must be at least 6 characters long')
 })
 
@@ -22,49 +21,23 @@ type LoginFormData = z.infer<typeof loginSchema>
 
 export const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState<string>('')
-  const { login, isLoading } = useAuth()
+  const { login, error, isLoading, clearError } = useLogin()
   const { getCurrentTheme } = useThemeStore()
-  const navigate = useNavigate()
   const theme = getCurrentTheme()
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     mode: 'onChange'
   })
 
-  const onSubmit = async (data: LoginFormData) => {
-    soundFX.playClick()
-    setError('')
-    
-    try {
-      await login(data.email, data.password)
-      soundFX.playSuccess()
-      navigate('/dashboard')
-    } catch (error) {
-      console.error('Login failed:', error)
-      setError(error instanceof Error ? error.message : 'Login failed. Please try again.')
-      soundFX.playError()
-    }
-  }
 
-  const handleDemoLogin = async () => {
-    soundFX.playClick()
-    setError('')
-    
-    try {
-      await login('demo@chess-training.com', 'demo123')
-      soundFX.playSuccess()
-      navigate('/dashboard')
-    } catch (error) {
-      console.error('Demo login failed:', error)
-      setError(error instanceof Error ? error.message : 'Demo login failed. Please try again.')
-      soundFX.playError()
-    }
+  const handleDemoLogin = () => {
+    clearError()
+    login({ email: 'demo@chess-training.com', password: 'demo123' })
   }
 
   return (
@@ -93,16 +66,16 @@ export const LoginPage: React.FC = () => {
         )}
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(login)} className="space-y-6">
           <div className="space-y-4">
             {/* Email Field */}
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium text-white/80">
-                Email
+                Email or Username
               </Label>
               <Input
                 id="email"
-                type="email"
+                type="text"
                 {...register('email')}
                 className={`bg-black/20 border-white/20 text-white placeholder-white/40 focus:border-transparent focus:ring-2 focus:ring-offset-transparent ${errors.email ? 'border-red-500/50' : ''}`}
                 style={{
@@ -110,7 +83,7 @@ export const LoginPage: React.FC = () => {
                                  theme.accent.includes('amber') ? 'rgb(245 158 11)' : 
                                  'rgb(59 130 246)'
                 } as React.CSSProperties}
-                placeholder="Enter your email"
+                placeholder="Enter email or username"
               />
               {errors.email && (
                 <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>
@@ -192,12 +165,20 @@ export const LoginPage: React.FC = () => {
             </Link>
           </div>
           
-          <Link 
-            to="/forgot-password" 
-            className="block text-sm text-white/60 hover:text-white/80 transition-colors"
-          >
-            Forgot your password?
-          </Link>
+          <div className="flex justify-between items-center">
+            <Link 
+              to="/auth/forgot-password" 
+              className="text-sm text-white/60 hover:text-white/80 transition-colors"
+            >
+              Forgot your password?
+            </Link>
+            <Link 
+              to="/auth/register" 
+              className="text-sm text-white/60 hover:text-white/80 transition-colors"
+            >
+              Create account
+            </Link>
+          </div>
         </div>
 
         {/* Theme Indicator */}

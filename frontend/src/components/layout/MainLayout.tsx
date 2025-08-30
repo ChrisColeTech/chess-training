@@ -1,17 +1,17 @@
-import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useThemeStore } from '../../stores/themeStore'
 import { useAuthStore } from '../../stores/authStore'
-import { Sidebar } from './Sidebar'
+import { ChessSidebar } from './ChessSidebar'
 import { TitleBar } from './TitleBar'
 import { BackgroundEffects } from '../ui/BackgroundEffects'
+import { SidebarProvider, SidebarInset } from '../ui/sidebar'
+import { Toaster } from '../ui/toaster'
 
 interface MainLayoutProps {
   children: React.ReactNode
 }
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const { getCurrentTheme } = useThemeStore()
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const theme = getCurrentTheme()
@@ -25,33 +25,34 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     return <>{children}</>
   }
 
-  const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed)
-  }
-
   return (
-    <div className={`h-full flex flex-col bg-gradient-to-br ${theme.background} ${theme.text} relative`}>
-      <BackgroundEffects />
+    <SidebarProvider defaultOpen={true}>
+      {/* Fixed Background Layer */}
+      <div className={`fixed inset-0 bg-gradient-to-br ${theme.background} ${theme.text}`}>
+        <BackgroundEffects />
+      </div>
 
-      {/* Title Bar - Full Width */}
-      <TitleBar />
-      
-      {/* Main Layout - Sidebar + Content */}
-      <div className="flex-1 flex min-h-0 relative z-10">
-        {/* Sidebar */}
-        <Sidebar 
-          isCollapsed={isSidebarCollapsed}
-          onToggle={toggleSidebar}
-        />
+      {/* Main Layout - Over Background */}
+      <div className="h-full flex flex-col relative z-10">
+        {/* Title Bar - Full Width */}
+        <TitleBar />
         
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col min-w-0">          
-          {/* Content Area - No shared header, pages handle their own headers */}
-          <main className="flex-1 overflow-y-auto bg-black/5">
-            {children}
-          </main>
+        {/* Main Layout - Sidebar + Content */}
+        <div className="flex-1 flex min-h-0">
+          {/* Modern Sidebar */}
+          <ChessSidebar />
+          
+          {/* Main Content */}
+          <SidebarInset>
+            <main className="flex-1 overflow-y-auto h-full">
+              {children}
+            </main>
+          </SidebarInset>
         </div>
       </div>
-    </div>
+      
+      {/* Global Toast Notifications */}
+      <Toaster />
+    </SidebarProvider>
   )
 }

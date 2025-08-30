@@ -14,7 +14,8 @@ class SoundFXManager {
 
   // Audio context for better performance
   private audioContext: AudioContext | null = null
-  private soundBuffers: Map<string, AudioBuffer> = new Map()
+  // Future: preloaded audio buffers for better performance
+  // private soundBuffers: Map<string, AudioBuffer> = new Map()
 
   constructor() {
     this.initializeAudio()

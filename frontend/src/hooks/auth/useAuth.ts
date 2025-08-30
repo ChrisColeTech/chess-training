@@ -1,29 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../../stores/authStore';
-import { apiClient } from '../../services/apiClient';
-
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  success: boolean;
-  data: {
-    user: {
-      id: string;
-      username: string;
-      email: string;
-      chess_elo: number;
-      puzzle_rating: number;
-      preferences: Record<string, any>;
-    };
-    tokens: {
-      accessToken: string;
-      refreshToken: string;
-    };
-  };
-}
+import { authService } from '../../services/auth/authService';
+import type { LoginCredentials, LoginResponse } from '../../types/auth';
 
 /**
  * Research-compliant authentication hook
@@ -39,7 +17,7 @@ export function useAuth() {
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginCredentials): Promise<LoginResponse> => {
       console.log('🚀 Login mutation starting with credentials:', { email: credentials.email });
-      const response = await apiClient.post<LoginResponse>('/auth/login', credentials);
+      const response = await authService.login(credentials);
       console.log('📡 Login API response:', response);
       return response;
     },

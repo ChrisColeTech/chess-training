@@ -42,8 +42,8 @@ router.post('/register',
 router.post('/login',
   [
     body('email')
-      .isEmail()
-      .withMessage('Must be a valid email address'),
+      .notEmpty()
+      .withMessage('Email or username is required'),
     body('password')
       .notEmpty()
       .withMessage('Password is required')
@@ -75,23 +75,12 @@ router.post('/logout',
   authController.logout
 );
 
-// Forgot password
-router.post('/forgot-password',
+// Reset password - Desktop app friendly (no tokens)
+router.post('/reset-password',
   [
     body('email')
       .isEmail()
-      .withMessage('Must be a valid email address')
-  ],
-  validateRequest,
-  authController.forgotPassword
-);
-
-// Reset password
-router.post('/reset-password',
-  [
-    body('resetToken')
-      .notEmpty()
-      .withMessage('Reset token is required'),
+      .withMessage('Must be a valid email address'),
     body('newPassword')
       .isLength({ min: 6 })
       .withMessage('Password must be at least 6 characters long')

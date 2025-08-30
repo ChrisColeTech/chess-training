@@ -5,7 +5,7 @@ import { useThemeStore } from '../stores/themeStore'
 import { useAuthStore } from '../stores/authStore'
 
 export const SplashScreen: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true)
+  const [, setIsLoading] = useState(true)
   const [progress, setProgress] = useState(0)
   const navigate = useNavigate()
   const { getCurrentTheme } = useThemeStore()

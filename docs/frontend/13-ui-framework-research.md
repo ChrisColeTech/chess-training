@@ -628,7 +628,8 @@ A successful UI framework choice should:
 
 For our chess training desktop app, the research strongly suggests:
 
-**Primary Choice: Shadcn UI + Tailwind CSS**
+**Primary Choice: Shadcn UI v3 + Tailwind CSS**
+- **Version Requirement**: shadcn/ui v3 (https://v3.shadcn.com/) - contains all required components including Toast
 - Builds on our existing Tailwind investment
 - Perfect for gaming aesthetics and glassmorphism
 - Excellent Electron compatibility
