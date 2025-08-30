@@ -9,10 +9,10 @@ export const TitleBar: React.FC = () => {
   const theme = getCurrentTheme()
   const { isMaximized, isElectron, isReady, minimize, maximize, close } = useTitleBar()
 
-  // Don't render title bar if not in Electron or not ready
-  if (!isElectron || !isReady) {
-    return null
-  }
+  // Always show title bar for now (browser mode)
+  // if (!isElectron || !isReady) {
+  //   return null
+  // }
 
   return (
     <div className={cn(

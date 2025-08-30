@@ -92,10 +92,10 @@ export const StatusBar: React.FC<StatusBarProps> = ({
   // Full variant
   return (
     <div className={cn(
-      'h-8 bg-gradient-to-r from-black/40 via-black/30 to-black/40',
+      'w-full h-8 bg-gradient-to-r from-black/40 via-black/30 to-black/40',
       'backdrop-blur-sm border-t border-white/10',
       'flex items-center justify-between px-6 text-xs text-white/80',
-      'relative overflow-hidden',
+      'relative overflow-hidden shrink-0',
       className
     )}>
       {/* Background accent */}

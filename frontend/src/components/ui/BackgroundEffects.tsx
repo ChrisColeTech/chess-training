@@ -6,6 +6,8 @@ export const BackgroundEffects: React.FC = () => {
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Main Theme Background */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${theme.background}`}></div>
       {/* Floating Particles - More particles */}
       <div className={`absolute top-20 left-20 w-32 h-32 bg-gradient-to-br ${theme.accent} rounded-full opacity-20 blur-xl animate-pulse-glow`}></div>
       <div className={`absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-br ${theme.highlight} rounded-full opacity-25 blur-2xl animate-pulse-glow animation-delay-1000`}></div>

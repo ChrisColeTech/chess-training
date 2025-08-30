@@ -1,10 +1,7 @@
-import { HashRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
-import { QueryClientProvider } from '@tanstack/react-query'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
-import { queryClient } from './lib/query-client'
 import { useAuthStore } from './stores/authStore'
-import { useThemeStore } from './stores/themeStore'
-import { MainLayout } from './components/layout/MainLayout'
+import { DesktopAppLayout } from './components/layout/DesktopAppLayout'
 import { SplashScreen } from './pages/SplashScreen'
 import { LoginPage } from './pages/auth/LoginPage'
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage'
@@ -37,7 +34,7 @@ import TutorialsPage from './pages/help/TutorialsPage'
 import ContactPage from './pages/help/ContactPage'
 
 // Profile page
-import ProfilePage from './pages/ProfilePage'
+import ProfilePage from './pages/profile/ProfilePage'
 
 // Auth navigator - handles auth redirects programmatically
 function AuthNavigator() {
@@ -65,7 +62,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return null // AuthNavigator handles the redirect
   }
   
-  return <MainLayout>{children}</MainLayout>
+  return <DesktopAppLayout>{children}</DesktopAppLayout>
 }
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
@@ -79,15 +76,10 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
-  const { getCurrentTheme } = useThemeStore()
-  const theme = getCurrentTheme()
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className={`min-h-screen bg-gradient-to-br ${theme.background}`}>
-        <Router>
-          <AuthNavigator />
-          <Routes>
+    <>
+      <AuthNavigator />
+      <Routes>
             {/* Splash Screen - Entry point */}
             <Route path="/" element={<SplashScreen />} />
             
@@ -225,9 +217,7 @@ function App() {
             {/* Catch all - redirect to splash handled by AuthNavigator */}
             <Route path="*" element={<SplashScreen />} />
           </Routes>
-        </Router>
-      </div>
-    </QueryClientProvider>
+    </>
   )
 }
 

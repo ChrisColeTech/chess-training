@@ -104,10 +104,10 @@ export const ChessSidebar: React.FC = () => {
 
   return (
     <Sidebar 
-      variant="sidebar"
+      variant="inset"
       collapsible="icon"
       className={cn(
-        "transition-all duration-300",
+        "relative transition-all duration-300",
         theme.glassMorphism,
         "backdrop-blur-md border-r border-white/20"
       )}

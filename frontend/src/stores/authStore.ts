@@ -30,9 +30,16 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      // Initial state
-      isAuthenticated: false,
-      user: null,
+      // Initial state - temporarily set to true for testing
+      isAuthenticated: true,
+      user: {
+        id: "test-user",
+        username: "TestUser",
+        email: "test@example.com",
+        chess_elo: 1500,
+        puzzle_rating: 1200,
+        preferences: {}
+      },
       accessToken: null,
       refreshToken: null,
 

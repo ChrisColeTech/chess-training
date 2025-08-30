@@ -2,7 +2,6 @@ import { useLocation } from 'react-router-dom'
 import { useThemeStore } from '../../stores/themeStore'
 import { useAuthStore } from '../../stores/authStore'
 import { ChessSidebar } from './ChessSidebar'
-import { TitleBar } from './TitleBar'
 import { BackgroundEffects } from '../ui/BackgroundEffects'
 import { SidebarProvider, SidebarInset } from '../ui/sidebar'
 import { Toaster } from '../ui/toaster'
@@ -27,28 +26,20 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      {/* Fixed Background Layer */}
-      <div className={`fixed inset-0 bg-gradient-to-br ${theme.background} ${theme.text}`}>
-        <BackgroundEffects />
-      </div>
-
-      {/* Main Layout - Over Background */}
-      <div className="h-full flex flex-col relative z-10">
-        {/* Title Bar - Full Width */}
-        <TitleBar />
+      {/* Background Effects for the layout */}
+      <BackgroundEffects />
+      
+      {/* Main Layout - Sidebar + Content */}
+      <div className="h-full w-full flex">
+        {/* Modern Sidebar */}
+        <ChessSidebar />
         
-        {/* Main Layout - Sidebar + Content */}
-        <div className="flex-1 flex min-h-0">
-          {/* Modern Sidebar */}
-          <ChessSidebar />
-          
-          {/* Main Content */}
-          <SidebarInset>
-            <main className="flex-1 overflow-y-auto h-full">
-              {children}
-            </main>
-          </SidebarInset>
-        </div>
+        {/* Main Content */}
+        <SidebarInset className="flex-1 min-w-0">
+          <main className="w-full h-full overflow-y-auto">
+            {children}
+          </main>
+        </SidebarInset>
       </div>
       
       {/* Global Toast Notifications */}

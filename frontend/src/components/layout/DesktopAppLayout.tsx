@@ -30,29 +30,28 @@ export const DesktopAppLayout: React.FC<DesktopAppLayoutProps> = ({ children }) 
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+    <div className="h-screen flex flex-col dark">
       <BackgroundEffects />
       
-      {/* Desktop Title Bar - Electron window controls only */}
+      {/* Desktop Title Bar - Fixed height */}
       <TitleBar />
       
-      <SidebarProvider defaultOpen={true}>
-        <div className="flex-1 flex min-h-0 relative z-10">
-          {/* Chess Sidebar Navigation */}
+      {/* Main Layout - Apply lessons learned */}
+      <div className="flex-1 overflow-hidden flex">
+        <SidebarProvider defaultOpen={true}>
           <ChessSidebar />
           
-          {/* Main Content Area */}
-          <SidebarInset>
-            <main className={`flex-1 overflow-y-auto h-full bg-gradient-to-br ${theme.background} ${theme.text}`}>
-              {/* Individual pages handle their own breadcrumbs - NO shared header */}
+          {/* Main Content Area - Proper scrolling setup */}
+          <div className="flex-1 overflow-y-auto">
+            <main className={`p-6 ${theme.text}`}>
               {children}
             </main>
-          </SidebarInset>
-        </div>
-        
-        {/* Desktop Status Bar - System information */}
-        <StatusBar variant="full" />
-      </SidebarProvider>
+          </div>
+        </SidebarProvider>
+      </div>
+      
+      {/* Desktop Status Bar - Fixed height */}
+      <StatusBar variant="full" />
       
       {/* Global Toast Notifications */}
       <Toaster />
@@ -77,22 +76,25 @@ export const CompactDesktopLayout: React.FC<DesktopAppLayoutProps> = ({ children
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+    <div className="h-screen flex flex-col dark">
       <BackgroundEffects />
       <TitleBar />
       
-      <SidebarProvider defaultOpen={false}>
-        <div className="flex-1 flex min-h-0 relative z-10">
+      {/* Main Layout - Apply lessons learned for compact version */}
+      <div className="flex-1 overflow-hidden flex">
+        <SidebarProvider defaultOpen={false}>
           <ChessSidebar />
-          <SidebarInset>
-            <main className={`flex-1 overflow-y-auto h-full bg-gradient-to-br ${theme.background} ${theme.text}`}>
+          
+          {/* Main Content Area - Proper scrolling setup */}
+          <div className="flex-1 overflow-y-auto">
+            <main className={`p-6 ${theme.text}`}>
               {children}
             </main>
-          </SidebarInset>
-        </div>
-        <StatusBar variant="compact" />
-      </SidebarProvider>
+          </div>
+        </SidebarProvider>
+      </div>
       
+      <StatusBar variant="compact" />
       <Toaster />
     </div>
   )
