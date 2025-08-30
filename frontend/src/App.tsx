@@ -11,6 +11,34 @@ import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage'
 import { RegisterPage } from './pages/auth/RegisterPage'
 import { DashboardPage } from './pages/dashboard/DashboardPage'
 
+// Play pages
+import PlayComputerPage from './pages/play/PlayComputerPage'
+import AnalysisBoardPage from './pages/play/AnalysisBoardPage'
+import GameReviewPage from './pages/play/GameReviewPage'
+
+// Puzzle pages
+import TacticalPuzzlesPage from './pages/puzzles/TacticalPuzzlesPage'
+import EndgamePuzzlesPage from './pages/puzzles/EndgamePuzzlesPage'
+import PuzzleSelectionPage from './pages/puzzles/PuzzleSelectionPage'
+
+// Progress pages
+import ProgressOverviewPage from './pages/progress/ProgressOverviewPage'
+import AchievementsPage from './pages/progress/AchievementsPage'
+import LearningPathPage from './pages/progress/LearningPathPage'
+
+// Settings pages
+import PreferencesPage from './pages/settings/PreferencesPage'
+import BoardSettingsPage from './pages/settings/BoardSettingsPage'
+import AccountPage from './pages/settings/AccountPage'
+
+// Help pages
+import HelpCenterPage from './pages/help/HelpCenterPage'
+import TutorialsPage from './pages/help/TutorialsPage'
+import ContactPage from './pages/help/ContactPage'
+
+// Profile page
+import ProfilePage from './pages/ProfilePage'
+
 // Auth navigator - handles auth redirects programmatically
 function AuthNavigator() {
   const navigate = useNavigate()
@@ -92,70 +120,105 @@ function App() {
               </ProtectedRoute>
             } />
             
-            {/* Placeholder routes for future pages */}
+            {/* Play routes */}
             <Route path="/play/computer" element={
               <ProtectedRoute>
-                <div className="p-6"><h1 className="text-2xl font-bold text-white">Play vs Computer</h1></div>
+                <PlayComputerPage />
               </ProtectedRoute>
             } />
             
-            <Route path="/play/online" element={
+            <Route path="/play/analysis" element={
               <ProtectedRoute>
-                <div className="p-6"><h1 className="text-2xl font-bold text-white">Online Games</h1></div>
+                <AnalysisBoardPage />
               </ProtectedRoute>
             } />
             
-            <Route path="/puzzles/daily" element={
+            <Route path="/play/review" element={
               <ProtectedRoute>
-                <div className="p-6"><h1 className="text-2xl font-bold text-white">Daily Puzzles</h1></div>
+                <GameReviewPage />
+              </ProtectedRoute>
+            } />
+            
+            {/* Puzzle routes */}
+            <Route path="/puzzles" element={
+              <ProtectedRoute>
+                <PuzzleSelectionPage />
               </ProtectedRoute>
             } />
             
             <Route path="/puzzles/tactical" element={
               <ProtectedRoute>
-                <div className="p-6"><h1 className="text-2xl font-bold text-white">Tactical Puzzles</h1></div>
+                <TacticalPuzzlesPage />
               </ProtectedRoute>
             } />
             
             <Route path="/puzzles/endgame" element={
               <ProtectedRoute>
-                <div className="p-6"><h1 className="text-2xl font-bold text-white">Endgame Puzzles</h1></div>
+                <EndgamePuzzlesPage />
               </ProtectedRoute>
             } />
             
-            <Route path="/progress/overview" element={
+            {/* Progress routes */}
+            <Route path="/progress" element={
               <ProtectedRoute>
-                <div className="p-6"><h1 className="text-2xl font-bold text-white">Progress Overview</h1></div>
+                <ProgressOverviewPage />
               </ProtectedRoute>
             } />
             
             <Route path="/progress/achievements" element={
               <ProtectedRoute>
-                <div className="p-6"><h1 className="text-2xl font-bold text-white">Achievements</h1></div>
+                <AchievementsPage />
               </ProtectedRoute>
             } />
             
+            <Route path="/progress/learning" element={
+              <ProtectedRoute>
+                <LearningPathPage />
+              </ProtectedRoute>
+            } />
+            
+            {/* Profile route */}
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            } />
+            
+            {/* Settings routes */}
             <Route path="/settings/preferences" element={
               <ProtectedRoute>
-                <div className="p-6"><h1 className="text-2xl font-bold text-white">Preferences</h1></div>
+                <PreferencesPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/settings/board" element={
+              <ProtectedRoute>
+                <BoardSettingsPage />
               </ProtectedRoute>
             } />
             
             <Route path="/settings/account" element={
               <ProtectedRoute>
-                <div className="p-6"><h1 className="text-2xl font-bold text-white">Account Settings</h1></div>
+                <AccountPage />
+              </ProtectedRoute>
+            } />
+            
+            {/* Help routes */}
+            <Route path="/help" element={
+              <ProtectedRoute>
+                <HelpCenterPage />
               </ProtectedRoute>
             } />
             
             <Route path="/help/tutorials" element={
               <ProtectedRoute>
-                <div className="p-6"><h1 className="text-2xl font-bold text-white">Tutorials</h1></div>
+                <TutorialsPage />
               </ProtectedRoute>
             } />
             
             <Route path="/help/contact" element={
               <ProtectedRoute>
-                <div className="p-6"><h1 className="text-2xl font-bold text-white">Contact</h1></div>
+                <ContactPage />
               </ProtectedRoute>
             } />
             
