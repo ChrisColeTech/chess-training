@@ -1,0 +1,330 @@
+CREATE TABLE users (
+        id TEXT PRIMARY KEY,
+        username TEXT UNIQUE NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        chess_elo INTEGER DEFAULT 1200,
+        puzzle_rating INTEGER DEFAULT 1200,
+        preferences TEXT DEFAULT '{}',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+CREATE TABLE games (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        ai_level INTEGER NOT NULL,
+        user_color TEXT NOT NULL,
+        current_fen TEXT NOT NULL,
+        pgn TEXT DEFAULT '',
+        status TEXT DEFAULT 'active',
+        result TEXT,
+        time_control TEXT,
+        started_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        completed_at DATETIME,
+        FOREIGN KEY (user_id) REFERENCES users(id)
+      );
+CREATE TABLE puzzles (
+        id TEXT PRIMARY KEY,
+        fen TEXT NOT NULL,
+        solution_moves TEXT NOT NULL,
+        themes TEXT NOT NULL,
+        rating INTEGER NOT NULL,
+        description TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+CREATE TABLE puzzle_attempts (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        puzzle_id TEXT NOT NULL,
+        moves TEXT NOT NULL,
+        correct BOOLEAN NOT NULL,
+        time_taken INTEGER NOT NULL,
+        hints_used INTEGER DEFAULT 0,
+        rating_change INTEGER NOT NULL,
+        attempted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (puzzle_id) REFERENCES puzzles(id)
+      );
+CREATE TABLE user_sessions (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        refresh_token TEXT NOT NULL,
+        expires_at DATETIME NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id)
+      );
+CREATE INDEX idx_games_user_id ON games(user_id);
+CREATE INDEX idx_games_status ON games(status);
+CREATE INDEX idx_puzzle_attempts_user_id ON puzzle_attempts(user_id);
+CREATE INDEX idx_puzzle_attempts_puzzle_id ON puzzle_attempts(puzzle_id);
+CREATE INDEX idx_puzzles_rating ON puzzles(rating);
+CREATE INDEX idx_user_sessions_user_id ON user_sessions(user_id);
+CREATE INDEX idx_user_sessions_token ON user_sessions(refresh_token);
+CREATE TABLE user_profiles (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL,
+          display_name TEXT,
+          avatar_url TEXT,
+          bio TEXT,
+          country TEXT,
+          timezone TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+CREATE TABLE user_settings (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL,
+          theme TEXT DEFAULT 'light',
+          language TEXT DEFAULT 'en',
+          sound_enabled BOOLEAN DEFAULT 1,
+          notifications_enabled BOOLEAN DEFAULT 1,
+          auto_promote_queen BOOLEAN DEFAULT 1,
+          show_legal_moves BOOLEAN DEFAULT 1,
+          board_style TEXT DEFAULT 'classic',
+          piece_style TEXT DEFAULT 'standard',
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+CREATE TABLE user_progress (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL,
+          current_rating INTEGER DEFAULT 1200,
+          puzzles_solved INTEGER DEFAULT 0,
+          puzzles_attempted INTEGER DEFAULT 0,
+          accuracy_rate REAL DEFAULT 0.0,
+          current_streak INTEGER DEFAULT 0,
+          best_streak INTEGER DEFAULT 0,
+          total_study_time INTEGER DEFAULT 0,
+          skill_level TEXT DEFAULT 'beginner',
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+CREATE TABLE user_puzzle_preferences (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL,
+          preferred_themes TEXT, -- JSON array
+          difficulty_range_min INTEGER DEFAULT 1000,
+          difficulty_range_max INTEGER DEFAULT 2000,
+          time_limit INTEGER DEFAULT 300,
+          show_hints BOOLEAN DEFAULT 1,
+          auto_next_puzzle BOOLEAN DEFAULT 1,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+CREATE TABLE user_study_plans (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL,
+          name TEXT NOT NULL,
+          description TEXT,
+          target_rating INTEGER,
+          estimated_weeks INTEGER,
+          is_active BOOLEAN DEFAULT 1,
+          current_module TEXT,
+          progress REAL DEFAULT 0.0,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+CREATE TABLE openings (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          eco_code TEXT,
+          moves TEXT NOT NULL, -- JSON array of moves
+          description TEXT,
+          popularity_score INTEGER DEFAULT 0,
+          difficulty_level TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE opening_moves (
+          id TEXT PRIMARY KEY,
+          opening_id TEXT NOT NULL,
+          move_number INTEGER NOT NULL,
+          move_notation TEXT NOT NULL,
+          fen_after_move TEXT,
+          theory_explanation TEXT,
+          FOREIGN KEY (opening_id) REFERENCES openings(id)
+        );
+CREATE TABLE tutorials (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL,
+          description TEXT,
+          difficulty_level TEXT,
+          estimated_duration INTEGER, -- in minutes
+          category TEXT,
+          content TEXT, -- JSON or markdown
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE tutorial_steps (
+          id TEXT PRIMARY KEY,
+          tutorial_id TEXT NOT NULL,
+          step_number INTEGER NOT NULL,
+          title TEXT,
+          content TEXT,
+          position_fen TEXT,
+          interactive_element TEXT, -- JSON
+          FOREIGN KEY (tutorial_id) REFERENCES tutorials(id)
+        );
+CREATE TABLE analysis_positions (
+          id TEXT PRIMARY KEY,
+          fen TEXT NOT NULL,
+          name TEXT,
+          description TEXT,
+          best_moves TEXT, -- JSON array
+          evaluation REAL,
+          depth INTEGER,
+          engine_analysis TEXT, -- JSON
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE endgame_positions (
+          id TEXT PRIMARY KEY,
+          fen TEXT NOT NULL,
+          name TEXT,
+          category TEXT,
+          result TEXT, -- win/draw/loss
+          key_concepts TEXT, -- JSON array
+          solution_moves TEXT, -- JSON array
+          theory TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE puzzle_sources (
+          id TEXT PRIMARY KEY,
+          source_id TEXT UNIQUE NOT NULL,
+          name TEXT NOT NULL,
+          description TEXT,
+          total_puzzles INTEGER DEFAULT 0,
+          average_rating INTEGER DEFAULT 1500,
+          is_active BOOLEAN DEFAULT 1,
+          attribution TEXT, -- JSON
+          license TEXT,
+          url TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE learning_paths (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          description TEXT,
+          skill_level TEXT,
+          estimated_hours INTEGER,
+          prerequisites TEXT, -- JSON array
+          learning_objectives TEXT, -- JSON array
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE learning_modules (
+          id TEXT PRIMARY KEY,
+          learning_path_id TEXT NOT NULL,
+          name TEXT NOT NULL,
+          description TEXT,
+          order_index INTEGER NOT NULL,
+          estimated_hours INTEGER,
+          module_type TEXT,
+          content TEXT, -- JSON
+          FOREIGN KEY (learning_path_id) REFERENCES learning_paths(id)
+        );
+CREATE TABLE user_progress_tracking (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL,
+          learning_path_id TEXT,
+          module_id TEXT,
+          progress_percentage REAL DEFAULT 0.0,
+          time_spent INTEGER DEFAULT 0, -- in seconds
+          last_accessed DATETIME,
+          completed_at DATETIME,
+          FOREIGN KEY (user_id) REFERENCES users(id),
+          FOREIGN KEY (learning_path_id) REFERENCES learning_paths(id),
+          FOREIGN KEY (module_id) REFERENCES learning_modules(id)
+        );
+CREATE TABLE ai_opponents (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          personality TEXT,
+          strength_rating INTEGER,
+          playing_style TEXT,
+          description TEXT,
+          avatar_url TEXT,
+          is_available BOOLEAN DEFAULT 1,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE game_reviews (
+          id TEXT PRIMARY KEY,
+          game_id TEXT NOT NULL,
+          reviewer_id TEXT,
+          title TEXT,
+          description TEXT,
+          key_moments TEXT, -- JSON array
+          analysis_depth TEXT,
+          review_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (game_id) REFERENCES games(id),
+          FOREIGN KEY (reviewer_id) REFERENCES users(id)
+        );
+CREATE TABLE game_review_moves (
+          id TEXT PRIMARY KEY,
+          review_id TEXT NOT NULL,
+          move_number INTEGER NOT NULL,
+          move_notation TEXT,
+          comment TEXT,
+          evaluation REAL,
+          best_move TEXT,
+          annotation_symbols TEXT,
+          FOREIGN KEY (review_id) REFERENCES game_reviews(id)
+        );
+CREATE TABLE achievements (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          description TEXT,
+          category TEXT,
+          icon TEXT,
+          points INTEGER DEFAULT 0,
+          difficulty TEXT,
+          requirements TEXT, -- JSON
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE user_achievements (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL,
+          achievement_id TEXT NOT NULL,
+          earned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          progress REAL DEFAULT 1.0,
+          FOREIGN KEY (user_id) REFERENCES users(id),
+          FOREIGN KEY (achievement_id) REFERENCES achievements(id),
+          UNIQUE(user_id, achievement_id)
+        );
+CREATE TABLE user_analytics (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL,
+          event_type TEXT NOT NULL,
+          event_data TEXT, -- JSON
+          session_id TEXT,
+          timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+CREATE TABLE help_content (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL,
+          content TEXT NOT NULL,
+          category TEXT,
+          tags TEXT, -- JSON array
+          search_keywords TEXT,
+          view_count INTEGER DEFAULT 0,
+          helpful_votes INTEGER DEFAULT 0,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE subscriptions (
+          id TEXT PRIMARY KEY,
+          tier TEXT NOT NULL,
+          name TEXT NOT NULL,
+          price REAL NOT NULL,
+          currency TEXT DEFAULT 'USD',
+          description TEXT,
+          features TEXT, -- JSON array
+          limits TEXT, -- JSON object
+          is_active BOOLEAN DEFAULT 1,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );

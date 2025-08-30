@@ -1,0 +1,16 @@
+{
+  "original": {
+    "totalInterfaces": 419,
+    "estimatedTables": 352,
+    "duplicateGroups": 20
+  },
+  "optimized": {
+    "finalTables": 88,
+    "totalEndpoints": 21,
+    "domains": 6
+  },
+  "reduction": {
+    "tablesEliminated": 264,
+    "percentageReduction": 75
+  }
+}

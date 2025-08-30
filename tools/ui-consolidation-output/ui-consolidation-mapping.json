@@ -1,0 +1,1412 @@
+{
+  "summary": {
+    "originalInterfaces": 268,
+    "consolidatedGroups": 9,
+    "reductionPercentage": 97
+  },
+  "groups": [
+    {
+      "category": "board-themes",
+      "outputFile": "boardThemeConfig.ts",
+      "interfaceCount": 36,
+      "interfaces": [
+        {
+          "name": "BoardSizeConfig",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "CoordinateStyle",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "HighlightStyle",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "ArrowStyle",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "BoardThemeColors",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/boardThemeDefaults.ts",
+          "propertyCount": 3
+        },
+        {
+          "name": "BoardTheme",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/boardThemesData.ts",
+          "propertyCount": 16
+        },
+        {
+          "name": "ThemeCategory",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/boardThemesData.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "PieceSetInfo",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/pieceSetsData.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "PieceCustomization",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/pieceSetsData.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "ThemeOption",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/preferencesData.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "EvaluationBarProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/analysisBoard.ts",
+          "propertyCount": 2
+        },
+        {
+          "name": "EngineLineProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/analysisBoard.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "PositionSetupProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/analysisBoard.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "MoveNavigationProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/analysisBoard.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "AnalysisControlsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/analysisBoard.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "PositionDatabaseProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/analysisBoard.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "CoordinateSettings",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "MoveHighlightSettings",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "MarkupSettings",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "BorderSettings",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "BoardTheme",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 15
+        },
+        {
+          "name": "BoardSettings",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 14
+        },
+        {
+          "name": "BoardSettingsExport",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "BoardPreviewProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "ThemeSelectorProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "PieceSelectorProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "BoardControlsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 3
+        },
+        {
+          "name": "BoardSettingsHookReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 21
+        },
+        {
+          "name": "ThemeWizardStep",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "ThemeCreationData",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/boardSettings.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "CustomPuzzleBoardProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/customPuzzles.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "OpeningBoardProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "PuzzleBoardProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingPuzzles.ts",
+          "propertyCount": 3
+        },
+        {
+          "name": "ChessGameBoardProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "ThemeSelectorProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "CommandCenterTheme",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 6
+        }
+      ]
+    },
+    {
+      "category": "component-props",
+      "outputFile": "componentProps.ts",
+      "interfaceCount": 103,
+      "interfaces": [
+        {
+          "name": "ProfileEditorProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "SecuritySettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "SubscriptionManagementProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "DataManagementProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "ConnectedServicesProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "LoginHistoryProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "AchievementCardProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "AchievementGridProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "AchievementDetailsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "AchievementFiltersProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "AchievementStatsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "ProgressTrackerProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "BadgeDetailsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "CustomPuzzleControlsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/customPuzzles.ts",
+          "propertyCount": 11
+        },
+        {
+          "name": "CustomPuzzleInfoProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/customPuzzles.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "CustomPuzzleCollectionBrowserProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/customPuzzles.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "PuzzleImportExportProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/customPuzzles.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "PuzzleSharingProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/customPuzzles.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "PerformanceMetricsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/detailedStats.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "TrendAnalysisProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/detailedStats.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "WeaknessAnalysisProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/detailedStats.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "PositionHeatMapProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/detailedStats.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "ComparativeAnalysisProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/detailedStats.ts",
+          "propertyCount": 3
+        },
+        {
+          "name": "GamePhaseAnalysisProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/detailedStats.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "EndgameCategoriesProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "PositionViewerProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "TablebaseQueryProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "EndgameAnalysisProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "EndgamePracticeProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "GameSelectionProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "MoveAnalysisProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "EngineEvaluationProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "GameStatisticsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "SearchInterfaceProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/helpCenter.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "CategoryBrowserProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/helpCenter.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "ArticleViewerProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/helpCenter.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "FAQSectionProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/helpCenter.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "TutorialBrowserProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/helpCenter.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "SkillTreeProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "PathViewerProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "RecommendationEngineProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "LearningAnalyticsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "StudyPlannerProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "MilestoneTrackerProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "GameLibraryProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "GameViewerProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts",
+          "propertyCount": 11
+        },
+        {
+          "name": "MasterAnalysisProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "PlayerProfileProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "NotificationCenterProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "AlertSettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "ChannelSettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "EventSettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "QuietHoursProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "NotificationRulesProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "NotificationTestingProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "NotificationHistoryProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "OpeningSearchProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "VariationTreeProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "MasterGamesProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "OpeningAnalysisProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "OpeningInfoProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "PuzzleControlsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingPuzzles.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "PuzzleInfoProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingPuzzles.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "PuzzleTabsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingPuzzles.ts",
+          "propertyCount": 2
+        },
+        {
+          "name": "PuzzleProgressProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingPuzzles.ts",
+          "propertyCount": 3
+        },
+        {
+          "name": "OpponentSelectorProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "GameSetupProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "MoveHistoryProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "GameAnalysisProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "GeneralSettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "LanguageSettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "AccessibilitySettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "PerformanceSettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "PrivacySettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "ImportExportSettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "BackupSyncSettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "GamingSettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "SoundAnimationSettingsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "ProfileHeaderProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/profile.ts",
+          "propertyCount": 3
+        },
+        {
+          "name": "ProfileTabsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/profile.ts",
+          "propertyCount": 3
+        },
+        {
+          "name": "ProfileOverviewProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/profile.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "ProfileAchievementsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/profile.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "ProfileActivityProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/profile.ts",
+          "propertyCount": 3
+        },
+        {
+          "name": "StatsGridProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/profile.ts",
+          "propertyCount": 2
+        },
+        {
+          "name": "StatsCardsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "ProgressChartsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "ActivityFeedProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "AchievementSectionProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "QuickActionsProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "CategoryCardProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/puzzleSelection.ts",
+          "propertyCount": 3
+        },
+        {
+          "name": "StatsCardProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/puzzleSelection.ts",
+          "propertyCount": 2
+        },
+        {
+          "name": "RecentPuzzlesProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/puzzleSelection.ts",
+          "propertyCount": 3
+        },
+        {
+          "name": "AchievementShowcaseProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/puzzleSelection.ts",
+          "propertyCount": 2
+        },
+        {
+          "name": "PlanOverviewProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "LessonViewerProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "ProgressTrackerProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "StudySchedulerProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "AchievementBadgesProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "TutorialLauncherProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "InteractiveGuideProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "ProgressTrackerProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "VideoPlayerProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "TutorialFeedbackProps",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts",
+          "propertyCount": 6
+        }
+      ]
+    },
+    {
+      "category": "form-configs",
+      "outputFile": "formConfig.ts",
+      "interfaceCount": 8,
+      "interfaces": [
+        {
+          "name": "ContactFormData",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/contact.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "ContactFormErrors",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/contact.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "CustomPuzzleFormData",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/customPuzzles.ts",
+          "propertyCount": 12
+        },
+        {
+          "name": "PerformanceMetrics",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/detailedStats.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "PerformanceMetrics",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "PerformanceStats",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts",
+          "propertyCount": 12
+        },
+        {
+          "name": "PerformancePreferences",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "PerformanceAnalytics",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 8
+        }
+      ]
+    },
+    {
+      "category": "navigation-ui",
+      "outputFile": "navigationConfig.ts",
+      "interfaceCount": 4,
+      "interfaces": [
+        {
+          "name": "CollectionBrowserTab",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/collectionBrowserTabs.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "NavItem",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/navigationConfig.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "TablebaseQueryResult",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "OpeningDatabaseService",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts",
+          "propertyCount": 7
+        }
+      ]
+    },
+    {
+      "category": "notification-ui",
+      "outputFile": "notificationConfig.ts",
+      "interfaceCount": 14,
+      "interfaces": [
+        {
+          "name": "VisualAlertOption",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/notificationSettingsData.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "PriorityLevelOption",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/notificationSettingsData.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "NotificationEventTemplate",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/notificationSettingsData.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "QuietHoursPeriod",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "NotificationChannelSettings",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "NotificationEventSettings",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "NotificationInstance",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 13
+        },
+        {
+          "name": "NotificationAction",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "NotificationRuleAction",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 2
+        },
+        {
+          "name": "NotificationTest",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "NotificationStats",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "NotificationSettings",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "NotificationsHookReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 28
+        },
+        {
+          "name": "NotificationDiagnostics",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts",
+          "propertyCount": 6
+        }
+      ]
+    },
+    {
+      "category": "analysis-ui",
+      "outputFile": "analysisUIConfig.ts",
+      "interfaceCount": 9,
+      "interfaces": [
+        {
+          "name": "TrendAnalysis",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/detailedStats.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "EndgamePosition",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts",
+          "propertyCount": 21
+        },
+        {
+          "name": "EndgameAnalysis",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts",
+          "propertyCount": 12
+        },
+        {
+          "name": "EndgameComposition",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts",
+          "propertyCount": 12
+        },
+        {
+          "name": "EndgameAnalysis",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "GameAnalysis",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "PositionAnalysis",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "GameSetup",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "GameAnalysis",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts",
+          "propertyCount": 6
+        }
+      ]
+    },
+    {
+      "category": "puzzle-ui",
+      "outputFile": "puzzleUIConfig.ts",
+      "interfaceCount": 18,
+      "interfaces": [
+        {
+          "name": "PuzzleSourceMapping",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/puzzleSourceMappings.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "TacticalPuzzle",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/tacticalPuzzles.ts",
+          "propertyCount": 11
+        },
+        {
+          "name": "UserPuzzlePreferences",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzlePreferences.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "UserPuzzleSelection",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleSelections.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "PuzzleSelectionEntry",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleSelections.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "UserPuzzleSession",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleSessions.ts",
+          "propertyCount": 15
+        },
+        {
+          "name": "PuzzleResult",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleSessions.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "PuzzleSession",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleStats.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "CustomPuzzle",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/customPuzzles.ts",
+          "propertyCount": 24
+        },
+        {
+          "name": "CustomPuzzleSession",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/customPuzzles.ts",
+          "propertyCount": 15
+        },
+        {
+          "name": "CustomPuzzleFilters",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/customPuzzles.ts",
+          "propertyCount": 11
+        },
+        {
+          "name": "EndgameCategoryInfo",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "EndgameLibraryHookReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts",
+          "propertyCount": 37
+        },
+        {
+          "name": "GameFilters",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts",
+          "propertyCount": 13
+        },
+        {
+          "name": "OpeningPuzzle",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingPuzzles.ts",
+          "propertyCount": 16
+        },
+        {
+          "name": "PuzzleSession",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingPuzzles.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "TimerConfig",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingPuzzles.ts",
+          "propertyCount": 2
+        },
+        {
+          "name": "PuzzleCategory",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/puzzleSelection.ts",
+          "propertyCount": 14
+        }
+      ]
+    },
+    {
+      "category": "settings-ui",
+      "outputFile": "settingsUIConfig.ts",
+      "interfaceCount": 14,
+      "interfaces": [
+        {
+          "name": "UIDensityOption",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/preferencesData.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "SecuritySettings",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "EmailConfig",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/forgotPassword.ts",
+          "propertyCount": 3
+        },
+        {
+          "name": "HelpCenterConfig",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/helpCenter.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "TimeControlConfig",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "GeneralPreferences",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 11
+        },
+        {
+          "name": "AppearancePreferences",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "LanguagePreferences",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "ImportExportPreferences",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "GamingPreferences",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "UserPreferences",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 13
+        },
+        {
+          "name": "PreferencesHookReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts",
+          "propertyCount": 32
+        },
+        {
+          "name": "MockDataConfig",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "ResetPasswordConfig",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/resetPassword.ts",
+          "propertyCount": 2
+        }
+      ]
+    },
+    {
+      "category": "misc-ui",
+      "outputFile": "miscUIConfig.ts",
+      "interfaceCount": 62,
+      "interfaces": [
+        {
+          "name": "SupportedSource",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/importExportSources.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "SubscriptionTier",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/subscriptionData.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "UserProgressData",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/userProgressTracking.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "ProgressSnapshot",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/data/userProgressTracking.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "UserProfile",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts",
+          "propertyCount": 15
+        },
+        {
+          "name": "DataExportRequest",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "AchievementUnlockCondition",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "AchievementShare",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "ContactState",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/contact.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "UseContactReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/contact.ts",
+          "propertyCount": 21
+        },
+        {
+          "name": "OpeningRepertoire",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/detailedStats.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "DetailedStatistics",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/detailedStats.ts",
+          "propertyCount": 11
+        },
+        {
+          "name": "UseForgotPasswordReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/forgotPassword.ts",
+          "propertyCount": 12
+        },
+        {
+          "name": "AnalyzedMove",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts",
+          "propertyCount": 23
+        },
+        {
+          "name": "GameReview",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts",
+          "propertyCount": 21
+        },
+        {
+          "name": "ReviewSession",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "GameReviewHookReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts",
+          "propertyCount": 24
+        },
+        {
+          "name": "HelpArticle",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/helpCenter.ts",
+          "propertyCount": 18
+        },
+        {
+          "name": "Tutorial",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/helpCenter.ts",
+          "propertyCount": 12
+        },
+        {
+          "name": "CategoryInfo",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/helpCenter.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "HelpCenterHookReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/helpCenter.ts",
+          "propertyCount": 39
+        },
+        {
+          "name": "SkillNode",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts",
+          "propertyCount": 14
+        },
+        {
+          "name": "LearningBranch",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts",
+          "propertyCount": 7
+        },
+        {
+          "name": "AdaptiveDifficulty",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "StudySessionPlan",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "MasterPlayer",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "ChessOpening",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "MoveAnnotation",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "LibraryStats",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "MasterProfile",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "RecommendationCriteria",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts",
+          "propertyCount": 6
+        },
+        {
+          "name": "MasterGame",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts",
+          "propertyCount": 14
+        },
+        {
+          "name": "UserOpeningData",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "OpeningExplorerHookReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts",
+          "propertyCount": 37
+        },
+        {
+          "name": "AIOpponent",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts",
+          "propertyCount": 14
+        },
+        {
+          "name": "ChessMove",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "PlayComputerHookReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts",
+          "propertyCount": 22
+        },
+        {
+          "name": "ProfileUser",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/profile.ts",
+          "propertyCount": 14
+        },
+        {
+          "name": "QuickAction",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/profile.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "ProfileData",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/profile.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "StatCard",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "Achievement",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 13
+        },
+        {
+          "name": "SkillProgression",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "Goal",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 13
+        },
+        {
+          "name": "QuickAction",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 11
+        },
+        {
+          "name": "ProgressOverviewHookReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts",
+          "propertyCount": 20
+        },
+        {
+          "name": "RegisterRequest",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/register.ts",
+          "propertyCount": 4
+        },
+        {
+          "name": "PasswordRequirement",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/resetPassword.ts",
+          "propertyCount": 2
+        },
+        {
+          "name": "UseResetPasswordReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/resetPassword.ts",
+          "propertyCount": 11
+        },
+        {
+          "name": "StudyLesson",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts",
+          "propertyCount": 13
+        },
+        {
+          "name": "InteractiveElement",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts",
+          "propertyCount": 5
+        },
+        {
+          "name": "StudyModule",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts",
+          "propertyCount": 13
+        },
+        {
+          "name": "LearningPath",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts",
+          "propertyCount": 13
+        },
+        {
+          "name": "StudySession",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "StudyPlansHookReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts",
+          "propertyCount": 29
+        },
+        {
+          "name": "TutorialStep",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts",
+          "propertyCount": 13
+        },
+        {
+          "name": "Tutorial",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts",
+          "propertyCount": 27
+        },
+        {
+          "name": "TutorialProgress",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts",
+          "propertyCount": 15
+        },
+        {
+          "name": "TutorialAchievement",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts",
+          "propertyCount": 10
+        },
+        {
+          "name": "TutorialMiniGame",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts",
+          "propertyCount": 9
+        },
+        {
+          "name": "QuickStartGuide",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts",
+          "propertyCount": 8
+        },
+        {
+          "name": "TutorialsHookReturn",
+          "sourceFile": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts",
+          "propertyCount": 42
+        }
+      ]
+    }
+  ]
+}

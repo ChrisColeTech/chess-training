@@ -243,4 +243,178 @@ export class ChessService {
     if (result === '0-1') return -Math.max(5, Math.floor(baseChange * 0.8));
     return 0; // Draw
   }
+
+  async getAllGames(userId: string): Promise<any[]> {
+    const games = await this.db.db.all(
+      `SELECT id, ai_level, user_color, current_fen, pgn, status, result, 
+              time_control, started_at, completed_at
+       FROM games 
+       WHERE user_id = ? 
+       ORDER BY started_at DESC`,
+      [userId]
+    );
+
+    return games.map((game: any) => ({
+      id: game.id,
+      aiLevel: game.ai_level,
+      userColor: game.user_color,
+      currentFen: game.current_fen,
+      pgn: game.pgn,
+      status: game.status,
+      result: game.result,
+      timeControl: game.time_control,
+      startedAt: game.started_at,
+      completedAt: game.completed_at,
+      eloChange: game.status === 'completed' ? this.calculateEloChange(game.result, game.ai_level) : 0
+    }));
+  }
+
+  async deleteGame(gameId: string, userId: string): Promise<void> {
+    // Check if game exists and belongs to user
+    const game = await this.db.db.get(
+      'SELECT * FROM games WHERE id = ? AND user_id = ?',
+      [gameId, userId]
+    );
+
+    if (!game) {
+      throw new Error('Game not found');
+    }
+
+    // Don't allow deleting active games
+    if (game.status === 'active') {
+      throw new Error('Cannot delete active game');
+    }
+
+    // Delete the game
+    await this.db.db.run(
+      'DELETE FROM games WHERE id = ? AND user_id = ?',
+      [gameId, userId]
+    );
+  }
+
+  async analyzeGame(gameId: string, userId: string, options: {
+    engine?: string;
+    depth?: number;
+  }): Promise<any> {
+    // Check if game exists and belongs to user
+    const game = await this.db.db.get(
+      'SELECT * FROM games WHERE id = ? AND user_id = ?',
+      [gameId, userId]
+    );
+
+    if (!game) {
+      throw new Error('Game not found');
+    }
+
+    // Only analyze completed games
+    if (game.status !== 'completed') {
+      throw new Error('Game not completed');
+    }
+
+    const chess = new Chess();
+    const moves = game.pgn ? chess.loadPgn(game.pgn) : [];
+    chess.reset();
+
+    // Analyze each position in the game
+    const analysis = [];
+    const gameHistory = chess.history({ verbose: true });
+
+    // For POC, provide basic analysis
+    // In a full implementation, this would use an actual chess engine
+    for (let i = 0; i < gameHistory.length; i++) {
+      const move = gameHistory[i];
+      chess.reset();
+      
+      // Play moves up to current position
+      for (let j = 0; j < i; j++) {
+        chess.move(gameHistory[j]);
+      }
+
+      const position = {
+        moveNumber: Math.floor(i / 2) + 1,
+        side: move.color === 'w' ? 'white' : 'black',
+        move: move.san,
+        fen: chess.fen(),
+        evaluation: this.evaluatePosition(chess, move.color),
+        bestMove: await this.getBestMoveForPosition(chess.fen(), options.depth || 15),
+        comment: this.getMoveComment(chess, move)
+      };
+
+      analysis.push(position);
+    }
+
+    return {
+      gameId,
+      pgn: game.pgn,
+      result: game.result,
+      aiLevel: game.ai_level,
+      analysis,
+      summary: {
+        totalMoves: gameHistory.length,
+        accuracy: this.calculateAccuracy(analysis),
+        mistakes: analysis.filter(pos => pos.evaluation < -100).length,
+        blunders: analysis.filter(pos => pos.evaluation < -300).length
+      },
+      analyzedAt: new Date().toISOString(),
+      engine: options.engine || 'stockfish',
+      depth: options.depth || 15
+    };
+  }
+
+  private evaluatePosition(chess: Chess, side: string): number {
+    // Basic material evaluation for POC
+    // In a full implementation, this would use an actual chess engine
+    const pieceValues = {
+      'p': 1, 'n': 3, 'b': 3, 'r': 5, 'q': 9, 'k': 0,
+      'P': 1, 'N': 3, 'B': 3, 'R': 5, 'Q': 9, 'K': 0
+    };
+
+    let whiteValue = 0;
+    let blackValue = 0;
+
+    const board = chess.board();
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        const piece = board[i][j];
+        if (piece) {
+          if (piece.color === 'w') {
+            whiteValue += (pieceValues as any)[piece.type.toUpperCase()] || 0;
+          } else {
+            blackValue += (pieceValues as any)[piece.type.toLowerCase()] || 0;
+          }
+        }
+      }
+    }
+
+    const materialBalance = whiteValue - blackValue;
+    return side === 'w' ? materialBalance * 100 : -materialBalance * 100;
+  }
+
+  private async getBestMoveForPosition(fen: string, depth: number): Promise<string> {
+    // In POC, return a random legal move
+    // In full implementation, this would use chess engine
+    const chess = new Chess(fen);
+    const moves = chess.moves();
+    return moves[Math.floor(Math.random() * moves.length)] || 'None';
+  }
+
+  private getMoveComment(chess: Chess, move: any): string {
+    // Basic move comments for POC
+    if (chess.inCheck()) {
+      return 'Gives check';
+    }
+    if (move.captured) {
+      return `Captures ${move.captured}`;
+    }
+    if (move.promotion) {
+      return `Promotes to ${move.promotion}`;
+    }
+    return 'Normal move';
+  }
+
+  private calculateAccuracy(analysis: any[]): number {
+    // Simple accuracy calculation for POC
+    const goodMoves = analysis.filter(pos => pos.evaluation >= -50).length;
+    return analysis.length > 0 ? Math.round((goodMoves / analysis.length) * 100) : 0;
+  }
 }

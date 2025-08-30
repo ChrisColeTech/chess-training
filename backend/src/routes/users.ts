@@ -38,4 +38,30 @@ router.put('/profile',
   userController.updateProfile
 );
 
+// Get dashboard stats (referenced in API docs)
+router.get('/dashboard-stats', 
+  userController.getDashboardStats
+);
+
+// Simplified endpoints for frontend compatibility
+router.get('/preferences', 
+  userController.getPreferences
+);
+
+router.put('/preferences',
+  [
+    body().isObject().withMessage('Preferences must be an object')
+  ],
+  validateRequest,
+  userController.updatePreferences
+);
+
+router.get('/statistics',
+  userController.getStatistics
+);
+
+router.get('/activity',
+  userController.getActivity
+);
+
 export default router;

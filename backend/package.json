@@ -4,7 +4,14 @@
   "description": "Chess Training POC - Backend API Server",
   "main": "dist/app.js",
   "scripts": {
-    "seed": "ts-node src/scripts/seed.ts"
+    "start": "ts-node src/app.ts",
+    "dev": "nodemon src/app.ts",
+    "build": "tsc",
+    "seed": "ts-node src/scripts/seed.ts",
+    "backup-database": "ts-node src/scripts/backup-database.ts",
+    "restore-database": "ts-node src/scripts/restore-database.ts",
+    "cleanup-duplicates": "ts-node src/scripts/cleanup-duplicates.ts",
+    "migrate-full": "cd ../tools && npm run build && npm run migrate-all-data && npm run migrate-all-puzzles && cd ../backend && npm run cleanup-duplicates && npm run backup-database"
   },
   "dependencies": {
     "bcrypt": "^5.1.x",
@@ -15,8 +22,8 @@
     "express-validator": "^7.0.x",
     "helmet": "^7.0.x",
     "jsonwebtoken": "^9.0.x",
-    "sqlite": "^5.0.x",
-    "sqlite3": "^5.1.x",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.6",
     "typescript": "^5.0.x",
     "uuid": "^9.0.x"
   },

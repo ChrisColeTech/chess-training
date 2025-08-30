@@ -19,7 +19,12 @@ const validateRequest = (req: express.Request, res: express.Response, next: expr
   next();
 };
 
-// All puzzle routes require authentication
+// Public routes for browsing puzzles
+router.get('/', puzzleController.getAllPuzzles);
+router.get('/category/:category', puzzleController.getPuzzlesByCategory);
+router.get('/difficulty/:difficulty', puzzleController.getPuzzlesByDifficulty);
+
+// All other puzzle routes require authentication
 router.use(authenticateToken);
 
 // Get next puzzle

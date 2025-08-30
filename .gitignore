@@ -84,3 +84,5 @@ pnpm-lock.yaml
 /playwright/.cache/
 /archive
 /backend/dist
+/tools/dist
+/data-processing

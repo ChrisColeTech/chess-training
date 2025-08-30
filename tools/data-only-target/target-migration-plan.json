@@ -1,0 +1,212 @@
+{
+  "overview": {
+    "totalInterfaces": 56,
+    "targetTables": 9,
+    "databaseEntities": 14,
+    "reductionPercentage": 84
+  },
+  "phases": [
+    {
+      "phase": 1,
+      "name": "User Management",
+      "tables": [
+        "users",
+        "user_sessions"
+      ],
+      "priority": "critical",
+      "estimatedTime": "1 day",
+      "mappedInterfaces": [
+        "UserAnalysisPreferences",
+        "UserPuzzleStats",
+        "UserStudyPlan",
+        "StudyModule",
+        "StudyTopic"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Core Gameplay",
+      "tables": [
+        "games",
+        "puzzles"
+      ],
+      "priority": "critical",
+      "estimatedTime": "2 days",
+      "mappedInterfaces": [
+        "SoundEffect",
+        "RelatedTutorial",
+        "GameFilter",
+        "BillingHistory",
+        "PaymentMethod",
+        "EndgamePuzzle",
+        "EndgameCategory",
+        "PuzzleSourceMetadata"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Progress Tracking",
+      "tables": [
+        "puzzle_attempts",
+        "user_stats"
+      ],
+      "priority": "high",
+      "estimatedTime": "1 day",
+      "mappedInterfaces": [
+        "ProgressStatistic"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Achievements & Learning",
+      "tables": [
+        "achievements",
+        "user_achievements",
+        "opening_positions"
+      ],
+      "priority": "medium",
+      "estimatedTime": "2 days",
+      "mappedInterfaces": []
+    }
+  ],
+  "dataMapping": {
+    "databaseEntities": [
+      {
+        "interface": "SoundEffect",
+        "targetTable": "games",
+        "confidence": 50,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts"
+      },
+      {
+        "interface": "EndgamePuzzle",
+        "targetTable": "puzzles",
+        "confidence": 95,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/endgamePuzzles.ts"
+      },
+      {
+        "interface": "EndgameCategory",
+        "targetTable": "puzzles",
+        "confidence": 46,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/endgamePuzzles.ts"
+      },
+      {
+        "interface": "ProgressStatistic",
+        "targetTable": "user_stats",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/puzzleProgressStats.ts"
+      },
+      {
+        "interface": "PuzzleSourceMetadata",
+        "targetTable": "puzzles",
+        "confidence": 56,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/puzzleSourceDatabase.ts"
+      },
+      {
+        "interface": "RelatedTutorial",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/relatedTutorials.ts"
+      },
+      {
+        "interface": "GameFilter",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/reviewGames.ts"
+      },
+      {
+        "interface": "BillingHistory",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/subscriptionData.ts"
+      },
+      {
+        "interface": "PaymentMethod",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/subscriptionData.ts"
+      },
+      {
+        "interface": "UserAnalysisPreferences",
+        "targetTable": "users",
+        "confidence": 56,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userAnalysisPreferences.ts"
+      },
+      {
+        "interface": "UserPuzzleStats",
+        "targetTable": "users",
+        "confidence": 62,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleStats.ts"
+      },
+      {
+        "interface": "UserStudyPlan",
+        "targetTable": "users",
+        "confidence": 86,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userStudyPlans.ts"
+      },
+      {
+        "interface": "StudyModule",
+        "targetTable": "users",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userStudyPlans.ts"
+      },
+      {
+        "interface": "StudyTopic",
+        "targetTable": "users",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userStudyPlans.ts"
+      }
+    ]
+  },
+  "filteredOut": {
+    "uiConfig": [
+      "BoardSizeConfig",
+      "CoordinateStyle",
+      "HighlightStyle",
+      "ArrowStyle",
+      "BoardThemeColors",
+      "BoardTheme",
+      "ThemeCategory",
+      "CollectionBrowserTab",
+      "SupportedSource",
+      "NavItem",
+      "VisualAlertOption",
+      "PriorityLevelOption",
+      "NotificationEventTemplate",
+      "PieceSetInfo",
+      "PieceCustomization",
+      "ThemeOption",
+      "UIDensityOption",
+      "PuzzleSourceMapping",
+      "SubscriptionTier",
+      "TacticalPuzzle",
+      "UserProgressData",
+      "ProgressSnapshot",
+      "UserPuzzlePreferences",
+      "UserPuzzleSelection",
+      "PuzzleSelectionEntry",
+      "UserPuzzleSession",
+      "PuzzleResult",
+      "PuzzleSession"
+    ],
+    "mockData": [
+      "MockUser"
+    ],
+    "utility": [
+      "ChessPrinciple",
+      "NotificationSoundOption",
+      "FrequencyOption",
+      "LanguageOption",
+      "ChessNotationOption",
+      "StartupBehaviorOption"
+    ],
+    "unmapped": [
+      "AnalysisSettings",
+      "EngineStatus",
+      "AnalysisSettings",
+      "EngineStatus",
+      "ImportProgress",
+      "PredefinedPosition",
+      "AnimationIntensity"
+    ]
+  }
+}

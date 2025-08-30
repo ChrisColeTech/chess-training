@@ -82,7 +82,7 @@ export class GameController {
     } catch (error: any) {
       console.error('Make move error:', error);
       
-      if (error.message === 'Game not found') {
+      if ((error as any).message === 'Game not found') {
         return res.status(404).json({
           success: false,
           error: 'Game not found'
@@ -124,7 +124,7 @@ export class GameController {
     } catch (error: any) {
       console.error('Get game error:', error);
       
-      if (error.message === 'Game not found') {
+      if ((error as any).message === 'Game not found') {
         return res.status(404).json({
           success: false,
           error: 'Game not found'
@@ -160,6 +160,135 @@ export class GameController {
       res.status(500).json({
         success: false,
         error: 'Failed to get game history'
+      });
+    }
+  };
+
+  getAllGames = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.userId;
+
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: 'User not authenticated'
+        });
+      }
+
+      // Get all games for the user (both active and completed)
+      const games = await this.chessService.getAllGames(userId);
+      
+      res.json({
+        success: true,
+        games
+      });
+    } catch (error: any) {
+      console.error('Get all games error:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to get games'
+      });
+    }
+  };
+
+  deleteGame = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { gameId } = req.params;
+      const userId = req.user?.userId;
+
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: 'User not authenticated'
+        });
+      }
+
+      if (!gameId) {
+        return res.status(400).json({
+          success: false,
+          error: 'Game ID required'
+        });
+      }
+
+      await this.chessService.deleteGame(gameId, userId);
+      
+      res.json({
+        success: true,
+        message: 'Game deleted successfully'
+      });
+    } catch (error: any) {
+      console.error('Delete game error:', error);
+      
+      if ((error as any).message === 'Game not found') {
+        return res.status(404).json({
+          success: false,
+          error: 'Game not found'
+        });
+      }
+
+      if ((error as any).message === 'Cannot delete active game') {
+        return res.status(400).json({
+          success: false,
+          error: 'Cannot delete active game'
+        });
+      }
+
+      res.status(500).json({
+        success: false,
+        error: 'Failed to delete game'
+      });
+    }
+  };
+
+  analyzeGame = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { gameId } = req.params;
+      const { engine = 'stockfish', depth = 15 } = req.body;
+      const userId = req.user?.userId;
+
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: 'User not authenticated'
+        });
+      }
+
+      if (!gameId) {
+        return res.status(400).json({
+          success: false,
+          error: 'Game ID required'
+        });
+      }
+
+      const analysis = await this.chessService.analyzeGame(gameId, userId, {
+        engine,
+        depth
+      });
+      
+      res.json({
+        success: true,
+        analysis
+      });
+    } catch (error: any) {
+      console.error('Analyze game error:', error);
+      
+      if ((error as any).message === 'Game not found') {
+        return res.status(404).json({
+          success: false,
+          error: 'Game not found'
+        });
+      }
+
+      if ((error as any).message === 'Game not completed') {
+        return res.status(400).json({
+          success: false,
+          error: 'Can only analyze completed games'
+        });
+      }
+
+      res.status(500).json({
+        success: false,
+        error: 'Failed to analyze game'
       });
     }
   };

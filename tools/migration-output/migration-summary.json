@@ -1,0 +1,112 @@
+{
+  "timestamp": "2025-08-29T01:07:15.820Z",
+  "dryRun": false,
+  "summary": {
+    "totalEntities": 14,
+    "totalMigrations": 14,
+    "successful": 10,
+    "failed": 4,
+    "successRate": 71
+  },
+  "plans": [
+    {
+      "sourceInterface": "SoundEffect",
+      "sourceFile": "boardControlsData.ts",
+      "targetTable": "configuration",
+      "migrationStrategy": "keep in frontend - not database data",
+      "dataCount": 7
+    },
+    {
+      "sourceInterface": "EndgamePuzzle",
+      "sourceFile": "endgamePuzzles.ts",
+      "targetTable": "puzzles",
+      "migrationStrategy": "direct data migration",
+      "dataCount": 2
+    },
+    {
+      "sourceInterface": "EndgameCategory",
+      "sourceFile": "endgamePuzzles.ts",
+      "targetTable": "puzzles",
+      "migrationStrategy": "puzzle type migration",
+      "dataCount": 2
+    },
+    {
+      "sourceInterface": "ProgressStatistic",
+      "sourceFile": "puzzleProgressStats.ts",
+      "targetTable": "puzzle_attempts",
+      "migrationStrategy": "progress tracking data",
+      "dataCount": 1
+    },
+    {
+      "sourceInterface": "PuzzleSourceMetadata",
+      "sourceFile": "puzzleSourceDatabase.ts",
+      "targetTable": "puzzles",
+      "migrationStrategy": "direct data migration",
+      "dataCount": 1
+    },
+    {
+      "sourceInterface": "RelatedTutorial",
+      "sourceFile": "relatedTutorials.ts",
+      "targetTable": "configuration",
+      "migrationStrategy": "keep in frontend - not database data",
+      "dataCount": 1
+    },
+    {
+      "sourceInterface": "GameFilter",
+      "sourceFile": "reviewGames.ts",
+      "targetTable": "users",
+      "migrationStrategy": "merge into user data",
+      "dataCount": 3
+    },
+    {
+      "sourceInterface": "BillingHistory",
+      "sourceFile": "subscriptionData.ts",
+      "targetTable": "users",
+      "migrationStrategy": "merge into user data",
+      "dataCount": 6
+    },
+    {
+      "sourceInterface": "PaymentMethod",
+      "sourceFile": "subscriptionData.ts",
+      "targetTable": "users",
+      "migrationStrategy": "merge into user data",
+      "dataCount": 6
+    },
+    {
+      "sourceInterface": "UserAnalysisPreferences",
+      "sourceFile": "userAnalysisPreferences.ts",
+      "targetTable": "users",
+      "migrationStrategy": "merge into user preferences",
+      "dataCount": 1
+    },
+    {
+      "sourceInterface": "UserPuzzleStats",
+      "sourceFile": "userPuzzleStats.ts",
+      "targetTable": "puzzle_attempts",
+      "migrationStrategy": "user puzzle performance data",
+      "dataCount": 1
+    },
+    {
+      "sourceInterface": "UserStudyPlan",
+      "sourceFile": "userStudyPlans.ts",
+      "targetTable": "users",
+      "migrationStrategy": "merge into user preferences",
+      "dataCount": 1
+    },
+    {
+      "sourceInterface": "StudyModule",
+      "sourceFile": "userStudyPlans.ts",
+      "targetTable": "puzzles",
+      "migrationStrategy": "study content as puzzle categories",
+      "dataCount": 1
+    },
+    {
+      "sourceInterface": "StudyTopic",
+      "sourceFile": "userStudyPlans.ts",
+      "targetTable": "puzzles",
+      "migrationStrategy": "topic-based puzzle grouping",
+      "dataCount": 1
+    }
+  ],
+  "errors": []
+}

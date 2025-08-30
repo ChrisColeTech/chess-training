@@ -1,0 +1,30 @@
+{
+  "name": "chess-training-schema-analyzer",
+  "version": "1.0.0",
+  "description": "TypeScript schema analysis tool for chess training database migration",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "analyze": "npm run build && node dist/index.js",
+    "consolidate": "npm run build && node dist/consolidate.js",
+    "map-target": "npm run build && node dist/map-target.js",
+    "consolidate-ui": "npm run build && node dist/consolidate-ui.js",
+    "migrate-data": "npm run build && node dist/migrate-data.js",
+    "migrate-all-puzzles": "npm run build && node dist/comprehensive-puzzle-migrator.js",
+    "migrate-non-puzzle": "npm run build && node dist/non-puzzle-migrator.js",
+    "migrate-all-data": "npm run build && node dist/comprehensive-database-migrator.js"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.0.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.6",
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0"
+  }
+}

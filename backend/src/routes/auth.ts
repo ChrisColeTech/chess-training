@@ -75,4 +75,44 @@ router.post('/logout',
   authController.logout
 );
 
+// Forgot password
+router.post('/forgot-password',
+  [
+    body('email')
+      .isEmail()
+      .withMessage('Must be a valid email address')
+  ],
+  validateRequest,
+  authController.forgotPassword
+);
+
+// Reset password
+router.post('/reset-password',
+  [
+    body('resetToken')
+      .notEmpty()
+      .withMessage('Reset token is required'),
+    body('newPassword')
+      .isLength({ min: 6 })
+      .withMessage('Password must be at least 6 characters long')
+  ],
+  validateRequest,
+  authController.resetPassword
+);
+
+// Change password (requires authentication)
+router.put('/change-password',
+  authenticateToken,
+  [
+    body('currentPassword')
+      .notEmpty()
+      .withMessage('Current password is required'),
+    body('newPassword')
+      .isLength({ min: 6 })
+      .withMessage('New password must be at least 6 characters long')
+  ],
+  validateRequest,
+  authController.changePassword
+);
+
 export default router;

@@ -1,0 +1,207 @@
+{
+  "overview": {
+    "totalTables": 46,
+    "totalDomains": 7,
+    "estimatedDuration": "2-3 weeks",
+    "complexity": "high"
+  },
+  "phases": [
+    {
+      "phase": 1,
+      "name": "User Domain",
+      "tables": [
+        "mock_user",
+        "piece_set_info",
+        "subscription_tier",
+        "billing_history",
+        "payment_method",
+        "user_analysis_preferences",
+        "user_puzzle_preferences",
+        "user_puzzle_selection"
+      ],
+      "priority": "high",
+      "estimatedTime": "4 hours",
+      "dependencies": []
+    },
+    {
+      "phase": 2,
+      "name": "System Domain",
+      "tables": [
+        "analysis_settings",
+        "analysis_settings",
+        "board_size_config",
+        "sound_effect",
+        "coordinate_style",
+        "highlight_style",
+        "arrow_style",
+        "board_theme_colors",
+        "board_theme",
+        "theme_category",
+        "supported_source",
+        "nav_item",
+        "notification_sound_option",
+        "visual_alert_option",
+        "priority_level_option",
+        "frequency_option",
+        "notification_event_template",
+        "language_option",
+        "theme_option",
+        "u_i_density_option",
+        "animation_intensity",
+        "chess_notation_option",
+        "startup_behavior_option"
+      ],
+      "priority": "high",
+      "estimatedTime": "2 days",
+      "dependencies": [
+        "user"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Puzzle Domain",
+      "tables": [
+        "collection_browser_tab",
+        "endgame_puzzle",
+        "endgame_category",
+        "piece_customization",
+        "puzzle_source_metadata",
+        "puzzle_source_mapping",
+        "tactical_puzzle",
+        "puzzle_selection_entry",
+        "user_puzzle_session",
+        "puzzle_result",
+        "puzzle_session"
+      ],
+      "priority": "high",
+      "estimatedTime": "5.5 hours",
+      "dependencies": [
+        "system"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Game Domain",
+      "tables": [
+        "analysis_settings",
+        "engine_status",
+        "analysis_settings",
+        "engine_status",
+        "predefined_position",
+        "game_filter"
+      ],
+      "priority": "medium",
+      "estimatedTime": "3 hours",
+      "dependencies": [
+        "puzzle"
+      ]
+    },
+    {
+      "phase": 5,
+      "name": "Learning Domain",
+      "tables": [
+        "related_tutorial",
+        "user_study_plan",
+        "study_module",
+        "study_topic"
+      ],
+      "priority": "medium",
+      "estimatedTime": "2 hours",
+      "dependencies": [
+        "game"
+      ]
+    },
+    {
+      "phase": 6,
+      "name": "Opening Domain",
+      "tables": [
+        "chess_principle"
+      ],
+      "priority": "low",
+      "estimatedTime": "2 hours",
+      "dependencies": [
+        "learning"
+      ]
+    },
+    {
+      "phase": 7,
+      "name": "Progress Domain",
+      "tables": [
+        "import_progress",
+        "progress_statistic",
+        "user_progress_data",
+        "progress_snapshot",
+        "user_puzzle_stats"
+      ],
+      "priority": "medium",
+      "estimatedTime": "2.5 hours",
+      "dependencies": [
+        "opening"
+      ]
+    }
+  ],
+  "consolidations": [
+    {
+      "action": "merge",
+      "entities": [
+        "AnalysisSettings",
+        "AnalysisSettings",
+        "UserAnalysisPreferences"
+      ],
+      "target": "analysis_settings",
+      "estimatedSavings": 2,
+      "consolidationStrategy": "Merge into unified 'AnalysisSettings' entity with optional fields for variations"
+    },
+    {
+      "action": "merge",
+      "entities": [
+        "EngineStatus",
+        "EngineStatus"
+      ],
+      "target": "engine_status",
+      "estimatedSavings": 1,
+      "consolidationStrategy": "Merge into unified 'EngineStatus' entity with optional fields for variations"
+    },
+    {
+      "action": "merge",
+      "entities": [
+        "SoundEffect",
+        "ThemeCategory"
+      ],
+      "target": "sound_effect",
+      "estimatedSavings": 1,
+      "consolidationStrategy": "Merge into unified 'SoundEffect' entity with optional fields for variations"
+    },
+    {
+      "action": "merge",
+      "entities": [
+        "CollectionBrowserTab",
+        "PriorityLevelOption",
+        "StartupBehaviorOption"
+      ],
+      "target": "collection_browser_tab",
+      "estimatedSavings": 2,
+      "consolidationStrategy": "Merge into unified 'CollectionBrowserTab' entity with optional fields for variations"
+    },
+    {
+      "action": "merge",
+      "entities": [
+        "EndgamePuzzle",
+        "TacticalPuzzle"
+      ],
+      "target": "endgame_puzzle",
+      "estimatedSavings": 1,
+      "consolidationStrategy": "Merge into unified 'EndgamePuzzle' entity with optional fields for variations"
+    },
+    {
+      "action": "merge",
+      "entities": [
+        "NotificationSoundOption",
+        "ChessNotationOption"
+      ],
+      "target": "notification_sound_option",
+      "estimatedSavings": 1,
+      "consolidationStrategy": "Merge into unified 'Option' entity with optional fields for variations"
+    }
+  ]
+}

@@ -1,0 +1,894 @@
+{
+  "overview": {
+    "totalInterfaces": 419,
+    "targetTables": 9,
+    "databaseEntities": 67,
+    "reductionPercentage": 98
+  },
+  "phases": [
+    {
+      "phase": 1,
+      "name": "User Management",
+      "tables": [
+        "users",
+        "user_sessions"
+      ],
+      "priority": "critical",
+      "estimatedTime": "1 day",
+      "mappedInterfaces": [
+        "UserAnalysisPreferences",
+        "UserPuzzleStats",
+        "UserStudyPlan",
+        "StudyModule",
+        "StudyTopic",
+        "LoginSession",
+        "UserAccount",
+        "AccountHookReturn",
+        "TrainingSession",
+        "StudySchedule"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Core Gameplay",
+      "tables": [
+        "games",
+        "puzzles"
+      ],
+      "priority": "critical",
+      "estimatedTime": "2 days",
+      "mappedInterfaces": [
+        "SoundEffect",
+        "RelatedTutorial",
+        "GameFilter",
+        "BillingHistory",
+        "PaymentMethod",
+        "MoveTreeNode",
+        "AnalysisBoardState",
+        "AnalysisBoardActions",
+        "SupportChannel",
+        "ContactCategory",
+        "GamePhaseAnalysis",
+        "PracticeSession",
+        "EndgameLibraryFilters",
+        "EndgameLibraryStats",
+        "GameImport",
+        "GameCollection",
+        "GameReviewService",
+        "FAQItem",
+        "LearningObjective",
+        "WeakArea",
+        "MasterGame",
+        "StudySession",
+        "MasterGamesHookReturn",
+        "GameSearchResult",
+        "NotificationRule",
+        "ChessOpening",
+        "MoveVariation",
+        "GameState",
+        "AIMoveResult",
+        "PreferencesSection",
+        "LessonSection",
+        "AssessmentQuestion",
+        "CustomStudyPlan",
+        "TutorialSeries",
+        "EndgamePuzzle",
+        "EndgameCategory",
+        "PuzzleSourceMetadata",
+        "CustomPuzzleCollection",
+        "RecentPuzzle"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Progress Tracking",
+      "tables": [
+        "puzzle_attempts",
+        "user_stats"
+      ],
+      "priority": "high",
+      "estimatedTime": "1 day",
+      "mappedInterfaces": [
+        "SearchResult",
+        "ProgressStatistic"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Achievements & Learning",
+      "tables": [
+        "achievements",
+        "user_achievements",
+        "opening_positions"
+      ],
+      "priority": "medium",
+      "estimatedTime": "2 days",
+      "mappedInterfaces": [
+        "AchievementReward",
+        "Achievement",
+        "AchievementSeries",
+        "AchievementStats",
+        "AchievementLeaderboardEntry",
+        "AchievementNotification",
+        "AchievementsHookReturn",
+        "LearningMilestone",
+        "Achievement",
+        "Achievement",
+        "AchievementBadge",
+        "LearningPath",
+        "PaymentRecord",
+        "LearningRecommendation",
+        "OpeningTreeNode",
+        "StudyRecommendation"
+      ]
+    }
+  ],
+  "dataMapping": {
+    "databaseEntities": [
+      {
+        "interface": "SoundEffect",
+        "targetTable": "games",
+        "confidence": 50,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts"
+      },
+      {
+        "interface": "EndgamePuzzle",
+        "targetTable": "puzzles",
+        "confidence": 95,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/endgamePuzzles.ts"
+      },
+      {
+        "interface": "EndgameCategory",
+        "targetTable": "puzzles",
+        "confidence": 46,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/endgamePuzzles.ts"
+      },
+      {
+        "interface": "ProgressStatistic",
+        "targetTable": "user_stats",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/puzzleProgressStats.ts"
+      },
+      {
+        "interface": "PuzzleSourceMetadata",
+        "targetTable": "puzzles",
+        "confidence": 56,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/puzzleSourceDatabase.ts"
+      },
+      {
+        "interface": "RelatedTutorial",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/relatedTutorials.ts"
+      },
+      {
+        "interface": "GameFilter",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/reviewGames.ts"
+      },
+      {
+        "interface": "BillingHistory",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/subscriptionData.ts"
+      },
+      {
+        "interface": "PaymentMethod",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/subscriptionData.ts"
+      },
+      {
+        "interface": "UserAnalysisPreferences",
+        "targetTable": "users",
+        "confidence": 56,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userAnalysisPreferences.ts"
+      },
+      {
+        "interface": "UserPuzzleStats",
+        "targetTable": "users",
+        "confidence": 62,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleStats.ts"
+      },
+      {
+        "interface": "UserStudyPlan",
+        "targetTable": "users",
+        "confidence": 86,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userStudyPlans.ts"
+      },
+      {
+        "interface": "StudyModule",
+        "targetTable": "users",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userStudyPlans.ts"
+      },
+      {
+        "interface": "StudyTopic",
+        "targetTable": "users",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userStudyPlans.ts"
+      },
+      {
+        "interface": "PaymentRecord",
+        "targetTable": "opening_positions",
+        "confidence": 50,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts"
+      },
+      {
+        "interface": "LoginSession",
+        "targetTable": "users",
+        "confidence": 56,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts"
+      },
+      {
+        "interface": "UserAccount",
+        "targetTable": "users",
+        "confidence": 94,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts"
+      },
+      {
+        "interface": "AccountHookReturn",
+        "targetTable": "users",
+        "confidence": 66,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/account.ts"
+      },
+      {
+        "interface": "AchievementReward",
+        "targetTable": "achievements",
+        "confidence": 42,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts"
+      },
+      {
+        "interface": "Achievement",
+        "targetTable": "achievements",
+        "confidence": 60,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts"
+      },
+      {
+        "interface": "AchievementSeries",
+        "targetTable": "achievements",
+        "confidence": 66,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts"
+      },
+      {
+        "interface": "AchievementStats",
+        "targetTable": "achievements",
+        "confidence": 42,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts"
+      },
+      {
+        "interface": "AchievementLeaderboardEntry",
+        "targetTable": "achievements",
+        "confidence": 48,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts"
+      },
+      {
+        "interface": "AchievementNotification",
+        "targetTable": "achievements",
+        "confidence": 66,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts"
+      },
+      {
+        "interface": "AchievementsHookReturn",
+        "targetTable": "achievements",
+        "confidence": 90,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/achievements.ts"
+      },
+      {
+        "interface": "MoveTreeNode",
+        "targetTable": "games",
+        "confidence": 52,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/analysisBoard.ts"
+      },
+      {
+        "interface": "AnalysisBoardState",
+        "targetTable": "games",
+        "confidence": 64,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/analysisBoard.ts"
+      },
+      {
+        "interface": "AnalysisBoardActions",
+        "targetTable": "games",
+        "confidence": 70,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/analysisBoard.ts"
+      },
+      {
+        "interface": "SupportChannel",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/contact.ts"
+      },
+      {
+        "interface": "ContactCategory",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/contact.ts"
+      },
+      {
+        "interface": "CustomPuzzleCollection",
+        "targetTable": "puzzles",
+        "confidence": 86,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/customPuzzles.ts"
+      },
+      {
+        "interface": "GamePhaseAnalysis",
+        "targetTable": "games",
+        "confidence": 42,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/detailedStats.ts"
+      },
+      {
+        "interface": "PracticeSession",
+        "targetTable": "games",
+        "confidence": 56,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts"
+      },
+      {
+        "interface": "EndgameLibraryFilters",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts"
+      },
+      {
+        "interface": "EndgameLibraryStats",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/endgameLibrary.ts"
+      },
+      {
+        "interface": "GameImport",
+        "targetTable": "games",
+        "confidence": 46,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts"
+      },
+      {
+        "interface": "GameCollection",
+        "targetTable": "games",
+        "confidence": 95,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts"
+      },
+      {
+        "interface": "GameReviewService",
+        "targetTable": "games",
+        "confidence": 70,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/gameReview.ts"
+      },
+      {
+        "interface": "FAQItem",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/helpCenter.ts"
+      },
+      {
+        "interface": "SearchResult",
+        "targetTable": "puzzle_attempts",
+        "confidence": 50,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/helpCenter.ts"
+      },
+      {
+        "interface": "LearningRecommendation",
+        "targetTable": "opening_positions",
+        "confidence": 56,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts"
+      },
+      {
+        "interface": "LearningObjective",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts"
+      },
+      {
+        "interface": "WeakArea",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts"
+      },
+      {
+        "interface": "LearningMilestone",
+        "targetTable": "achievements",
+        "confidence": 50,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/learningPath.ts"
+      },
+      {
+        "interface": "MasterGame",
+        "targetTable": "games",
+        "confidence": 82,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts"
+      },
+      {
+        "interface": "StudySession",
+        "targetTable": "games",
+        "confidence": 68,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts"
+      },
+      {
+        "interface": "MasterGamesHookReturn",
+        "targetTable": "games",
+        "confidence": 95,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts"
+      },
+      {
+        "interface": "GameSearchResult",
+        "targetTable": "games",
+        "confidence": 46,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/masterGames.ts"
+      },
+      {
+        "interface": "NotificationRule",
+        "targetTable": "games",
+        "confidence": 60,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/notifications.ts"
+      },
+      {
+        "interface": "ChessOpening",
+        "targetTable": "games",
+        "confidence": 60,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts"
+      },
+      {
+        "interface": "MoveVariation",
+        "targetTable": "games",
+        "confidence": 48,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts"
+      },
+      {
+        "interface": "OpeningTreeNode",
+        "targetTable": "opening_positions",
+        "confidence": 48,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/openingExplorer.ts"
+      },
+      {
+        "interface": "GameState",
+        "targetTable": "games",
+        "confidence": 64,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts"
+      },
+      {
+        "interface": "AIMoveResult",
+        "targetTable": "games",
+        "confidence": 46,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/playComputer.ts"
+      },
+      {
+        "interface": "PreferencesSection",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/preferences.ts"
+      },
+      {
+        "interface": "Achievement",
+        "targetTable": "achievements",
+        "confidence": 56,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/profile.ts"
+      },
+      {
+        "interface": "TrainingSession",
+        "targetTable": "users",
+        "confidence": 50,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts"
+      },
+      {
+        "interface": "LearningPath",
+        "targetTable": "user_achievements",
+        "confidence": 46,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/progressOverview.ts"
+      },
+      {
+        "interface": "RecentPuzzle",
+        "targetTable": "puzzles",
+        "confidence": 60,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/puzzleSelection.ts"
+      },
+      {
+        "interface": "Achievement",
+        "targetTable": "achievements",
+        "confidence": 62,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/puzzleSelection.ts"
+      },
+      {
+        "interface": "LessonSection",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts"
+      },
+      {
+        "interface": "AssessmentQuestion",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts"
+      },
+      {
+        "interface": "StudySchedule",
+        "targetTable": "users",
+        "confidence": 42,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts"
+      },
+      {
+        "interface": "AchievementBadge",
+        "targetTable": "achievements",
+        "confidence": 70,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts"
+      },
+      {
+        "interface": "CustomStudyPlan",
+        "targetTable": "games",
+        "confidence": 60,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts"
+      },
+      {
+        "interface": "StudyRecommendation",
+        "targetTable": "opening_positions",
+        "confidence": 50,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/studyPlans.ts"
+      },
+      {
+        "interface": "TutorialSeries",
+        "targetTable": "games",
+        "confidence": 40,
+        "filePath": "/mnt/c/Projects/chess-training/frontend/src/types/tutorials.ts"
+      }
+    ]
+  },
+  "filteredOut": {
+    "uiConfig": [
+      "BoardSizeConfig",
+      "CoordinateStyle",
+      "HighlightStyle",
+      "ArrowStyle",
+      "BoardThemeColors",
+      "BoardTheme",
+      "ThemeCategory",
+      "CollectionBrowserTab",
+      "SupportedSource",
+      "NavItem",
+      "VisualAlertOption",
+      "PriorityLevelOption",
+      "NotificationEventTemplate",
+      "PieceSetInfo",
+      "PieceCustomization",
+      "ThemeOption",
+      "UIDensityOption",
+      "PuzzleSourceMapping",
+      "SubscriptionTier",
+      "TacticalPuzzle",
+      "UserProgressData",
+      "ProgressSnapshot",
+      "UserPuzzlePreferences",
+      "UserPuzzleSelection",
+      "PuzzleSelectionEntry",
+      "UserPuzzleSession",
+      "PuzzleResult",
+      "PuzzleSession",
+      "UserProfile",
+      "SecuritySettings",
+      "DataExportRequest",
+      "ProfileEditorProps",
+      "SecuritySettingsProps",
+      "SubscriptionManagementProps",
+      "DataManagementProps",
+      "ConnectedServicesProps",
+      "LoginHistoryProps",
+      "AchievementUnlockCondition",
+      "AchievementShare",
+      "AchievementCardProps",
+      "AchievementGridProps",
+      "AchievementDetailsProps",
+      "AchievementFiltersProps",
+      "AchievementStatsProps",
+      "ProgressTrackerProps",
+      "BadgeDetailsProps",
+      "EvaluationBarProps",
+      "EngineLineProps",
+      "PositionSetupProps",
+      "MoveNavigationProps",
+      "AnalysisControlsProps",
+      "PositionDatabaseProps",
+      "CoordinateSettings",
+      "MoveHighlightSettings",
+      "MarkupSettings",
+      "BorderSettings",
+      "BoardTheme",
+      "BoardSettings",
+      "BoardSettingsExport",
+      "BoardPreviewProps",
+      "ThemeSelectorProps",
+      "PieceSelectorProps",
+      "BoardControlsProps",
+      "BoardSettingsHookReturn",
+      "ThemeWizardStep",
+      "ThemeCreationData",
+      "ContactFormData",
+      "ContactFormErrors",
+      "ContactState",
+      "UseContactReturn",
+      "CustomPuzzle",
+      "CustomPuzzleSession",
+      "CustomPuzzleBoardProps",
+      "CustomPuzzleControlsProps",
+      "CustomPuzzleInfoProps",
+      "CustomPuzzleCollectionBrowserProps",
+      "PuzzleImportExportProps",
+      "PuzzleSharingProps",
+      "CustomPuzzleFilters",
+      "CustomPuzzleFormData",
+      "PerformanceMetrics",
+      "TrendAnalysis",
+      "OpeningRepertoire",
+      "DetailedStatistics",
+      "PerformanceMetricsProps",
+      "TrendAnalysisProps",
+      "WeaknessAnalysisProps",
+      "PositionHeatMapProps",
+      "ComparativeAnalysisProps",
+      "GamePhaseAnalysisProps",
+      "EndgamePosition",
+      "EndgameCategoryInfo",
+      "TablebaseQueryResult",
+      "EndgameAnalysis",
+      "EndgameComposition",
+      "EndgameCategoriesProps",
+      "PositionViewerProps",
+      "TablebaseQueryProps",
+      "EndgameAnalysisProps",
+      "EndgamePracticeProps",
+      "EndgameLibraryHookReturn",
+      "UseForgotPasswordReturn",
+      "EmailConfig",
+      "AnalyzedMove",
+      "EndgameAnalysis",
+      "PerformanceMetrics",
+      "GameReview",
+      "ReviewSession",
+      "GameSelectionProps",
+      "MoveAnalysisProps",
+      "EngineEvaluationProps",
+      "GameStatisticsProps",
+      "GameReviewHookReturn",
+      "HelpArticle",
+      "Tutorial",
+      "CategoryInfo",
+      "HelpCenterConfig",
+      "SearchInterfaceProps",
+      "CategoryBrowserProps",
+      "ArticleViewerProps",
+      "FAQSectionProps",
+      "TutorialBrowserProps",
+      "HelpCenterHookReturn",
+      "SkillNode",
+      "LearningBranch",
+      "AdaptiveDifficulty",
+      "StudySessionPlan",
+      "SkillTreeProps",
+      "PathViewerProps",
+      "RecommendationEngineProps",
+      "LearningAnalyticsProps",
+      "StudyPlannerProps",
+      "MilestoneTrackerProps",
+      "MasterPlayer",
+      "ChessOpening",
+      "MoveAnnotation",
+      "GameAnalysis",
+      "GameFilters",
+      "LibraryStats",
+      "MasterProfile",
+      "GameLibraryProps",
+      "GameViewerProps",
+      "MasterAnalysisProps",
+      "PlayerProfileProps",
+      "RecommendationCriteria",
+      "QuietHoursPeriod",
+      "NotificationChannelSettings",
+      "NotificationEventSettings",
+      "NotificationInstance",
+      "NotificationAction",
+      "NotificationRuleAction",
+      "NotificationTest",
+      "NotificationStats",
+      "NotificationSettings",
+      "NotificationCenterProps",
+      "AlertSettingsProps",
+      "ChannelSettingsProps",
+      "EventSettingsProps",
+      "QuietHoursProps",
+      "NotificationRulesProps",
+      "NotificationTestingProps",
+      "NotificationHistoryProps",
+      "NotificationsHookReturn",
+      "NotificationDiagnostics",
+      "MasterGame",
+      "PositionAnalysis",
+      "UserOpeningData",
+      "OpeningSearchProps",
+      "VariationTreeProps",
+      "MasterGamesProps",
+      "OpeningAnalysisProps",
+      "OpeningBoardProps",
+      "OpeningInfoProps",
+      "OpeningExplorerHookReturn",
+      "OpeningDatabaseService",
+      "OpeningPuzzle",
+      "PuzzleSession",
+      "PuzzleBoardProps",
+      "PuzzleControlsProps",
+      "PuzzleInfoProps",
+      "PuzzleTabsProps",
+      "PuzzleProgressProps",
+      "TimerConfig",
+      "AIOpponent",
+      "TimeControlConfig",
+      "GameSetup",
+      "ChessMove",
+      "GameAnalysis",
+      "PerformanceStats",
+      "OpponentSelectorProps",
+      "GameSetupProps",
+      "ChessGameBoardProps",
+      "MoveHistoryProps",
+      "GameAnalysisProps",
+      "PlayComputerHookReturn",
+      "GeneralPreferences",
+      "AppearancePreferences",
+      "LanguagePreferences",
+      "PerformancePreferences",
+      "ImportExportPreferences",
+      "GamingPreferences",
+      "UserPreferences",
+      "PreferencesHookReturn",
+      "GeneralSettingsProps",
+      "ThemeSelectorProps",
+      "LanguageSettingsProps",
+      "AccessibilitySettingsProps",
+      "PerformanceSettingsProps",
+      "PrivacySettingsProps",
+      "ImportExportSettingsProps",
+      "BackupSyncSettingsProps",
+      "GamingSettingsProps",
+      "SoundAnimationSettingsProps",
+      "ProfileUser",
+      "QuickAction",
+      "ProfileData",
+      "ProfileHeaderProps",
+      "ProfileTabsProps",
+      "ProfileOverviewProps",
+      "ProfileAchievementsProps",
+      "ProfileActivityProps",
+      "StatsGridProps",
+      "StatCard",
+      "Achievement",
+      "SkillProgression",
+      "PerformanceAnalytics",
+      "Goal",
+      "QuickAction",
+      "StatsCardsProps",
+      "ProgressChartsProps",
+      "ActivityFeedProps",
+      "AchievementSectionProps",
+      "QuickActionsProps",
+      "ProgressOverviewHookReturn",
+      "MockDataConfig",
+      "CommandCenterTheme",
+      "PuzzleCategory",
+      "CategoryCardProps",
+      "StatsCardProps",
+      "RecentPuzzlesProps",
+      "AchievementShowcaseProps",
+      "RegisterRequest",
+      "PasswordRequirement",
+      "UseResetPasswordReturn",
+      "ResetPasswordConfig",
+      "StudyLesson",
+      "InteractiveElement",
+      "StudyModule",
+      "LearningPath",
+      "StudySession",
+      "PlanOverviewProps",
+      "LessonViewerProps",
+      "ProgressTrackerProps",
+      "StudySchedulerProps",
+      "AchievementBadgesProps",
+      "StudyPlansHookReturn",
+      "TutorialStep",
+      "Tutorial",
+      "TutorialProgress",
+      "TutorialAchievement",
+      "TutorialMiniGame",
+      "QuickStartGuide",
+      "TutorialLauncherProps",
+      "InteractiveGuideProps",
+      "ProgressTrackerProps",
+      "VideoPlayerProps",
+      "TutorialFeedbackProps",
+      "TutorialsHookReturn"
+    ],
+    "mockData": [
+      "MockUser"
+    ],
+    "utility": [
+      "ChessPrinciple",
+      "NotificationSoundOption",
+      "FrequencyOption",
+      "LanguageOption",
+      "ChessNotationOption",
+      "StartupBehaviorOption",
+      "AchievementProgressData",
+      "UseContactOptions",
+      "PasswordResetRequest",
+      "PasswordResetService",
+      "SoundAnimationPreferences",
+      "SkillLevelOption",
+      "TokenValidationResult",
+      "TutorialSortOptions"
+    ],
+    "unmapped": [
+      "AnalysisSettings",
+      "EngineStatus",
+      "AnalysisSettings",
+      "EngineStatus",
+      "ImportProgress",
+      "PredefinedPosition",
+      "AnimationIntensity",
+      "SubscriptionInfo",
+      "ConnectedService",
+      "PrivacySettings",
+      "AccountBadges",
+      "AccountDeletionRequest",
+      "AchievementFilters",
+      "EngineAnalysis",
+      "AnalysisPosition",
+      "AnalysisSettings",
+      "EngineStatus",
+      "OpeningInfo",
+      "AnimationSettings",
+      "SoundSettings",
+      "SystemInfo",
+      "ContactSubmissionResponse",
+      "CustomMoveValidationResult",
+      "CustomPuzzleSearchResult",
+      "WeaknessAnalysis",
+      "PositionHeatMaps",
+      "ComparativeAnalysis",
+      "DetailedStatsHookReturn",
+      "StudyProgress",
+      "ForgotPasswordState",
+      "PasswordResetResponse",
+      "EmailSentData",
+      "OpeningAnalysis",
+      "TimeAnalysis",
+      "TutorialStep",
+      "UserProgress",
+      "SearchFilters",
+      "SearchAnalysis",
+      "LearningAnalytics",
+      "PersonalizedLearningPath",
+      "LearningPathHookReturn",
+      "Tournament",
+      "NotificationCondition",
+      "OpeningFilters",
+      "SearchResults",
+      "OpeningStatistics",
+      "MoveValidationResult",
+      "RatingChange",
+      "AccessibilityPreferences",
+      "PrivacyPreferences",
+      "BackupSyncPreferences",
+      "PreferencesValidation",
+      "PreferencesImportResult",
+      "RecentActivity",
+      "RatingDataPoint",
+      "ActivityDataPoint",
+      "StudyStreak",
+      "PuzzleDifficulty",
+      "PuzzleStats",
+      "PuzzleSelectionFilters",
+      "RegisterResponse",
+      "ResetPasswordState",
+      "ResetPasswordResponse",
+      "StudyProgress",
+      "StudyPlansService",
+      "TutorialFilters",
+      "VideoTutorial",
+      "TutorialStatistics",
+      "TutorialRecommendation"
+    ]
+  }
+}

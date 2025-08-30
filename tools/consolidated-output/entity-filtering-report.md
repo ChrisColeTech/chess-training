@@ -1,0 +1,104 @@
+# Entity Filtering Report
+
+## Summary
+- **Total Interfaces Analyzed:** 419
+- **Database Entities:** 272 (89 high-confidence)
+- **UI Components:** 77
+- **Configuration:** 53
+- **Mock/Test Data:** 4
+- **Utility Types:** 13
+
+## High-Confidence Database Entities (89)
+- **SoundEffect** (71% confidence) - Located in data directory; High database property indicators (2)
+- **EndgamePuzzle** (80% confidence) - Name suggests core business entity; Located in data directory
+- **EndgameCategory** (75% confidence) - Name suggests core business entity; Located in data directory
+- **ImportProgress** (75% confidence) - Name suggests core business entity; Located in data directory
+- **NavItem** (71% confidence) - Located in data directory; High database property indicators (2)
+- **PieceSetInfo** (82% confidence) - Located in data directory; High database property indicators (2)
+- **ProgressStatistic** (75% confidence) - Name suggests core business entity; Located in data directory
+- **PuzzleSourceMetadata** (80% confidence) - Name suggests core business entity; Located in data directory
+- **PuzzleSourceMapping** (75% confidence) - Name suggests core business entity; Located in data directory
+- **RelatedTutorial** (71% confidence) - Located in data directory; High database property indicators (2)
+- **GameFilter** (75% confidence) - Name suggests core business entity; Located in data directory
+- **BillingHistory** (71% confidence) - Located in data directory; High database property indicators (2)
+- **PaymentMethod** (71% confidence) - Located in data directory; High database property indicators (2)
+- **TacticalPuzzle** (80% confidence) - Name suggests core business entity; Located in data directory
+- **UserProgressData** (80% confidence) - Name suggests core business entity; Located in data directory
+- **ProgressSnapshot** (75% confidence) - Name suggests core business entity; Located in data directory
+- **UserPuzzleSelection** (75% confidence) - Name suggests core business entity; Located in data directory
+- **PuzzleSelectionEntry** (80% confidence) - Name suggests core business entity; Located in data directory
+- **UserPuzzleSession** (83% confidence) - Name suggests core business entity; Located in data directory
+- **PuzzleResult** (80% confidence) - Name suggests core business entity; Located in data directory
+- **UserPuzzleStats** (80% confidence) - Name suggests core business entity; Located in data directory
+- **PuzzleSession** (80% confidence) - Name suggests core business entity; Located in data directory
+- **UserStudyPlan** (88% confidence) - Name suggests core business entity; Located in data directory
+- **StudyModule** (71% confidence) - Located in data directory; High database property indicators (2)
+- **StudyTopic** (71% confidence) - Located in data directory; High database property indicators (2)
+- **UserProfile** (71% confidence) - Name suggests core business entity; Located in types directory
+- **LoginSession** (78% confidence) - Name suggests core business entity; Located in types directory
+- **UserAccount** (78% confidence) - Name suggests core business entity; Located in types directory
+- **AchievementUnlockCondition** (71% confidence) - Name suggests core business entity; Located in types directory
+- **AchievementReward** (71% confidence) - Name suggests core business entity; Located in types directory
+- **AchievementSeries** (78% confidence) - Name suggests core business entity; Located in types directory
+- **AchievementStats** (71% confidence) - Name suggests core business entity; Located in types directory
+- **AchievementFilters** (71% confidence) - Name suggests core business entity; Located in types directory
+- **AchievementShare** (71% confidence) - Name suggests core business entity; Located in types directory
+- **AchievementLeaderboardEntry** (80% confidence) - Name suggests core business entity; Located in types directory
+- **AchievementNotification** (78% confidence) - Name suggests core business entity; Located in types directory
+- **CustomPuzzle** (76% confidence) - Name suggests core business entity; Located in types directory
+- **CustomPuzzleCollection** (85% confidence) - Name suggests core business entity; Located in types directory
+- **CustomPuzzleSession** (71% confidence) - Name suggests core business entity; Located in types directory
+- **CustomPuzzleFilters** (71% confidence) - Name suggests core business entity; Located in types directory
+- **CustomPuzzleSearchResult** (71% confidence) - Name suggests core business entity; Located in types directory
+- **CustomPuzzleFormData** (78% confidence) - Name suggests core business entity; Located in types directory
+- **GamePhaseAnalysis** (71% confidence) - Name suggests core business entity; Located in types directory
+- **EndgameCategoryInfo** (71% confidence) - Name suggests core business entity; Located in types directory
+- **EndgameAnalysis** (71% confidence) - Name suggests core business entity; Located in types directory
+- **StudyProgress** (78% confidence) - Name suggests core business entity; Located in types directory
+- **PracticeSession** (78% confidence) - Name suggests core business entity; Located in types directory
+- **EndgameComposition** (78% confidence) - Name suggests core business entity; Located in types directory
+- **EndgameLibraryFilters** (71% confidence) - Name suggests core business entity; Located in types directory
+- **EndgameLibraryStats** (71% confidence) - Name suggests core business entity; Located in types directory
+- **EndgameAnalysis** (71% confidence) - Name suggests core business entity; Located in types directory
+- **GameImport** (71% confidence) - Name suggests core business entity; Located in types directory
+- **ReviewSession** (71% confidence) - Name suggests core business entity; Located in types directory
+- **GameCollection** (85% confidence) - Name suggests core business entity; Located in types directory
+- **GameReviewService** (71% confidence) - Name suggests core business entity; Located in types directory
+- **UserProgress** (71% confidence) - Name suggests core business entity; Located in types directory
+- **StudySessionPlan** (78% confidence) - Name suggests core business entity; Located in types directory
+- **GameAnalysis** (71% confidence) - Name suggests core business entity; Located in types directory
+- **GameFilters** (71% confidence) - Name suggests core business entity; Located in types directory
+- **StudySession** (82% confidence) - Name suggests core business entity; Located in types directory
+- **GameSearchResult** (71% confidence) - Name suggests core business entity; Located in types directory
+- **NotificationInstance** (75% confidence) - Located in types directory; High database property indicators (4)
+- **NotificationRule** (80% confidence) - Located in types directory; High database property indicators (2)
+- **MasterGame** (71% confidence) - Name suggests core business entity; Located in types directory
+- **UserOpeningData** (71% confidence) - Name suggests core business entity; Located in types directory
+- **PuzzleSession** (71% confidence) - Name suggests core business entity; Located in types directory
+- **GameSetup** (71% confidence) - Name suggests core business entity; Located in types directory
+- **GameState** (78% confidence) - Name suggests core business entity; Located in types directory
+- **GameAnalysis** (71% confidence) - Name suggests core business entity; Located in types directory
+- **ProfileUser** (71% confidence) - Name suggests core business entity; Located in types directory
+- **Achievement** (78% confidence) - Name suggests core business entity; Located in types directory
+- **TrainingSession** (78% confidence) - Name suggests core business entity; Located in types directory
+- **Achievement** (78% confidence) - Name suggests core business entity; Located in types directory
+- **SkillProgression** (71% confidence) - Name suggests core business entity; Located in types directory
+- **Goal** (80% confidence) - Located in types directory; High database property indicators (2)
+- **PuzzleCategory** (78% confidence) - Name suggests core business entity; Located in types directory
+- **PuzzleDifficulty** (71% confidence) - Name suggests core business entity; Located in types directory
+- **PuzzleStats** (71% confidence) - Name suggests core business entity; Located in types directory
+- **RecentPuzzle** (78% confidence) - Name suggests core business entity; Located in types directory
+- **Achievement** (78% confidence) - Name suggests core business entity; Located in types directory
+- **PuzzleSelectionFilters** (71% confidence) - Name suggests core business entity; Located in types directory
+- **UseResetPasswordReturn** (71% confidence) - Name suggests core business entity; Located in types directory
+- **AchievementBadge** (78% confidence) - Name suggests core business entity; Located in types directory
+- **StudyProgress** (78% confidence) - Name suggests core business entity; Located in types directory
+- **StudySession** (78% confidence) - Name suggests core business entity; Located in types directory
+- **CustomStudyPlan** (80% confidence) - Located in types directory; High database property indicators (2)
+- **TutorialProgress** (78% confidence) - Name suggests core business entity; Located in types directory
+- **TutorialAchievement** (78% confidence) - Name suggests core business entity; Located in types directory
+- **TutorialMiniGame** (78% confidence) - Name suggests core business entity; Located in types directory
+
+## Filtering Effectiveness
+- **Reduction:** 419 → 89 (79% reduction)
+- **Focus:** Core business entities only

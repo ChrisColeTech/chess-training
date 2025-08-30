@@ -72,9 +72,44 @@ router.get('/:gameId',
   gameController.getGame
 );
 
+// Get all games (list)
+router.get('/', 
+  gameController.getAllGames
+);
+
 // Get game history
 router.get('/history',
   gameController.getGameHistory
+);
+
+// Delete game
+router.delete('/:gameId',
+  [
+    param('gameId')
+      .isUUID()
+      .withMessage('Invalid game ID format')
+  ],
+  validateRequest,
+  gameController.deleteGame
+);
+
+// Analyze game
+router.post('/:gameId/analysis',
+  [
+    param('gameId')
+      .isUUID()
+      .withMessage('Invalid game ID format'),
+    body('engine')
+      .optional()
+      .isString()
+      .withMessage('Engine must be a string'),
+    body('depth')
+      .optional()
+      .isInt({ min: 1, max: 20 })
+      .withMessage('Depth must be between 1 and 20')
+  ],
+  validateRequest,
+  gameController.analyzeGame
 );
 
 export default router;

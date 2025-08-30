@@ -152,4 +152,97 @@ export class AuthService {
       [JSON.stringify(preferences), userId]
     );
   }
+
+  async forgotPassword(email: string): Promise<{ resetToken: string }> {
+    // Check if user exists
+    const user = await this.db.db.get(
+      'SELECT id, email FROM users WHERE email = ?',
+      [email]
+    );
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Generate reset token
+    const resetToken = uuidv4();
+    const expiresAt = new Date();
+    expiresAt.setMinutes(expiresAt.getMinutes() + 30); // 30 minutes
+
+    // Store reset token
+    await this.db.db.run(
+      `INSERT OR REPLACE INTO password_reset_tokens (user_id, token, expires_at, created_at)
+       VALUES (?, ?, ?, datetime("now"))`,
+      [user.id, resetToken, expiresAt.toISOString()]
+    );
+
+    return { resetToken };
+  }
+
+  async resetPassword(resetToken: string, newPassword: string): Promise<void> {
+    // Verify reset token
+    const tokenRecord = await this.db.db.get(
+      `SELECT user_id FROM password_reset_tokens 
+       WHERE token = ? AND expires_at > datetime("now")`,
+      [resetToken]
+    );
+
+    if (!tokenRecord) {
+      throw new Error('Invalid or expired reset token');
+    }
+
+    // Hash new password
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+
+    // Update user password
+    await this.db.db.run(
+      'UPDATE users SET password_hash = ?, updated_at = datetime("now") WHERE id = ?',
+      [passwordHash, tokenRecord.user_id]
+    );
+
+    // Remove used reset token
+    await this.db.db.run(
+      'DELETE FROM password_reset_tokens WHERE token = ?',
+      [resetToken]
+    );
+
+    // Invalidate all user sessions
+    await this.db.db.run(
+      'DELETE FROM user_sessions WHERE user_id = ?',
+      [tokenRecord.user_id]
+    );
+  }
+
+  async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<void> {
+    // Get user with current password hash
+    const user = await this.db.db.get(
+      'SELECT password_hash FROM users WHERE id = ?',
+      [userId]
+    );
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Verify current password
+    if (!await bcrypt.compare(currentPassword, user.password_hash)) {
+      throw new Error('Current password is incorrect');
+    }
+
+    // Hash new password
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+
+    // Update password
+    await this.db.db.run(
+      'UPDATE users SET password_hash = ?, updated_at = datetime("now") WHERE id = ?',
+      [passwordHash, userId]
+    );
+
+    // Invalidate all user sessions except current one
+    // Note: In a more sophisticated implementation, we'd preserve the current session
+    await this.db.db.run(
+      'DELETE FROM user_sessions WHERE user_id = ?',
+      [userId]
+    );
+  }
 }

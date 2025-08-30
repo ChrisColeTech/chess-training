@@ -235,4 +235,178 @@ export class UserController {
 
     return streak;
   }
+
+  // Simplified endpoints for frontend compatibility
+  getPreferences = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.userId;
+
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: 'User not authenticated'
+        });
+      }
+
+      const user = await this.authService.getUserById(userId);
+      
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          error: 'User not found'
+        });
+      }
+
+      res.json({
+        success: true,
+        preferences: user.preferences || {}
+      });
+    } catch (error: any) {
+      console.error('Get preferences error:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to get preferences'
+      });
+    }
+  };
+
+  updatePreferences = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.userId;
+      const preferences = req.body;
+
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: 'User not authenticated'
+        });
+      }
+
+      if (!preferences || typeof preferences !== 'object') {
+        return res.status(400).json({
+          success: false,
+          error: 'Valid preferences object required'
+        });
+      }
+
+      await this.authService.updateUserPreferences(userId, preferences);
+
+      res.json({
+        success: true,
+        message: 'Preferences updated successfully'
+      });
+    } catch (error: any) {
+      console.error('Update preferences error:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to update preferences'
+      });
+    }
+  };
+
+  getStatistics = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.userId;
+
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: 'User not authenticated'
+        });
+      }
+
+      const user = await this.authService.getUserById(userId);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          error: 'User not found'
+        });
+      }
+
+      // Get comprehensive stats
+      const gameStats = await this.getGameStats(userId);
+      const puzzleStats = await this.getPuzzleStats(userId);
+      const todayStats = await this.getTodayStats(userId);
+      const streak = await this.getCurrentStreak(userId);
+
+      res.json({
+        success: true,
+        statistics: {
+          ratings: {
+            chess: user.chess_elo,
+            puzzle: user.puzzle_rating
+          },
+          games: {
+            total: gameStats.total,
+            wins: gameStats.wins,
+            losses: gameStats.losses,
+            draws: gameStats.draws,
+            winRate: gameStats.total > 0 ? Math.round((gameStats.wins / gameStats.total) * 100) : 0
+          },
+          puzzles: {
+            solved: puzzleStats.solved,
+            accuracy: puzzleStats.accuracy
+          },
+          activity: {
+            todayGames: todayStats.games,
+            todayPuzzles: todayStats.puzzles,
+            streak: streak
+          }
+        }
+      });
+    } catch (error: any) {
+      console.error('Get statistics error:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to get statistics'
+      });
+    }
+  };
+
+  getActivity = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.userId;
+
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: 'User not authenticated'
+        });
+      }
+
+      // Get recent activity
+      const recentGames = await this.getRecentGames(userId);
+      const recentPuzzles = await this.db.db.all(`
+        SELECT 
+          p.themes,
+          pa.correct,
+          pa.rating_change,
+          pa.attempted_at
+        FROM puzzle_attempts pa
+        JOIN puzzles p ON pa.puzzle_id = p.id
+        WHERE pa.user_id = ?
+        ORDER BY pa.attempted_at DESC
+        LIMIT 10
+      `, [userId]);
+
+      res.json({
+        success: true,
+        activity: {
+          recentGames: recentGames,
+          recentPuzzles: recentPuzzles.map((puzzle: any) => ({
+            themes: puzzle.themes,
+            correct: !!puzzle.correct,
+            ratingChange: puzzle.rating_change,
+            date: puzzle.attempted_at?.split('T')[0]
+          }))
+        }
+      });
+    } catch (error: any) {
+      console.error('Get activity error:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to get activity'
+      });
+    }
+  };
 }

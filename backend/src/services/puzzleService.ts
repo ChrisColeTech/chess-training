@@ -13,6 +13,177 @@ import {
 export class PuzzleService {
   private db = Database.getInstance();
 
+  async getAllPuzzles(options: {
+    page: number;
+    limit: number;
+    difficulty?: string;
+    themes?: string;
+  }): Promise<{
+    data: any[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPages: number;
+    };
+  }> {
+    const { page, limit } = options;
+    const offset = (page - 1) * limit;
+
+    // Build WHERE clause based on filters
+    let whereClause = '';
+    const params: any[] = [];
+
+    if (options.difficulty) {
+      const difficultyRanges = {
+        beginner: [800, 1200],
+        intermediate: [1200, 1600],
+        advanced: [1600, 2000],
+        expert: [2000, 3000]
+      };
+      const range = difficultyRanges[options.difficulty.toLowerCase() as keyof typeof difficultyRanges];
+      if (range) {
+        whereClause = 'WHERE rating BETWEEN ? AND ?';
+        params.push(...range);
+      }
+    }
+
+    if (options.themes) {
+      const themeFilter = whereClause ? 'AND' : 'WHERE';
+      whereClause += ` ${themeFilter} themes LIKE ?`;
+      params.push(`%"${options.themes}"%`);
+    }
+
+    // Get total count
+    const totalResult = await this.db.db.get(
+      `SELECT COUNT(*) as total FROM puzzles ${whereClause}`,
+      params
+    );
+    const total = totalResult.total;
+
+    // Get puzzles
+    const puzzles = await this.db.db.all(
+      `SELECT * FROM puzzles ${whereClause} ORDER BY rating ASC LIMIT ? OFFSET ?`,
+      [...params, limit, offset]
+    );
+
+    return {
+      data: puzzles.map((puzzle: any) => this.formatPuzzleResponse(puzzle)),
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
+  }
+
+  async getPuzzlesByCategory(category: string, options: {
+    page: number;
+    limit: number;
+  }): Promise<{
+    data: any[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPages: number;
+    };
+  }> {
+    const { page, limit } = options;
+    const offset = (page - 1) * limit;
+
+    // Filter by theme/category in the themes JSON field
+    const whereClause = 'WHERE themes LIKE ?';
+    const params = [`%"${category}"%`];
+
+    // Get total count
+    const totalResult = await this.db.db.get(
+      `SELECT COUNT(*) as total FROM puzzles ${whereClause}`,
+      params
+    );
+    const total = totalResult?.total || 0;
+
+    // Get puzzles
+    const puzzles = await this.db.db.all(
+      `SELECT * FROM puzzles ${whereClause} ORDER BY rating ASC LIMIT ? OFFSET ?`,
+      [...params, limit, offset]
+    );
+
+    return {
+      data: puzzles.map((puzzle: any) => this.formatPuzzleResponse(puzzle)),
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
+  }
+
+  async getPuzzlesByDifficulty(difficulty: string, options: {
+    page: number;
+    limit: number;
+  }): Promise<{
+    data: any[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPages: number;
+    };
+  }> {
+    const { page, limit } = options;
+    const offset = (page - 1) * limit;
+
+    // Map difficulty to rating ranges
+    const difficultyRanges = {
+      beginner: [800, 1200],
+      intermediate: [1200, 1600],
+      advanced: [1600, 2000],
+      expert: [2000, 3000]
+    };
+
+    const range = difficultyRanges[difficulty.toLowerCase() as keyof typeof difficultyRanges];
+    if (!range) {
+      return {
+        data: [],
+        pagination: {
+          page,
+          limit,
+          total: 0,
+          totalPages: 0
+        }
+      };
+    }
+
+    const whereClause = 'WHERE rating BETWEEN ? AND ?';
+    const params = [range[0], range[1]];
+
+    // Get total count
+    const totalResult = await this.db.db.get(
+      `SELECT COUNT(*) as total FROM puzzles ${whereClause}`,
+      params
+    );
+    const total = totalResult?.total || 0;
+
+    // Get puzzles
+    const puzzles = await this.db.db.all(
+      `SELECT * FROM puzzles ${whereClause} ORDER BY rating ASC LIMIT ? OFFSET ?`,
+      [...params, limit, offset]
+    );
+
+    return {
+      data: puzzles.map((puzzle: any) => this.formatPuzzleResponse(puzzle)),
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
+  }
+
   async getNextPuzzle(userId: string): Promise<PuzzleResponse> {
     const user = await this.db.db.get('SELECT puzzle_rating FROM users WHERE id = ?', [userId]);
     if (!user) throw new Error('User not found');

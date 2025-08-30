@@ -1,9 +1,89 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { PuzzleService } from '../services/puzzleService';
 import { AuthenticatedRequest } from '../middleware/auth';
 
 export class PuzzleController {
   private puzzleService = new PuzzleService();
+
+  // Get all puzzles (public endpoint for browsing)
+  getAllPuzzles = async (req: Request, res: Response) => {
+    try {
+      const { page = 1, limit = 50, difficulty, themes } = req.query;
+      
+      const puzzles = await this.puzzleService.getAllPuzzles({
+        page: Number(page),
+        limit: Number(limit),
+        difficulty: difficulty as string,
+        themes: themes as string
+      });
+      
+      res.json({
+        success: true,
+        data: puzzles.data,
+        pagination: puzzles.pagination
+      });
+    } catch (error: any) {
+      console.error('Get all puzzles error:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to get puzzles'
+      });
+    }
+  };
+
+  // Get puzzles by category (public endpoint)
+  getPuzzlesByCategory = async (req: Request, res: Response) => {
+    try {
+      const { category } = req.params;
+      const { page = 1, limit = 20 } = req.query;
+      
+      const puzzles = await this.puzzleService.getPuzzlesByCategory(category, {
+        page: Number(page),
+        limit: Number(limit)
+      });
+      
+      res.json({
+        success: true,
+        data: {
+          puzzles: puzzles.data,
+          total: puzzles.pagination.total
+        }
+      });
+    } catch (error: any) {
+      console.error('Get puzzles by category error:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to get puzzles by category'
+      });
+    }
+  };
+
+  // Get puzzles by difficulty (public endpoint)  
+  getPuzzlesByDifficulty = async (req: Request, res: Response) => {
+    try {
+      const { difficulty } = req.params;
+      const { page = 1, limit = 20 } = req.query;
+      
+      const puzzles = await this.puzzleService.getPuzzlesByDifficulty(difficulty, {
+        page: Number(page),
+        limit: Number(limit)
+      });
+      
+      res.json({
+        success: true,
+        data: {
+          puzzles: puzzles.data,
+          total: puzzles.pagination.total
+        }
+      });
+    } catch (error: any) {
+      console.error('Get puzzles by difficulty error:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to get puzzles by difficulty'
+      });
+    }
+  };
 
   getNextPuzzle = async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -25,14 +105,14 @@ export class PuzzleController {
     } catch (error: any) {
       console.error('Get next puzzle error:', error);
       
-      if (error.message === 'User not found') {
+      if ((error as any).message === 'User not found') {
         return res.status(404).json({
           success: false,
           error: 'User not found'
         });
       }
       
-      if (error.message === 'No puzzles available') {
+      if ((error as any).message === 'No puzzles available') {
         return res.status(404).json({
           success: false,
           error: 'No puzzles available'
@@ -92,14 +172,14 @@ export class PuzzleController {
     } catch (error: any) {
       console.error('Solve puzzle error:', error);
       
-      if (error.message === 'Puzzle not found') {
+      if ((error as any).message === 'Puzzle not found') {
         return res.status(404).json({
           success: false,
           error: 'Puzzle not found'
         });
       }
       
-      if (error.message === 'User not found') {
+      if ((error as any).message === 'User not found') {
         return res.status(404).json({
           success: false,
           error: 'User not found'
@@ -141,7 +221,7 @@ export class PuzzleController {
     } catch (error: any) {
       console.error('Get hint error:', error);
       
-      if (error.message === 'Puzzle not found') {
+      if ((error as any).message === 'Puzzle not found') {
         return res.status(404).json({
           success: false,
           error: 'Puzzle not found'

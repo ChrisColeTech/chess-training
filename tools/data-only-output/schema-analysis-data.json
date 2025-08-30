@@ -1,0 +1,3157 @@
+{
+  "totalInterfaces": 56,
+  "fileCount": 35,
+  "duplicates": [
+    {
+      "primaryEntity": "AnalysisSettings",
+      "primaryFilePath": "/mnt/c/Projects/chess-training/frontend/src/data/analysisSettings.ts",
+      "duplicates": [
+        {
+          "entity": "AnalysisSettings",
+          "similarityScore": 100,
+          "conflictingProperties": [],
+          "missingProperties": [],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/analysisUIConfig.ts"
+        },
+        {
+          "entity": "UserAnalysisPreferences",
+          "similarityScore": 80,
+          "conflictingProperties": [],
+          "missingProperties": [
+            "Extra in UserAnalysisPreferences: userId",
+            "Extra in UserAnalysisPreferences: createdAt",
+            "Extra in UserAnalysisPreferences: updatedAt"
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userAnalysisPreferences.ts"
+        }
+      ],
+      "consolidationSuggestion": "Merge into unified 'AnalysisSettings' entity with optional fields for variations",
+      "estimatedSavings": 2
+    },
+    {
+      "primaryEntity": "EngineStatus",
+      "primaryFilePath": "/mnt/c/Projects/chess-training/frontend/src/data/analysisSettings.ts",
+      "duplicates": [
+        {
+          "entity": "EngineStatus",
+          "similarityScore": 100,
+          "conflictingProperties": [],
+          "missingProperties": [],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/analysisUIConfig.ts"
+        }
+      ],
+      "consolidationSuggestion": "Merge into unified 'EngineStatus' entity with optional fields for variations",
+      "estimatedSavings": 1
+    },
+    {
+      "primaryEntity": "SoundEffect",
+      "primaryFilePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts",
+      "duplicates": [
+        {
+          "entity": "ThemeCategory",
+          "similarityScore": 70,
+          "conflictingProperties": [],
+          "missingProperties": [
+            "Missing from ThemeCategory: filename",
+            "Extra in ThemeCategory: icon",
+            "Extra in ThemeCategory: count"
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardThemesData.ts"
+        }
+      ],
+      "consolidationSuggestion": "Merge into unified 'SoundEffect' entity with optional fields for variations",
+      "estimatedSavings": 1
+    },
+    {
+      "primaryEntity": "CollectionBrowserTab",
+      "primaryFilePath": "/mnt/c/Projects/chess-training/frontend/src/data/collectionBrowserTabs.ts",
+      "duplicates": [
+        {
+          "entity": "PriorityLevelOption",
+          "similarityScore": 70,
+          "conflictingProperties": [],
+          "missingProperties": [
+            "Missing from PriorityLevelOption: key",
+            "Extra in PriorityLevelOption: value",
+            "Extra in PriorityLevelOption: color"
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/notificationSettingsData.ts"
+        },
+        {
+          "entity": "StartupBehaviorOption",
+          "similarityScore": 76,
+          "conflictingProperties": [],
+          "missingProperties": [
+            "Missing from StartupBehaviorOption: key",
+            "Extra in StartupBehaviorOption: value"
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/preferencesData.ts"
+        }
+      ],
+      "consolidationSuggestion": "Merge into unified 'CollectionBrowserTab' entity with optional fields for variations",
+      "estimatedSavings": 2
+    },
+    {
+      "primaryEntity": "EndgamePuzzle",
+      "primaryFilePath": "/mnt/c/Projects/chess-training/frontend/src/data/endgamePuzzles.ts",
+      "duplicates": [
+        {
+          "entity": "TacticalPuzzle",
+          "similarityScore": 86.15384615384616,
+          "conflictingProperties": [],
+          "missingProperties": [
+            "Missing from TacticalPuzzle: endgameType",
+            "Missing from TacticalPuzzle: theory",
+            "Extra in TacticalPuzzle: theme"
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/tacticalPuzzles.ts"
+        }
+      ],
+      "consolidationSuggestion": "Merge into unified 'EndgamePuzzle' entity with optional fields for variations",
+      "estimatedSavings": 1
+    },
+    {
+      "primaryEntity": "NotificationSoundOption",
+      "primaryFilePath": "/mnt/c/Projects/chess-training/frontend/src/data/notificationSettingsData.ts",
+      "duplicates": [
+        {
+          "entity": "ChessNotationOption",
+          "similarityScore": 70,
+          "conflictingProperties": [],
+          "missingProperties": [
+            "Missing from ChessNotationOption: filename",
+            "Missing from ChessNotationOption: duration",
+            "Extra in ChessNotationOption: example"
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/preferencesData.ts"
+        }
+      ],
+      "consolidationSuggestion": "Merge into unified 'Option' entity with optional fields for variations",
+      "estimatedSavings": 1
+    }
+  ],
+  "domains": {
+    "user": {
+      "name": "user",
+      "entities": [
+        "MockUser",
+        "PieceSetInfo",
+        "SubscriptionTier",
+        "BillingHistory",
+        "PaymentMethod",
+        "UserAnalysisPreferences",
+        "UserPuzzlePreferences",
+        "UserPuzzleSelection"
+      ],
+      "relationships": [
+        {
+          "from": "UserAnalysisPreferences",
+          "to": "MockUser",
+          "type": "one-to-many",
+          "foreignKey": "userId"
+        },
+        {
+          "from": "UserPuzzlePreferences",
+          "to": "MockUser",
+          "type": "one-to-many",
+          "foreignKey": "userId"
+        },
+        {
+          "from": "UserPuzzleSelection",
+          "to": "MockUser",
+          "type": "one-to-many",
+          "foreignKey": "userId"
+        }
+      ],
+      "priority": "high",
+      "estimatedTables": 7,
+      "suggestedEndpoints": [
+        "/api/auth",
+        "/api/users",
+        "/api/profile",
+        "/api/subscription"
+      ]
+    },
+    "puzzle": {
+      "name": "puzzle",
+      "entities": [
+        "CollectionBrowserTab",
+        "EndgamePuzzle",
+        "EndgameCategory",
+        "PieceCustomization",
+        "PuzzleSourceMetadata",
+        "PuzzleSourceMapping",
+        "TacticalPuzzle",
+        "PuzzleSelectionEntry",
+        "UserPuzzleSession",
+        "PuzzleResult",
+        "PuzzleSession"
+      ],
+      "relationships": [
+        {
+          "from": "PuzzleSelectionEntry",
+          "to": "EndgamePuzzle",
+          "type": "one-to-many",
+          "foreignKey": "puzzleId"
+        },
+        {
+          "from": "UserPuzzleSession",
+          "to": "PuzzleResult",
+          "type": "one-to-many"
+        },
+        {
+          "from": "PuzzleResult",
+          "to": "EndgamePuzzle",
+          "type": "one-to-many",
+          "foreignKey": "puzzleId"
+        },
+        {
+          "from": "PuzzleSession",
+          "to": "UserPuzzleSession",
+          "type": "one-to-many",
+          "foreignKey": "sessionId"
+        }
+      ],
+      "priority": "high",
+      "estimatedTables": 9,
+      "suggestedEndpoints": [
+        "/api/puzzles",
+        "/api/puzzle-attempts",
+        "/api/custom-puzzles",
+        "/api/collections"
+      ]
+    },
+    "game": {
+      "name": "game",
+      "entities": [
+        "AnalysisSettings",
+        "EngineStatus",
+        "EngineStatus",
+        "PredefinedPosition",
+        "GameFilter"
+      ],
+      "relationships": [],
+      "priority": "medium",
+      "estimatedTables": 4,
+      "suggestedEndpoints": [
+        "/api/games",
+        "/api/analysis",
+        "/api/master-games",
+        "/api/review"
+      ]
+    },
+    "learning": {
+      "name": "learning",
+      "entities": [
+        "RelatedTutorial",
+        "UserStudyPlan",
+        "StudyModule",
+        "StudyTopic"
+      ],
+      "relationships": [
+        {
+          "from": "UserStudyPlan",
+          "to": "StudyModule",
+          "type": "one-to-many"
+        },
+        {
+          "from": "StudyModule",
+          "to": "StudyTopic",
+          "type": "one-to-many"
+        }
+      ],
+      "priority": "medium",
+      "estimatedTables": 3,
+      "suggestedEndpoints": [
+        "/api/learning-paths",
+        "/api/lessons",
+        "/api/study",
+        "/api/recommendations"
+      ]
+    },
+    "opening": {
+      "name": "opening",
+      "entities": [
+        "ChessPrinciple"
+      ],
+      "relationships": [],
+      "priority": "low",
+      "estimatedTables": 1,
+      "suggestedEndpoints": [
+        "/api/openings",
+        "/api/repertoire",
+        "/api/variations",
+        "/api/explorer"
+      ]
+    },
+    "progress": {
+      "name": "progress",
+      "entities": [
+        "ImportProgress",
+        "ProgressStatistic",
+        "UserProgressData",
+        "ProgressSnapshot",
+        "UserPuzzleStats"
+      ],
+      "relationships": [
+        {
+          "from": "UserProgressData",
+          "to": "ProgressSnapshot",
+          "type": "one-to-many"
+        },
+        {
+          "from": "UserPuzzleStats",
+          "to": "UserProgressData",
+          "type": "one-to-many",
+          "foreignKey": "userId"
+        }
+      ],
+      "priority": "medium",
+      "estimatedTables": 4,
+      "suggestedEndpoints": [
+        "/api/progress",
+        "/api/achievements",
+        "/api/stats",
+        "/api/analytics"
+      ]
+    },
+    "system": {
+      "name": "system",
+      "entities": [
+        "AnalysisSettings",
+        "BoardSizeConfig",
+        "SoundEffect",
+        "CoordinateStyle",
+        "HighlightStyle",
+        "ArrowStyle",
+        "BoardThemeColors",
+        "BoardTheme",
+        "ThemeCategory",
+        "SupportedSource",
+        "NavItem",
+        "NotificationSoundOption",
+        "VisualAlertOption",
+        "PriorityLevelOption",
+        "FrequencyOption",
+        "NotificationEventTemplate",
+        "LanguageOption",
+        "ThemeOption",
+        "UIDensityOption",
+        "AnimationIntensity",
+        "ChessNotationOption",
+        "StartupBehaviorOption"
+      ],
+      "relationships": [
+        {
+          "from": "NavItem",
+          "to": "NavItem",
+          "type": "one-to-many"
+        }
+      ],
+      "priority": "high",
+      "estimatedTables": 18,
+      "suggestedEndpoints": [
+        "/api/notifications",
+        "/api/settings",
+        "/api/preferences",
+        "/api/help"
+      ]
+    }
+  },
+  "estimatedTables": 46,
+  "estimatedEndpoints": 28,
+  "consolidationOpportunities": [
+    "Consolidate 3 similar entities: AnalysisSettings and AnalysisSettings, UserAnalysisPreferences",
+    "Consolidate 2 similar entities: EngineStatus and EngineStatus",
+    "Consolidate 2 similar entities: SoundEffect and ThemeCategory",
+    "Consolidate 3 similar entities: CollectionBrowserTab and PriorityLevelOption, StartupBehaviorOption",
+    "Consolidate 2 similar entities: EndgamePuzzle and TacticalPuzzle",
+    "Consolidate 2 similar entities: NotificationSoundOption and ChessNotationOption",
+    "puzzle domain has 11 entities - consider sub-domain organization",
+    "system domain has 22 entities - consider sub-domain organization"
+  ],
+  "rawData": [
+    {
+      "fileName": "achievementConfigurations.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/achievementConfigurations.ts",
+      "interfaces": [],
+      "types": [
+        {
+          "name": "RarityLevel",
+          "type": "keyof typeof rarityConfig",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/achievementConfigurations.ts",
+          "lineNumber": 67,
+          "exported": true
+        },
+        {
+          "name": "BadgeSize",
+          "type": "keyof typeof badgeSizeConfig",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/achievementConfigurations.ts",
+          "lineNumber": 140,
+          "exported": true
+        },
+        {
+          "name": "ProgressTrackerSize",
+          "type": "keyof typeof progressTrackerSizeConfig",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/achievementConfigurations.ts",
+          "lineNumber": 216,
+          "exported": true
+        }
+      ],
+      "imports": [
+        "lucide-react"
+      ],
+      "exports": []
+    },
+    {
+      "fileName": "analysisSettings.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/analysisSettings.ts",
+      "interfaces": [
+        {
+          "name": "AnalysisSettings",
+          "properties": [
+            {
+              "name": "depth",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "multiPV",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "timeLimit",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "threads",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "hashSize",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "contempt",
+              "type": "number",
+              "optional": true
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/analysisSettings.ts",
+          "lineNumber": 6,
+          "exported": true
+        },
+        {
+          "name": "EngineStatus",
+          "properties": [
+            {
+              "name": "engineName",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "version",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "isAnalyzing",
+              "type": "boolean",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/analysisSettings.ts",
+          "lineNumber": 83,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "analysisUIConfig.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/analysisUIConfig.ts",
+      "interfaces": [
+        {
+          "name": "AnalysisSettings",
+          "properties": [
+            {
+              "name": "depth",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "multiPV",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "timeLimit",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "threads",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "hashSize",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "contempt",
+              "type": "number",
+              "optional": true
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/analysisUIConfig.ts",
+          "lineNumber": 6,
+          "exported": true
+        },
+        {
+          "name": "EngineStatus",
+          "properties": [
+            {
+              "name": "engineName",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "version",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "isAnalyzing",
+              "type": "boolean",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/analysisUIConfig.ts",
+          "lineNumber": 71,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "authenticationMocks.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/authenticationMocks.ts",
+      "interfaces": [
+        {
+          "name": "MockUser",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "username",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "email",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "chess_elo",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "puzzle_rating",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "preferences",
+              "type": "Record<string, any>",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/authenticationMocks.ts",
+          "lineNumber": 3,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "boardControlsData.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts",
+      "interfaces": [
+        {
+          "name": "BoardSizeConfig",
+          "properties": [
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "width",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "height",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "squareSize",
+              "type": "number",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts",
+          "lineNumber": 1,
+          "exported": true
+        },
+        {
+          "name": "SoundEffect",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "filename",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts",
+          "lineNumber": 8,
+          "exported": true
+        },
+        {
+          "name": "CoordinateStyle",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "fontSize",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "fontWeight",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "opacity",
+              "type": "number",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts",
+          "lineNumber": 15,
+          "exported": true
+        },
+        {
+          "name": "HighlightStyle",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "type",
+              "type": "'dots' | 'border' | 'glow' | 'solid' | 'none'",
+              "optional": false
+            },
+            {
+              "name": "opacity",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "color",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts",
+          "lineNumber": 23,
+          "exported": true
+        },
+        {
+          "name": "ArrowStyle",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "strokeWidth",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "style",
+              "type": "'simple' | 'curved' | 'bold' | 'dashed' | 'glowing'",
+              "optional": false
+            },
+            {
+              "name": "opacity",
+              "type": "number",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardControlsData.ts",
+          "lineNumber": 31,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "boardThemeDefaults.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardThemeDefaults.ts",
+      "interfaces": [
+        {
+          "name": "BoardThemeColors",
+          "properties": [
+            {
+              "name": "lightSquare",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "darkSquare",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardThemeDefaults.ts",
+          "lineNumber": 6,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "boardThemesData.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardThemesData.ts",
+      "interfaces": [
+        {
+          "name": "BoardTheme",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "category",
+              "type": "'classic' | 'modern' | 'fantasy' | 'neon' | 'luxury' | 'minimal'",
+              "optional": false
+            },
+            {
+              "name": "author",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "createdAt",
+              "type": "Date",
+              "optional": false
+            },
+            {
+              "name": "isPremium",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "isUnlocked",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "lightSquare",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "darkSquare",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "border",
+              "type": "{\n    show: boolean\n    color: string\n    width: 'thin' | 'medium' | 'thick'\n  }",
+              "optional": false
+            },
+            {
+              "name": "background",
+              "type": "'plain' | 'wood-grain' | 'marble-veins' | 'space-stars' | 'gradient'",
+              "optional": false
+            },
+            {
+              "name": "pieceSet",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "material",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "popularity",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "downloadCount",
+              "type": "number",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardThemesData.ts",
+          "lineNumber": 1,
+          "exported": true
+        },
+        {
+          "name": "ThemeCategory",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "icon",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "count",
+              "type": "number",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/boardThemesData.ts",
+          "lineNumber": 24,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "chessTheoryPrinciples.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/chessTheoryPrinciples.ts",
+      "interfaces": [
+        {
+          "name": "ChessPrinciple",
+          "properties": [
+            {
+              "name": "text",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "category",
+              "type": "'opening' | 'middlegame' | 'endgame' | 'general'",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/chessTheoryPrinciples.ts",
+          "lineNumber": 6,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "collectionBrowserTabs.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/collectionBrowserTabs.ts",
+      "interfaces": [
+        {
+          "name": "CollectionBrowserTab",
+          "properties": [
+            {
+              "name": "key",
+              "type": "CollectionBrowserTabKey",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "icon",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": true
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/collectionBrowserTabs.ts",
+          "lineNumber": 8,
+          "exported": true
+        }
+      ],
+      "types": [
+        {
+          "name": "CollectionBrowserTabKey",
+          "type": "'all' | 'my' | 'featured' | 'popular'",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/collectionBrowserTabs.ts",
+          "lineNumber": 6,
+          "exported": true
+        }
+      ],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "commonConfigurations.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/commonConfigurations.ts",
+      "interfaces": [],
+      "types": [
+        {
+          "name": "StudyFrequency",
+          "type": "'Daily' | 'Every Other Day' | 'Weekly' | 'Custom'",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/commonConfigurations.ts",
+          "lineNumber": 7,
+          "exported": true
+        }
+      ],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "endgamePuzzles.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/endgamePuzzles.ts",
+      "interfaces": [
+        {
+          "name": "EndgamePuzzle",
+          "properties": [
+            {
+              "name": "id",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "fen",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "solution",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "endgameType",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "difficulty",
+              "type": "'Beginner' | 'Intermediate' | 'Advanced'",
+              "optional": false
+            },
+            {
+              "name": "rating",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "moves",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "theory",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "hint1",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "hint2",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "hint3",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/endgamePuzzles.ts",
+          "lineNumber": 3,
+          "exported": true
+        },
+        {
+          "name": "EndgameCategory",
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "puzzles",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "completed",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "icon",
+              "type": "any",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/endgamePuzzles.ts",
+          "lineNumber": 18,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [
+        "lucide-react"
+      ],
+      "exports": []
+    },
+    {
+      "fileName": "iconMappings.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/iconMappings.ts",
+      "interfaces": [],
+      "types": [
+        {
+          "name": "IconName",
+          "type": "keyof typeof iconMap",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/iconMappings.ts",
+          "lineNumber": 44,
+          "exported": true
+        }
+      ],
+      "imports": [
+        "react",
+        "lucide-react",
+        "react-icons/fa",
+        "react-icons/gi"
+      ],
+      "exports": []
+    },
+    {
+      "fileName": "importExportSources.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/importExportSources.ts",
+      "interfaces": [
+        {
+          "name": "SupportedSource",
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "color",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "category",
+              "type": "'import' | 'export' | 'both'",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/importExportSources.ts",
+          "lineNumber": 8,
+          "exported": true
+        },
+        {
+          "name": "ImportProgress",
+          "properties": [
+            {
+              "name": "status",
+              "type": "ImportProgressStatus",
+              "optional": false
+            },
+            {
+              "name": "current",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "total",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "message",
+              "type": "string",
+              "optional": true
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/importExportSources.ts",
+          "lineNumber": 80,
+          "exported": true
+        }
+      ],
+      "types": [
+        {
+          "name": "ExportFormat",
+          "type": "'pgn' | 'json'",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/importExportSources.ts",
+          "lineNumber": 6,
+          "exported": true
+        },
+        {
+          "name": "ImportProgressStatus",
+          "type": "'processing' | 'complete' | 'error'",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/importExportSources.ts",
+          "lineNumber": 78,
+          "exported": true
+        }
+      ],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "navigationConfig.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/navigationConfig.ts",
+      "interfaces": [
+        {
+          "name": "NavItem",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "title",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "icon",
+              "type": "any",
+              "optional": false
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "optional": true
+            },
+            {
+              "name": "children",
+              "type": "NavItem[]",
+              "optional": true
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/navigationConfig.ts",
+          "lineNumber": 25,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [
+        "lucide-react"
+      ],
+      "exports": []
+    },
+    {
+      "fileName": "notificationSettingsData.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/notificationSettingsData.ts",
+      "interfaces": [
+        {
+          "name": "NotificationSoundOption",
+          "properties": [
+            {
+              "name": "value",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "filename",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "duration",
+              "type": "number",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/notificationSettingsData.ts",
+          "lineNumber": 1,
+          "exported": true
+        },
+        {
+          "name": "VisualAlertOption",
+          "properties": [
+            {
+              "name": "value",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "animation",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "color",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/notificationSettingsData.ts",
+          "lineNumber": 9,
+          "exported": true
+        },
+        {
+          "name": "PriorityLevelOption",
+          "properties": [
+            {
+              "name": "value",
+              "type": "'urgent' | 'high' | 'normal' | 'low'",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "color",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "icon",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/notificationSettingsData.ts",
+          "lineNumber": 17,
+          "exported": true
+        },
+        {
+          "name": "FrequencyOption",
+          "properties": [
+            {
+              "name": "value",
+              "type": "'instant' | 'batched' | 'hourly' | 'daily' | 'weekly'",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "batchSize",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "interval",
+              "type": "number",
+              "optional": true
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/notificationSettingsData.ts",
+          "lineNumber": 25,
+          "exported": true
+        },
+        {
+          "name": "NotificationEventTemplate",
+          "properties": [
+            {
+              "name": "eventType",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "eventName",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "category",
+              "type": "'gameplay' | 'achievements' | 'social' | 'training' | 'system'",
+              "optional": false
+            },
+            {
+              "name": "defaultPriority",
+              "type": "'urgent' | 'high' | 'normal' | 'low'",
+              "optional": false
+            },
+            {
+              "name": "defaultFrequency",
+              "type": "'instant' | 'batched' | 'hourly' | 'daily' | 'weekly'",
+              "optional": false
+            },
+            {
+              "name": "defaultChannels",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "canCustomizeSound",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "canCustomizeVisual",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "examples",
+              "type": "string[]",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/notificationSettingsData.ts",
+          "lineNumber": 33,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "pieceSetsData.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/pieceSetsData.ts",
+      "interfaces": [
+        {
+          "name": "PieceSetInfo",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "preview",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "category",
+              "type": "'traditional' | 'modern' | 'fantasy' | 'gaming' | 'luxury'",
+              "optional": false
+            },
+            {
+              "name": "style",
+              "type": "'classic' | 'minimalist' | 'ornate' | 'pixel' | 'neon' | 'crystal' | 'carved' | 'metal'",
+              "optional": false
+            },
+            {
+              "name": "isPremium",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "author",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "createdAt",
+              "type": "Date",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/pieceSetsData.ts",
+          "lineNumber": 1,
+          "exported": true
+        },
+        {
+          "name": "PieceCustomization",
+          "properties": [
+            {
+              "name": "sizeScaling",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "shadowEffect",
+              "type": "'none' | 'soft' | 'hard'",
+              "optional": false
+            },
+            {
+              "name": "borderEnabled",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "borderWidth",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "borderColor",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "glowEffect",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "glowColor",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "glowIntensity",
+              "type": "number",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/pieceSetsData.ts",
+          "lineNumber": 13,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "predefinedPositions.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/predefinedPositions.ts",
+      "interfaces": [
+        {
+          "name": "PredefinedPosition",
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "fen",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "icon",
+              "type": "LucideIcon",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "category",
+              "type": "'starting' | 'endgame' | 'tactical' | 'theoretical'",
+              "optional": false
+            },
+            {
+              "name": "difficulty",
+              "type": "'beginner' | 'intermediate' | 'advanced'",
+              "optional": false
+            },
+            {
+              "name": "tags",
+              "type": "string[]",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/predefinedPositions.ts",
+          "lineNumber": 12,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [
+        "lucide-react",
+        "lucide-react"
+      ],
+      "exports": []
+    },
+    {
+      "fileName": "preferencesData.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/preferencesData.ts",
+      "interfaces": [
+        {
+          "name": "LanguageOption",
+          "properties": [
+            {
+              "name": "value",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "nativeName",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "flag",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "rtl",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "completeness",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "region",
+              "type": "string",
+              "optional": true
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/preferencesData.ts",
+          "lineNumber": 1,
+          "exported": true
+        },
+        {
+          "name": "ThemeOption",
+          "properties": [
+            {
+              "name": "value",
+              "type": "'midnight' | 'cyber' | 'neon' | 'royal' | 'classic'",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "primaryColors",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "accentColor",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "backgroundGradient",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "isPremium",
+              "type": "boolean",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/preferencesData.ts",
+          "lineNumber": 11,
+          "exported": true
+        },
+        {
+          "name": "UIDensityOption",
+          "properties": [
+            {
+              "name": "value",
+              "type": "'compact' | 'comfortable' | 'spacious'",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "spacing",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "fontSize",
+              "type": "number",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/preferencesData.ts",
+          "lineNumber": 21,
+          "exported": true
+        },
+        {
+          "name": "AnimationIntensity",
+          "properties": [
+            {
+              "name": "value",
+              "type": "'reduced' | 'normal' | 'enhanced'",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "transitionDuration",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "effectIntensity",
+              "type": "number",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/preferencesData.ts",
+          "lineNumber": 29,
+          "exported": true
+        },
+        {
+          "name": "ChessNotationOption",
+          "properties": [
+            {
+              "name": "value",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "example",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/preferencesData.ts",
+          "lineNumber": 37,
+          "exported": true
+        },
+        {
+          "name": "StartupBehaviorOption",
+          "properties": [
+            {
+              "name": "value",
+              "type": "'dashboard' | 'last_page' | 'training' | 'custom'",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "icon",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/preferencesData.ts",
+          "lineNumber": 44,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "progressConfigurations.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/progressConfigurations.ts",
+      "interfaces": [],
+      "types": [
+        {
+          "name": "TrendDirection",
+          "type": "'up' | 'down' | 'neutral'",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/progressConfigurations.ts",
+          "lineNumber": 9,
+          "exported": true
+        }
+      ],
+      "imports": [
+        "lucide-react"
+      ],
+      "exports": []
+    },
+    {
+      "fileName": "progressUIConfig.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/progressUIConfig.ts",
+      "interfaces": [],
+      "types": [
+        {
+          "name": "TrendDirection",
+          "type": "'up' | 'down' | 'neutral'",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/progressUIConfig.ts",
+          "lineNumber": 9,
+          "exported": true
+        }
+      ],
+      "imports": [
+        "lucide-react"
+      ],
+      "exports": []
+    },
+    {
+      "fileName": "puzzleProgressStats.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/puzzleProgressStats.ts",
+      "interfaces": [
+        {
+          "name": "ProgressStatistic",
+          "properties": [
+            {
+              "name": "value",
+              "type": "string | number",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "type",
+              "type": "'percentage' | 'rating' | 'count'",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/puzzleProgressStats.ts",
+          "lineNumber": 6,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "puzzleSourceDatabase.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/puzzleSourceDatabase.ts",
+      "interfaces": [
+        {
+          "name": "PuzzleSourceMetadata",
+          "properties": [
+            {
+              "name": "sourceId",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "totalPuzzles",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "averageRating",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "categories",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "isActive",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "lastUpdated",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "importDate",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "attribution",
+              "type": "{\n    author?: string\n    license?: string\n    url?: string\n    version?: string\n  }",
+              "optional": false
+            },
+            {
+              "name": "statistics",
+              "type": "{\n    downloadCount: number\n    userRating: number\n    popularityScore: number\n  }",
+              "optional": false
+            },
+            {
+              "name": "createdAt",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "updatedAt",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/puzzleSourceDatabase.ts",
+          "lineNumber": 6,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "puzzleSourceMappings.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/puzzleSourceMappings.ts",
+      "interfaces": [
+        {
+          "name": "PuzzleSourceMapping",
+          "properties": [
+            {
+              "name": "source",
+              "type": "PuzzleSource",
+              "optional": false
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "icon",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "shortIcon",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "color",
+              "type": "string",
+              "optional": true
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/puzzleSourceMappings.ts",
+          "lineNumber": 8,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [
+        "@/types/customPuzzles"
+      ],
+      "exports": []
+    },
+    {
+      "fileName": "relatedTutorials.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/relatedTutorials.ts",
+      "interfaces": [
+        {
+          "name": "RelatedTutorial",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "title",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "duration",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "thumbnail",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "category",
+              "type": "string",
+              "optional": true
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/relatedTutorials.ts",
+          "lineNumber": 6,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "reviewGames.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/reviewGames.ts",
+      "interfaces": [
+        {
+          "name": "GameFilter",
+          "properties": [
+            {
+              "name": "source",
+              "type": "string[]",
+              "optional": true
+            },
+            {
+              "name": "result",
+              "type": "string[]",
+              "optional": true
+            },
+            {
+              "name": "opponent",
+              "type": "string[]",
+              "optional": true
+            },
+            {
+              "name": "dateRange",
+              "type": "{\n    start: number\n    end: number\n  }",
+              "optional": true
+            },
+            {
+              "name": "minAccuracy",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "maxAccuracy",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "openings",
+              "type": "string[]",
+              "optional": true
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/reviewGames.ts",
+          "lineNumber": 807,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [
+        "@/types/gameReview"
+      ],
+      "exports": []
+    },
+    {
+      "fileName": "skillTreeConfigurations.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/skillTreeConfigurations.ts",
+      "interfaces": [],
+      "types": [
+        {
+          "name": "SkillLevel",
+          "type": "'Locked' | 'Beginner' | 'Developing' | 'Proficient' | 'Advanced' | 'Mastered'",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/skillTreeConfigurations.ts",
+          "lineNumber": 9,
+          "exported": true
+        },
+        {
+          "name": "ConnectionType",
+          "type": "keyof typeof connectionTypes",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/skillTreeConfigurations.ts",
+          "lineNumber": 110,
+          "exported": true
+        },
+        {
+          "name": "SkillTreeViewMode",
+          "type": "keyof typeof skillTreeViewModes",
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/skillTreeConfigurations.ts",
+          "lineNumber": 132,
+          "exported": true
+        }
+      ],
+      "imports": [
+        "lucide-react"
+      ],
+      "exports": []
+    },
+    {
+      "fileName": "subscriptionData.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/subscriptionData.ts",
+      "interfaces": [
+        {
+          "name": "SubscriptionTier",
+          "properties": [
+            {
+              "name": "tier",
+              "type": "'free' | 'premium' | 'pro' | 'grandmaster'",
+              "optional": false
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "price",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "popular",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "features",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "limits",
+              "type": "{\n    puzzlesPerDay: number | 'unlimited'\n    gamesPerMonth: number | 'unlimited'\n    analysisDepth: number\n    coachingSessions: number | 'unlimited'\n    storageGB: number | 'unlimited'\n  }",
+              "optional": false
+            },
+            {
+              "name": "benefits",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "color",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "icon",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/subscriptionData.ts",
+          "lineNumber": 1,
+          "exported": true
+        },
+        {
+          "name": "BillingHistory",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "amount",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "currency",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "status",
+              "type": "'paid' | 'pending' | 'failed' | 'refunded'",
+              "optional": false
+            },
+            {
+              "name": "date",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "invoiceUrl",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/subscriptionData.ts",
+          "lineNumber": 20,
+          "exported": true
+        },
+        {
+          "name": "PaymentMethod",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "type",
+              "type": "'card' | 'paypal' | 'crypto' | 'bank'",
+              "optional": false
+            },
+            {
+              "name": "lastFour",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "brand",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "expiryMonth",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "expiryYear",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "isDefault",
+              "type": "boolean",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/subscriptionData.ts",
+          "lineNumber": 30,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "tacticalPuzzles.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/tacticalPuzzles.ts",
+      "interfaces": [
+        {
+          "name": "TacticalPuzzle",
+          "properties": [
+            {
+              "name": "id",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "fen",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "solution",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "theme",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "difficulty",
+              "type": "'Beginner' | 'Intermediate' | 'Advanced'",
+              "optional": false
+            },
+            {
+              "name": "rating",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "moves",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "hint1",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "hint2",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "hint3",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/tacticalPuzzles.ts",
+          "lineNumber": 1,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "userAnalysisPreferences.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userAnalysisPreferences.ts",
+      "interfaces": [
+        {
+          "name": "UserAnalysisPreferences",
+          "properties": [
+            {
+              "name": "userId",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "depth",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "multiPV",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "timeLimit",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "threads",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "hashSize",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "contempt",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "createdAt",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "updatedAt",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userAnalysisPreferences.ts",
+          "lineNumber": 6,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "userProgressTracking.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userProgressTracking.ts",
+      "interfaces": [
+        {
+          "name": "UserProgressData",
+          "properties": [
+            {
+              "name": "userId",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "currentPerformanceLevel",
+              "type": "'excellent' | 'good' | 'average' | 'needsWork'",
+              "optional": false
+            },
+            {
+              "name": "performanceValue",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "progressMetrics",
+              "type": "{\n    tacticalRating: number\n    puzzlesSolved: number\n    studyStreak: number\n    totalStudyTime: number // minutes\n    gamesPlayed: number\n    winLossRatio: number\n    averageAccuracy: number\n    improvement: number // percentage change\n    milestoneReached: number // percentage of current milestone\n  }",
+              "optional": false
+            },
+            {
+              "name": "achievements",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "lastActivity",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "progressHistory",
+              "type": "ProgressSnapshot[]",
+              "optional": false
+            },
+            {
+              "name": "createdAt",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "updatedAt",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userProgressTracking.ts",
+          "lineNumber": 6,
+          "exported": true
+        },
+        {
+          "name": "ProgressSnapshot",
+          "properties": [
+            {
+              "name": "date",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "performanceValue",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "tacticalRating",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "puzzlesSolved",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "studyStreak",
+              "type": "number",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userProgressTracking.ts",
+          "lineNumber": 28,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "userPuzzlePreferences.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzlePreferences.ts",
+      "interfaces": [
+        {
+          "name": "UserPuzzlePreferences",
+          "properties": [
+            {
+              "name": "userId",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "preferredDifficulties",
+              "type": "CustomPuzzleDifficulty[]",
+              "optional": false
+            },
+            {
+              "name": "preferredSources",
+              "type": "PuzzleSource[]",
+              "optional": false
+            },
+            {
+              "name": "ratingRange",
+              "type": "{\n    min: number\n    max: number\n  }",
+              "optional": false
+            },
+            {
+              "name": "themes",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "autoAdvance",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "showHints",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "timeLimit",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "createdAt",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "updatedAt",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzlePreferences.ts",
+          "lineNumber": 8,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [
+        "@/types/customPuzzles"
+      ],
+      "exports": []
+    },
+    {
+      "fileName": "userPuzzleSelections.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleSelections.ts",
+      "interfaces": [
+        {
+          "name": "UserPuzzleSelection",
+          "properties": [
+            {
+              "name": "userId",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "selectionHistory",
+              "type": "PuzzleSelectionEntry[]",
+              "optional": false
+            },
+            {
+              "name": "favoriteThemes",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "blacklistedThemes",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "preferredTimeControl",
+              "type": "'blitz' | 'rapid' | 'untimed'",
+              "optional": false
+            },
+            {
+              "name": "difficultyProgression",
+              "type": "{\n    currentLevel: string\n    autoProgression: boolean\n    manualOverrides: string[]\n  }",
+              "optional": false
+            },
+            {
+              "name": "customFilters",
+              "type": "{\n    ratingRange: { min: number; max: number }\n    sources: string[]\n    excludeSolved: boolean\n    prioritizeWeakAreas: boolean\n  }",
+              "optional": false
+            },
+            {
+              "name": "selectionAlgorithm",
+              "type": "'random' | 'adaptive' | 'progressive' | 'weakness-focused'",
+              "optional": false
+            },
+            {
+              "name": "createdAt",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "updatedAt",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleSelections.ts",
+          "lineNumber": 6,
+          "exported": true
+        },
+        {
+          "name": "PuzzleSelectionEntry",
+          "properties": [
+            {
+              "name": "timestamp",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "puzzleId",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "selectionReason",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "userRating",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "puzzleRating",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "theme",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "difficulty",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "wasSkipped",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "performance",
+              "type": "number",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleSelections.ts",
+          "lineNumber": 28,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "userPuzzleSessions.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleSessions.ts",
+      "interfaces": [
+        {
+          "name": "UserPuzzleSession",
+          "properties": [
+            {
+              "name": "sessionId",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "userId",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "startTime",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "endTime",
+              "type": "string",
+              "optional": true
+            },
+            {
+              "name": "puzzlesSolved",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "correctAnswers",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "totalTime",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "averageTime",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "selectedDifficulties",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "selectedThemes",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "sessionType",
+              "type": "'timed' | 'untimed' | 'survival' | 'themed'",
+              "optional": false
+            },
+            {
+              "name": "results",
+              "type": "PuzzleResult[]",
+              "optional": false
+            },
+            {
+              "name": "sessionStats",
+              "type": "{\n    accuracy: number\n    streak: number\n    improvement: number\n    rating: number\n  }",
+              "optional": false
+            },
+            {
+              "name": "createdAt",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "updatedAt",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleSessions.ts",
+          "lineNumber": 6,
+          "exported": true
+        },
+        {
+          "name": "PuzzleResult",
+          "properties": [
+            {
+              "name": "puzzleId",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "isCorrect",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "timeSpent",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "hintsUsed",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "attempts",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "rating",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "theme",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "difficulty",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleSessions.ts",
+          "lineNumber": 29,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "userPuzzleStats.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleStats.ts",
+      "interfaces": [
+        {
+          "name": "UserPuzzleStats",
+          "properties": [
+            {
+              "name": "userId",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "totalAttempts",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "correctSolutions",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "averageRating",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "currentStreak",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "longestStreak",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "averageTime",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "categoryStats",
+              "type": "{\n    [category: string]: {\n      attempts: number\n      correct: number\n      averageRating: number\n      bestTime: number\n    }\n  }",
+              "optional": false
+            },
+            {
+              "name": "difficultyStats",
+              "type": "{\n    [difficulty: string]: {\n      attempts: number\n      correct: number\n      successRate: number\n    }\n  }",
+              "optional": false
+            },
+            {
+              "name": "recentSessions",
+              "type": "PuzzleSession[]",
+              "optional": false
+            },
+            {
+              "name": "createdAt",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "updatedAt",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleStats.ts",
+          "lineNumber": 6,
+          "exported": true
+        },
+        {
+          "name": "PuzzleSession",
+          "properties": [
+            {
+              "name": "sessionId",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "date",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "puzzlesSolved",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "correctAnswers",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "totalTime",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "averageRating",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "themes",
+              "type": "string[]",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userPuzzleStats.ts",
+          "lineNumber": 34,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    },
+    {
+      "fileName": "userStudyPlans.ts",
+      "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userStudyPlans.ts",
+      "interfaces": [
+        {
+          "name": "UserStudyPlan",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "userId",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "goals",
+              "type": "string[]",
+              "optional": false
+            },
+            {
+              "name": "targetRating",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "estimatedWeeks",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "isActive",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "progress",
+              "type": "{\n    completedModules: number\n    totalModules: number\n    currentModule: string\n    lastStudied: string\n  }",
+              "optional": false
+            },
+            {
+              "name": "modules",
+              "type": "StudyModule[]",
+              "optional": false
+            },
+            {
+              "name": "createdAt",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "updatedAt",
+              "type": "string",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userStudyPlans.ts",
+          "lineNumber": 6,
+          "exported": true
+        },
+        {
+          "name": "StudyModule",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "estimatedHours",
+              "type": "number",
+              "optional": false
+            },
+            {
+              "name": "isCompleted",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "completedAt",
+              "type": "string",
+              "optional": true
+            },
+            {
+              "name": "topics",
+              "type": "StudyTopic[]",
+              "optional": false
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userStudyPlans.ts",
+          "lineNumber": 26,
+          "exported": true
+        },
+        {
+          "name": "StudyTopic",
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "name": "type",
+              "type": "'puzzle' | 'reading' | 'practice' | 'analysis'",
+              "optional": false
+            },
+            {
+              "name": "isCompleted",
+              "type": "boolean",
+              "optional": false
+            },
+            {
+              "name": "completedAt",
+              "type": "string",
+              "optional": true
+            },
+            {
+              "name": "notes",
+              "type": "string",
+              "optional": true
+            }
+          ],
+          "filePath": "/mnt/c/Projects/chess-training/frontend/src/data/userStudyPlans.ts",
+          "lineNumber": 36,
+          "exported": true
+        }
+      ],
+      "types": [],
+      "imports": [],
+      "exports": []
+    }
+  ]
+}

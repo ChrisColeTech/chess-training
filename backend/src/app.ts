@@ -11,6 +11,24 @@ import gameRoutes from './routes/games';
 import puzzleRoutes from './routes/puzzles';
 import userRoutes from './routes/users';
 import statsRoutes from './routes/stats';
+import openingsRoutes from './routes/openings';
+import tutorialsRoutes from './routes/tutorials';
+import aiOpponentsRoutes from './routes/ai-opponents';
+import achievementsRoutes from './routes/achievements';
+import learningRoutes from './routes/learning';
+import analysisRoutes from './routes/analysis';
+import helpRoutes from './routes/help';
+import subscriptionsRoutes from './routes/subscriptions';
+import profilesRoutes from './routes/profiles';
+import gameReviewsRoutes from './routes/game-reviews';
+import gameReviewMovesRoutes from './routes/game-review-moves';
+import openingMovesRoutes from './routes/opening-moves';
+import puzzleSourcesRoutes from './routes/puzzle-sources';
+import userPuzzlePreferencesRoutes from './routes/user-puzzle-preferences';
+import settingsRoutes from './routes/settings';
+import notificationsRoutes from './routes/notifications';
+import searchRoutes from './routes/search';
+import progressRoutes from './routes/progress';
 
 // Load environment variables
 dotenv.config();
@@ -53,6 +71,24 @@ app.use('/api/games', gameRoutes);
 app.use('/api/puzzles', puzzleRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/openings', openingsRoutes);
+app.use('/api/tutorials', tutorialsRoutes);
+app.use('/api/ai-opponents', aiOpponentsRoutes);
+app.use('/api/achievements', achievementsRoutes);
+app.use('/api/learning', learningRoutes);
+app.use('/api/analysis', analysisRoutes);
+app.use('/api/help', helpRoutes);
+app.use('/api/subscriptions', subscriptionsRoutes);
+app.use('/api/profiles', profilesRoutes);
+app.use('/api/game-reviews', gameReviewsRoutes);
+app.use('/api/game-review-moves', gameReviewMovesRoutes);
+app.use('/api/opening-moves', openingMovesRoutes);
+app.use('/api/puzzle-sources', puzzleSourcesRoutes);
+app.use('/api/user-puzzle-preferences', userPuzzlePreferencesRoutes);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/notifications', notificationsRoutes);
+app.use('/api/search', searchRoutes);
+app.use('/api/progress', progressRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -77,6 +113,24 @@ app.get('/api', (req, res) => {
       puzzles: '/api/puzzles',
       user: '/api/user',
       stats: '/api/stats',
+      openings: '/api/openings',
+      tutorials: '/api/tutorials',
+      aiOpponents: '/api/ai-opponents',
+      achievements: '/api/achievements',
+      learning: '/api/learning',
+      analysis: '/api/analysis',
+      help: '/api/help',
+      subscriptions: '/api/subscriptions',
+      profiles: '/api/profiles',
+      gameReviews: '/api/game-reviews',
+      gameReviewMoves: '/api/game-review-moves',
+      openingMoves: '/api/opening-moves',
+      puzzleSources: '/api/puzzle-sources',
+      userPuzzlePreferences: '/api/user-puzzle-preferences',
+      settings: '/api/settings',
+      notifications: '/api/notifications',
+      search: '/api/search',
+      progress: '/api/progress',
       health: '/api/health'
     }
   });

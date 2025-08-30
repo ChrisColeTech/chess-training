@@ -1,0 +1,480 @@
+import React from 'react'
+import { TrendingUp, TrendingDown, BarChart3, LineChart, Activity, Calendar, Target } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import type { TrendAnalysisProps, ChartType } from '@/types/detailedStats'
+// Moved configurations locally
+const chartTypeIcons = {
+  line: LineChart,
+  bar: BarChart3,
+  area: Activity,
+  scatter: TrendingUp,
+  pie: Target,
+  heatmap: Calendar
+}
+
+const chartTypeLabels = {
+  line: 'Line Chart',
+  bar: 'Bar Chart', 
+  area: 'Area Chart',
+  scatter: 'Scatter Plot',
+  pie: 'Pie Chart',
+  heatmap: 'Heatmap'
+}
+
+/**
+ * TrendAnalysis Component
+ * Displays comprehensive trend analysis with multiple chart types and time-based insights
+ */
+export const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
+  trends,
+  isLoading,
+  chartType,
+  onChartTypeChange,
+  theme
+}) => {
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        {/* Loading Skeleton */}
+        <div className="bg-slate-800/30 border border-slate-700/30 rounded-xl p-6 animate-pulse">
+          <div className="h-4 bg-slate-600/50 rounded w-1/3 mb-4"></div>
+          <div className="h-64 bg-slate-600/50 rounded"></div>
+        </div>
+      </div>
+    )
+  }
+
+  const getChartTypeLabel = (type: ChartType) => {
+    return chartTypeLabels[type]
+  }
+
+  const calculateTrend = (data: Array<{ value: number }>) => {
+    if (data.length < 2) return { direction: 'stable', percentage: 0 }
+    
+    const first = data[0]?.value || 0
+    const last = data[data.length - 1]?.value || 0
+    const change = last - first
+    const percentage = first !== 0 ? (change / first) * 100 : 0
+    
+    return {
+      direction: change > 0 ? 'up' : change < 0 ? 'down' : 'stable',
+      percentage: Math.abs(percentage)
+    }
+  }
+
+  const formatTimestamp = (dateStr: string) => {
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  }
+
+  // Mock chart data visualization (in a real app, you'd use a charting library like Chart.js or D3)
+  const renderMockChart = () => {
+    const data = trends.ratingTrends.slice(-30) // Last 30 data points
+    const maxRating = Math.max(...data.map(d => d.rating))
+    const minRating = Math.min(...data.map(d => d.rating))
+    const range = maxRating - minRating || 1
+
+    return (
+      <div className="relative h-64 bg-slate-900/50 rounded-lg p-4 overflow-hidden">
+        {/* Mock Chart Background */}
+        <div className="absolute inset-0 opacity-10">
+          {[...Array(5)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-full h-px bg-slate-400"
+              style={{ top: `${(i + 1) * 20}%` }}
+            />
+          ))}
+          {[...Array(6)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute h-full w-px bg-slate-400"
+              style={{ left: `${(i + 1) * 16.66}%` }}
+            />
+          ))}
+        </div>
+
+        {/* Mock Chart Line */}
+        <svg className="w-full h-full">
+          <defs>
+            <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.8" />
+            </linearGradient>
+          </defs>
+          
+          {chartType === 'line' || chartType === 'area' ? (
+            <path
+              d={data.map((point, index) => {
+                const x = (index / (data.length - 1)) * 100
+                const y = 100 - ((point.rating - minRating) / range) * 80 - 10
+                return `${index === 0 ? 'M' : 'L'} ${x}% ${y}%`
+              }).join(' ')}
+              fill="none"
+              stroke="url(#chartGradient)"
+              strokeWidth="2"
+              className="drop-shadow-lg"
+            />
+          ) : chartType === 'bar' ? (
+            data.slice(-10).map((point, index) => (
+              <rect
+                key={index}
+                x={`${index * 10}%`}
+                y={`${100 - ((point.rating - minRating) / range) * 80 - 10}%`}
+                width="8%"
+                height={`${((point.rating - minRating) / range) * 80}%`}
+                fill="url(#chartGradient)"
+                className="opacity-80"
+              />
+            ))
+          ) : (
+            // Scatter plot
+            data.slice(-20).map((point, index) => (
+              <circle
+                key={index}
+                cx={`${(index / 19) * 100}%`}
+                cy={`${100 - ((point.rating - minRating) / range) * 80 - 10}%`}
+                r="3"
+                fill="url(#chartGradient)"
+                className="opacity-80"
+              />
+            ))
+          )}
+        </svg>
+
+        {/* Chart Labels */}
+        <div className="absolute bottom-2 left-4 text-xs text-slate-400">
+          {minRating}
+        </div>
+        <div className="absolute top-2 left-4 text-xs text-slate-400">
+          {maxRating}
+        </div>
+        <div className="absolute bottom-2 right-4 text-xs text-slate-400">
+          {formatTimestamp(data[data.length - 1]?.date || '')}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Chart Controls */}
+      <div className={`
+        bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6
+        command-panel
+      `}>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <TrendingUp size={20} className="text-blue-400" />
+            <h3 className="text-lg font-bold text-white uppercase tracking-wide">
+              Rating Trends
+            </h3>
+          </div>
+          
+          {/* Chart Type Selector */}
+          <div className="flex gap-2">
+            {(['line', 'bar', 'area', 'scatter'] as ChartType[]).map((type) => {
+              const Icon = chartTypeIcons[type]
+              return (
+                <Button
+                  key={type}
+                  onClick={() => onChartTypeChange(type)}
+                  variant={chartType === type ? "default" : "ghost"}
+                  size="sm"
+                  className={`
+                    p-2 transition-all duration-200 
+                    ${chartType === type
+                      ? `bg-gradient-to-r ${theme.primary} text-white border border-slate-500/50`
+                      : 'text-slate-400 hover:text-white hover:bg-slate-700/30'
+                    }
+                  `}
+                  title={getChartTypeLabel(type)}
+                >
+                  <Icon size={16} />
+                </Button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Chart Visualization */}
+        {renderMockChart()}
+
+        {/* Chart Summary */}
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+          {trends.ratingTrends.slice(-4).map((gameType, index) => {
+            const trendData = trends.ratingTrends.filter(t => t.gameType === gameType.gameType)
+            const trend = calculateTrend(trendData.map(t => ({ value: t.rating })))
+            
+            return (
+              <div key={index} className="text-center space-y-2">
+                <div className="text-sm text-slate-400 capitalize">{gameType.gameType}</div>
+                <div className="text-lg font-bold text-white">{gameType.rating}</div>
+                <div className={`flex items-center justify-center gap-1 text-xs ${
+                  trend.direction === 'up' ? 'text-green-400' : 
+                  trend.direction === 'down' ? 'text-red-400' : 'text-gray-400'
+                }`}>
+                  {trend.direction === 'up' ? <TrendingUp size={12} /> : 
+                   trend.direction === 'down' ? <TrendingDown size={12} /> : null}
+                  {trend.percentage.toFixed(1)}%
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Performance Trends */}
+      <div className={`
+        bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6
+        command-panel
+      `}>
+        <div className="flex items-center gap-3 mb-6">
+          <Activity size={20} className="text-purple-400" />
+          <h3 className="text-lg font-bold text-white uppercase tracking-wide">
+            Performance Trends
+          </h3>
+          <div className="h-px flex-1 bg-gradient-to-r from-slate-600 to-transparent"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {trends.performanceTrends.slice(-8).map((trend, index) => {
+            const isAboveBenchmark = trend.value > trend.benchmark
+            return (
+              <div key={index} className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
+                <div className="space-y-1">
+                  <div className="text-sm font-medium text-white">{trend.category}</div>
+                  <div className="text-xs text-slate-400">{formatTimestamp(trend.date)}</div>
+                </div>
+                <div className="text-right space-y-1">
+                  <div className={`text-lg font-bold ${
+                    isAboveBenchmark ? 'text-green-400' : 'text-red-400'
+                  }`}>
+                    {trend.value.toFixed(1)}%
+                  </div>
+                  <div className="text-xs text-slate-400">
+                    Benchmark: {trend.benchmark}%
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Activity Patterns */}
+      <div className={`
+        bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6
+        command-panel
+      `}>
+        <div className="flex items-center gap-3 mb-6">
+          <Calendar size={20} className="text-green-400" />
+          <h3 className="text-lg font-bold text-white uppercase tracking-wide">
+            Activity Patterns
+          </h3>
+          <div className="h-px flex-1 bg-gradient-to-r from-slate-600 to-transparent"></div>
+        </div>
+
+        {/* Daily Activity Chart */}
+        <div className="mb-6">
+          <h4 className="text-sm font-medium text-slate-300 mb-3">Recent Activity</h4>
+          <div className="grid grid-cols-7 gap-2">
+            {trends.activityPatterns.dailyActivity.slice(-7).map((day, index) => (
+              <div key={index} className="text-center space-y-2">
+                <div className="text-xs text-slate-400">
+                  {formatTimestamp(day.day)}
+                </div>
+                <div className="space-y-1">
+                  <div className={`h-12 bg-gradient-to-t ${theme.primary} rounded opacity-80`} 
+                       style={{ height: `${Math.max(8, (day.games / 8) * 48)}px` }} />
+                  <div className="text-xs text-white">{day.games}</div>
+                  <div className="text-xs text-slate-400">games</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Weekly and Monthly Patterns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Weekly Pattern */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-slate-300">Weekly Pattern</h4>
+            <div className="space-y-2">
+              {Object.entries(trends.activityPatterns.weeklyPattern).map(([day, value]) => (
+                <div key={day} className="flex items-center gap-3">
+                  <span className="text-xs text-slate-400 w-20">{day}</span>
+                  <div className="flex-1 bg-slate-700/50 rounded-full h-2">
+                    <div 
+                      className={`h-full bg-gradient-to-r ${theme.accent} rounded-full transition-all duration-500`}
+                      style={{ width: `${Math.min(100, (value / 120) * 100)}%` }}
+                    />
+                  </div>
+                  <span className="text-xs text-white w-8 text-right">{value}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Monthly Pattern */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-slate-300">Monthly Pattern</h4>
+            <div className="space-y-2">
+              {Object.entries(trends.activityPatterns.monthlyPattern).map(([week, value]) => (
+                <div key={week} className="flex items-center gap-3">
+                  <span className="text-xs text-slate-400 w-20">{week}</span>
+                  <div className="flex-1 bg-slate-700/50 rounded-full h-2">
+                    <div 
+                      className={`h-full bg-gradient-to-r ${theme.secondary} rounded-full transition-all duration-500`}
+                      style={{ width: `${Math.min(100, (value / 100) * 100)}%` }}
+                    />
+                  </div>
+                  <span className="text-xs text-white w-8 text-right">{value}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Learning Curve Analysis */}
+      <div className={`
+        bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6
+        command-panel
+      `}>
+        <div className="flex items-center gap-3 mb-6">
+          <Target size={20} className="text-yellow-400" />
+          <h3 className="text-lg font-bold text-white uppercase tracking-wide">
+            Learning Curve
+          </h3>
+          <div className="h-px flex-1 bg-gradient-to-r from-slate-600 to-transparent"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Improvement Rate */}
+          <div className="text-center space-y-3">
+            <div className="text-2xl font-bold text-yellow-400">
+              {trends.learningCurve.improvementRate.toFixed(1)}%
+            </div>
+            <div className="text-sm text-slate-400">Monthly Improvement Rate</div>
+            <div className={`text-xs ${
+              trends.learningCurve.improvementRate > 2 ? 'text-green-400' :
+              trends.learningCurve.improvementRate > 1 ? 'text-yellow-400' : 'text-red-400'
+            }`}>
+              {trends.learningCurve.improvementRate > 2 ? 'Excellent' :
+               trends.learningCurve.improvementRate > 1 ? 'Good' : 'Needs Focus'}
+            </div>
+          </div>
+
+          {/* Plateau Periods */}
+          <div className="text-center space-y-3">
+            <div className="text-2xl font-bold text-blue-400">
+              {trends.learningCurve.plateauPeriods.length}
+            </div>
+            <div className="text-sm text-slate-400">Plateau Periods</div>
+            {trends.learningCurve.plateauPeriods.length > 0 && (
+              <div className="text-xs text-slate-500">
+                Last: {trends.learningCurve.plateauPeriods[0]?.duration} days
+              </div>
+            )}
+          </div>
+
+          {/* Breakthrough Points */}
+          <div className="text-center space-y-3">
+            <div className="text-2xl font-bold text-green-400">
+              {trends.learningCurve.breakthroughPoints.length}
+            </div>
+            <div className="text-sm text-slate-400">Breakthroughs</div>
+            {trends.learningCurve.breakthroughPoints.length > 0 && (
+              <div className="text-xs text-slate-500">
+                Recent: {trends.learningCurve.breakthroughPoints[0]?.catalyst}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Breakthrough Details */}
+        {trends.learningCurve.breakthroughPoints.length > 0 && (
+          <div className="mt-6 space-y-3">
+            <h4 className="text-sm font-medium text-slate-300">Recent Breakthroughs</h4>
+            <div className="space-y-2">
+              {trends.learningCurve.breakthroughPoints.slice(0, 3).map((breakthrough, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
+                  <div className="space-y-1">
+                    <div className="text-sm font-medium text-white">{breakthrough.catalyst}</div>
+                    <div className="text-xs text-slate-400">{formatTimestamp(breakthrough.date)}</div>
+                  </div>
+                  <div className="text-lg font-bold text-green-400">
+                    +{breakthrough.improvement}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Predictions */}
+      <div className={`
+        bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6
+        command-panel
+      `}>
+        <div className="flex items-center gap-3 mb-6">
+          <TrendingUp size={20} className="text-cyan-400" />
+          <h3 className="text-lg font-bold text-white uppercase tracking-wide">
+            Future Projections
+          </h3>
+          <div className="h-px flex-1 bg-gradient-to-r from-slate-600 to-transparent"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Rating Projection */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium text-slate-300">Rating Projection</h4>
+            <div className="space-y-3">
+              {trends.predictions.ratingProjection.slice(0, 4).map((projection, index) => (
+                <div key={index} className="flex items-center justify-between">
+                  <span className="text-sm text-slate-400">
+                    {formatTimestamp(projection.date)}
+                  </span>
+                  <div className="text-right space-x-2">
+                    <span className="text-white font-medium">
+                      {Math.round(projection.predicted)}
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      ±{Math.round(projection.upper - projection.predicted)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Skill Development */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium text-slate-300">Skill Development</h4>
+            <div className="space-y-3">
+              {Object.entries(trends.predictions.skillDevelopment).map(([skill, projection]) => (
+                <div key={skill} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-white capitalize">{skill}</span>
+                    <span className="text-sm text-slate-400">{projection.current.toFixed(1)}%</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    <span className="text-slate-500">3m:</span>
+                    <span className="text-green-400">{projection.projected3m.toFixed(1)}%</span>
+                    <span className="text-slate-500">1y:</span>
+                    <span className="text-cyan-400">{projection.projected1y.toFixed(1)}%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default TrendAnalysis

@@ -94,6 +94,16 @@ export class Database {
         FOREIGN KEY (user_id) REFERENCES users(id)
       );
 
+      -- Password reset tokens table
+      CREATE TABLE IF NOT EXISTS password_reset_tokens (
+        user_id TEXT NOT NULL,
+        token TEXT NOT NULL UNIQUE,
+        expires_at DATETIME NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, token),
+        FOREIGN KEY (user_id) REFERENCES users(id)
+      );
+
       -- Create indexes for better performance
       CREATE INDEX IF NOT EXISTS idx_games_user_id ON games(user_id);
       CREATE INDEX IF NOT EXISTS idx_games_status ON games(status);
@@ -102,10 +112,27 @@ export class Database {
       CREATE INDEX IF NOT EXISTS idx_puzzles_rating ON puzzles(rating);
       CREATE INDEX IF NOT EXISTS idx_user_sessions_user_id ON user_sessions(user_id);
       CREATE INDEX IF NOT EXISTS idx_user_sessions_token ON user_sessions(refresh_token);
+      CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_token ON password_reset_tokens(token);
+      CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_expires ON password_reset_tokens(expires_at);
     `;
 
     await this.db.exec(schema);
     console.log('Database tables initialized');
+  }
+
+  public async get(query: string, params: any[] = []) {
+    if (!this.db) await this.connect();
+    return this.db.get(query, params);
+  }
+
+  public async getAll(query: string, params: any[] = []) {
+    if (!this.db) await this.connect();
+    return this.db.all(query, params);
+  }
+
+  public async run(query: string, params: any[] = []) {
+    if (!this.db) await this.connect();
+    return this.db.run(query, params);
   }
 
   public async close() {
