@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios';
+import { storageUtils } from './storage/crossPlatformStorage';
 
 // API Error types for consistent error handling (DRY principle)
 export interface ApiError {
@@ -55,18 +56,15 @@ export class ApiClient {
   private setupInterceptors(): void {
     // Request interceptor for auth token
     this.axiosInstance.interceptors.request.use(
-      (config) => {
-        // Get token from localStorage (Zustand persisted state)
-        const authStorage = localStorage.getItem('chess-auth-storage');
-        if (authStorage) {
-          try {
-            const parsed = JSON.parse(authStorage);
-            if (parsed.state?.accessToken) {
-              config.headers.Authorization = `Bearer ${parsed.state.accessToken}`;
-            }
-          } catch (error) {
-            console.warn('Failed to parse auth storage:', error);
+      async (config) => {
+        // Get token from cross-platform storage
+        try {
+          const tokens = await storageUtils.getAuthTokens();
+          if (tokens?.accessToken) {
+            config.headers.Authorization = `Bearer ${tokens.accessToken}`;
           }
+        } catch (error) {
+          console.warn('Failed to get auth tokens for request:', error);
         }
         return config;
       },
@@ -79,7 +77,7 @@ export class ApiClient {
       async (error) => {
         // Handle 401 Unauthorized
         if (error.response?.status === 401) {
-          localStorage.removeItem('chess-auth-storage');
+          await storageUtils.clearAllAuth();
           console.log('🔒 ApiClient: Unauthorized, cleared auth storage');
           throw new ApiError('Authentication required', 401, 'UNAUTHORIZED');
         }
@@ -202,14 +200,10 @@ export class ApiClient {
     this.cache.clear();
   }
 
-  public isAuthenticated(): boolean {
+  public async isAuthenticated(): Promise<boolean> {
     try {
-      const authStorage = localStorage.getItem('chess-auth-storage');
-      if (authStorage) {
-        const parsed = JSON.parse(authStorage);
-        return !!parsed.state?.accessToken;
-      }
-      return false;
+      const tokens = await storageUtils.getAuthTokens();
+      return !!(tokens?.accessToken && tokens?.refreshToken);
     } catch {
       return false;
     }

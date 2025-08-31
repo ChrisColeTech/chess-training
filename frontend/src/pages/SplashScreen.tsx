@@ -24,7 +24,7 @@ export const SplashScreen: React.FC = () => {
             if (isAuthenticated) {
               navigate('/dashboard')
             } else {
-              navigate('/login')
+              navigate('/auth/login')
             }
           }, 500)
           

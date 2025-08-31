@@ -4,6 +4,9 @@ import { ThemeShowcase } from '../../components/dashboard/ThemeShowcase'
 import { QuickActions } from '../../components/dashboard/QuickActions'
 import { DailyGoals } from '../../components/dashboard/DailyGoals'
 import { RecentAchievements } from '../../components/dashboard/RecentAchievements'
+import { PerformanceAnalytics } from '../../components/dashboard/PerformanceAnalytics'
+import { RecentGamesWidget } from '../../components/dashboard/RecentGamesWidget'
+import { AchievementProgress } from '../../components/dashboard/AchievementProgress'
 
 /**
  * DashboardPage - Built the correct way

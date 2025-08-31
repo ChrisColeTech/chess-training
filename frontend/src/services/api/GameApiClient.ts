@@ -32,12 +32,13 @@ export interface MoveRequest {
 
 export interface MoveResponse {
   success: boolean
-  newFen: string
-  playerMove: {
-    from: string
-    to: string
-    san: string
-    promotion?: string
+  legal: boolean
+  gameState: {
+    fen: string
+    turn: 'white' | 'black'
+    check: boolean
+    gameOver: boolean
+    result?: string
   }
   aiMove?: {
     from: string
@@ -45,8 +46,6 @@ export interface MoveResponse {
     san: string
     promotion?: string
   }
-  gameStatus: 'active' | 'checkmate' | 'stalemate' | 'draw' | 'resigned'
-  check?: boolean
   gameResult?: {
     result: 'win' | 'loss' | 'draw'
     reason: string
@@ -70,11 +69,14 @@ export interface GameHistory {
   limit: number
 }
 
-export class GameApiClient {
-  private apiClient: ApiClient
-  
-  constructor(apiClient: ApiClient) {
-    this.apiClient = apiClient
+/**
+ * GameApiClient - Following Document 2 service layer architecture
+ * Single Responsibility: Handle game-related API calls
+ * Extends base ApiClient for DRY error handling and JWT interceptors
+ */
+export class GameApiClient extends ApiClient {
+  constructor() {
+    super()
   }
 
   /**
@@ -82,7 +84,7 @@ export class GameApiClient {
    * Endpoint: POST /api/games/create
    */
   async createGame(gameData: CreateGameRequest): Promise<GameState> {
-    return this.apiClient.post<GameState>('/games/create', gameData)
+    return this.post<GameState>('/games/create', gameData)
   }
 
   /**
@@ -90,7 +92,7 @@ export class GameApiClient {
    * Endpoint: GET /api/games/:gameId
    */
   async getGame(gameId: string): Promise<GameState> {
-    return this.apiClient.get<GameState>(`/games/${gameId}`)
+    return this.get<GameState>(`/games/${gameId}`)
   }
 
   /**
@@ -98,7 +100,7 @@ export class GameApiClient {
    * Endpoint: POST /api/games/:gameId/move
    */
   async makeMove(gameId: string, move: MoveRequest): Promise<MoveResponse> {
-    return this.apiClient.post<MoveResponse>(`/games/${gameId}/move`, move)
+    return this.post<MoveResponse>(`/games/${gameId}/move`, move)
   }
 
   /**
@@ -106,7 +108,7 @@ export class GameApiClient {
    * Endpoint: GET /api/games
    */
   async getAllGames(page: number = 1, limit: number = 10): Promise<GameHistory> {
-    return this.apiClient.get<GameHistory>(`/games?page=${page}&limit=${limit}`)
+    return this.get<GameHistory>(`/games?page=${page}&limit=${limit}`)
   }
 
   /**
@@ -114,7 +116,31 @@ export class GameApiClient {
    * Endpoint: DELETE /api/games/:gameId
    */
   async deleteGame(gameId: string): Promise<{ success: boolean }> {
-    return this.apiClient.delete<{ success: boolean }>(`/games/${gameId}`)
+    return this.delete<{ success: boolean }>(`/games/${gameId}`)
+  }
+
+  /**
+   * Resign current game
+   * Endpoint: POST /api/games/:gameId/resign
+   */
+  async resignGame(gameId: string): Promise<{ success: boolean }> {
+    return this.post<{ success: boolean }>(`/games/${gameId}/resign`)
+  }
+
+  /**
+   * Offer draw to opponent
+   * Endpoint: POST /api/games/:gameId/offer-draw
+   */
+  async offerDraw(gameId: string): Promise<{ success: boolean }> {
+    return this.post<{ success: boolean }>(`/games/${gameId}/offer-draw`)
+  }
+
+  /**
+   * Pause current game
+   * Endpoint: POST /api/games/:gameId/pause
+   */
+  async pauseGame(gameId: string): Promise<{ success: boolean }> {
+    return this.post<{ success: boolean }>(`/games/${gameId}/pause`)
   }
 
   /**
@@ -144,6 +170,9 @@ export class GameApiClient {
       eco: string
     }
   }> {
-    return this.apiClient.post(`/games/${gameId}/analysis`, options)
+    return this.post(`/games/${gameId}/analysis`, options)
   }
 }
+
+// Singleton instance following DRY principle
+export const gameApiClient = new GameApiClient()

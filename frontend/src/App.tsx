@@ -1,6 +1,7 @@
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
-import { useAuthStore } from './stores/authStore'
+import { useEffect, useState } from 'react'
+import { useAuthStore, waitForHydration } from './stores/authStore'
+import './utils/storageValidation' // Initialize storage validation for debugging
 import { DesktopAppLayout } from './components/layout/DesktopAppLayout'
 import { SplashScreen } from './pages/SplashScreen'
 import { LoginPage } from './pages/auth/LoginPage'
@@ -36,20 +37,35 @@ import ContactPage from './pages/help/ContactPage'
 // Profile page
 import ProfilePage from './pages/profile/ProfilePage'
 
+// Debug pages
+import ChessBoardTestPage from './pages/debug/ChessBoardTestPage'
+
 // Auth navigator - handles auth redirects programmatically
 function AuthNavigator() {
   const navigate = useNavigate()
   const location = useLocation()
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const [hasHydrated, setHasHydrated] = useState(false)
   
   useEffect(() => {
+    // Wait for proper Zustand hydration
+    waitForHydration().then(() => {
+      console.log('🎉 Auth store hydration complete')
+      setHasHydrated(true)
+    })
+  }, [])
+  
+  useEffect(() => {
+    // Don't redirect until Zustand has rehydrated from localStorage
+    if (!hasHydrated) return
+    
     if (isAuthenticated && (location.pathname === '/login' || location.pathname === '/auth/login' || location.pathname === '/auth/forgot-password' || location.pathname === '/auth/register')) {
       navigate('/dashboard', { replace: true })
     }
-    if (!isAuthenticated && location.pathname !== '/login' && location.pathname !== '/auth/login' && location.pathname !== '/auth/forgot-password' && location.pathname !== '/auth/register' && location.pathname !== '/') {
+    if (!isAuthenticated && location.pathname !== '/login' && location.pathname !== '/auth/login' && location.pathname !== '/auth/forgot-password' && location.pathname !== '/auth/register' && location.pathname !== '/' && location.pathname !== '/test' && !location.pathname.startsWith('/debug/')) {
       navigate('/auth/login', { replace: true })
     }
-  }, [isAuthenticated, navigate, location.pathname])
+  }, [isAuthenticated, hasHydrated, navigate, location.pathname])
   
   return null
 }
@@ -57,6 +73,16 @@ function AuthNavigator() {
 // Route guards - now just check auth without Navigate components
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const [hasHydrated, setHasHydrated] = useState(false)
+  
+  useEffect(() => {
+    waitForHydration().then(() => setHasHydrated(true))
+  }, [])
+  
+  // Show loading until hydration completes
+  if (!hasHydrated) {
+    return <SplashScreen />
+  }
   
   if (!isAuthenticated) {
     return null // AuthNavigator handles the redirect
@@ -67,6 +93,16 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const [hasHydrated, setHasHydrated] = useState(false)
+  
+  useEffect(() => {
+    waitForHydration().then(() => setHasHydrated(true))
+  }, [])
+  
+  // Show loading until hydration completes
+  if (!hasHydrated) {
+    return <SplashScreen />
+  }
   
   if (isAuthenticated) {
     return null // AuthNavigator handles the redirect
@@ -82,6 +118,9 @@ function App() {
       <Routes>
             {/* Splash Screen - Entry point */}
             <Route path="/" element={<SplashScreen />} />
+            
+            {/* Quick access to chess test without login */}
+            <Route path="/test" element={<div className="p-8 text-white text-center"><h1>Test Route Works!</h1><p>This proves routing is working</p></div>} />
             
             {/* Public routes - redirect to dashboard if authenticated */}
             <Route path="/login" element={
@@ -211,6 +250,13 @@ function App() {
             <Route path="/help/contact" element={
               <ProtectedRoute>
                 <ContactPage />
+              </ProtectedRoute>
+            } />
+            
+            {/* Debug routes - accessible when logged in */}
+            <Route path="/debug/chess" element={
+              <ProtectedRoute>
+                <ChessBoardTestPage />
               </ProtectedRoute>
             } />
             

@@ -53,12 +53,10 @@ export class UserService {
       return {
         theme: 'default',
         board_style: 'classic',
-        piece_style: 'standard',
+        piece_set: 'standard',
         sound_enabled: true,
-        notifications_enabled: true,
         auto_queen: true,
-        show_coordinates: false,
-        highlight_moves: true
+        show_legal_moves: true
       }
     }
   }

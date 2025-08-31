@@ -50,7 +50,7 @@ export class StatsApiClient {
   }
 
   async getDashboardStats(): Promise<DashboardStats> {
-    return this.apiClient.get<DashboardStats>('/users/dashboard-stats')
+    return this.apiClient.get<DashboardStats>('/user/dashboard-stats')
   }
 
   /**

@@ -37,10 +37,10 @@ export const RecentAchievements: React.FC = () => {
               return (
                 <div key={index} className="flex items-center space-x-2 bg-white/5 rounded-lg px-3 py-2">
                   <IconComponent className="w-4 h-4 text-yellow-400" />
-                  <span className="text-white font-medium text-sm">{achievement.title}</span>
-                  {achievement.unlocked_at && (
+                  <span className="text-white font-medium text-sm">{achievement.name}</span>
+                  {achievement.unlock_date && (
                     <span className="text-xs text-white/60">
-                      {new Date(achievement.unlocked_at).toLocaleDateString()}
+                      {new Date(achievement.unlock_date).toLocaleDateString()}
                     </span>
                   )}
                 </div>

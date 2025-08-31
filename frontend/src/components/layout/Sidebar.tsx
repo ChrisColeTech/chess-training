@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, ChevronRight, ChevronDown, User, Home, Play, Puzzle, BookOpen, BarChart3, Settings, HelpCircle, Trophy } from 'lucide-react'
+import { Menu, ChevronRight, ChevronDown, User, Home, Play, Puzzle, BookOpen, BarChart3, Settings, HelpCircle, Trophy, Bug } from 'lucide-react'
 import { useThemeStore } from '../../stores/themeStore'
 import { useAuth } from '../../hooks/auth/useAuth'
 import { SidebarUserAvatar } from '../ui/UserAvatar'
@@ -124,6 +124,23 @@ const navigationItems: NavItem[] = [
   }
 ]
 
+// Add debug section
+navigationItems.push({
+  id: 'debug',
+  title: 'Debug',
+  icon: Bug,
+  children: [
+    {
+      id: 'chess-test',
+      title: 'Chess Board Test',
+      icon: Play,
+      path: '/debug/chess'
+    }
+  ]
+})
+
+console.log('🔧 Navigation items:', navigationItems.map(item => item.title))
+
 interface SidebarProps {
   isCollapsed: boolean
   onToggle: () => void
@@ -246,6 +263,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {navigationItems.map(item => renderNavItem(item))}
       </nav>
+
 
       {/* User Actions */}
       <div className="p-4 border-t border-white/10">

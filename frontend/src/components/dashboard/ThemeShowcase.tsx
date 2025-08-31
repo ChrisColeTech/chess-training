@@ -1,69 +1,23 @@
-import React, { useState } from 'react'
-import { useThemeStore } from '../../stores/themeStore'
+import React from 'react'
 import { cn } from '../../lib/utils'
-import { Waves, Flame, Moon, Zap, Sword } from 'lucide-react'
+import { useThemeSelection } from '../../hooks/useThemeSelection'
+import { THEME_DISPLAY_DATA } from '../../data/themeData'
+import type { ThemeShowcaseProps } from '../../types/components'
 
-export const ThemeShowcase: React.FC = () => {
-  const { getCurrentTheme, setTheme } = useThemeStore()
-  const [hoveredTheme, setHoveredTheme] = useState<string | null>(null)
-  const currentTheme = getCurrentTheme()
-  
-  const themes = [
-    { 
-      id: 'cyber-neon', 
-      name: 'Cyber Neon',
-      shortName: 'CYBER\nNEON',
-      description: 'Electric blue gaming',
-      icon: Waves,
-      gradient: 'from-cyan-400 via-blue-500 to-purple-600',
-      accentColor: 'cyan-400',
-      particles: true
-    },
-    { 
-      id: 'dragon-gold', 
-      name: 'Dragon Gold',
-      shortName: 'DRAGON\nGOLD', 
-      description: 'Legendary treasure',
-      icon: Flame,
-      gradient: 'from-yellow-400 via-orange-500 to-red-600',
-      accentColor: 'yellow-400',
-      particles: true
-    },
-    { 
-      id: 'shadow-knight', 
-      name: 'Shadow Knight',
-      shortName: 'SHADOW\nKNIGHT',
-      description: 'Dark & mysterious', 
-      icon: Moon,
-      gradient: 'from-gray-400 via-slate-500 to-indigo-600',
-      accentColor: 'gray-400',
-      particles: true
-    },
-    { 
-      id: 'emerald-matrix', 
-      name: 'Emerald Matrix',
-      shortName: 'EMERALD\nMATRIX',
-      description: 'Digital forest',
-      icon: Zap, 
-      gradient: 'from-green-400 via-emerald-500 to-teal-600',
-      accentColor: 'green-400',
-      particles: true
-    },
-    { 
-      id: 'crimson-war', 
-      name: 'Crimson War',
-      shortName: 'CRIMSON\nWAR',
-      description: 'Battle-tested fury',
-      icon: Sword,
-      gradient: 'from-red-400 via-rose-500 to-pink-600', 
-      accentColor: 'red-400',
-      particles: true
-    }
-  ]
-  
-  const handleThemeSwitch = (themeId: string) => {
-    setTheme(themeId)
-  }
+/**
+ * ThemeShowcase - Pure UI Component Following SRP
+ * Single Responsibility: Render theme selection UI only
+ * No hooks logic, no data definitions, no business logic
+ * Pure presentation that delegates to theme selection hook
+ */
+export const ThemeShowcase: React.FC<ThemeShowcaseProps> = () => {
+  const {
+    currentTheme,
+    handleThemeSwitch,
+    handleThemeHover,
+    isThemeActive,
+    isThemeHovered
+  } = useThemeSelection()
   
   return (
     <div className="backdrop-blur-xl bg-black/20 border-white/10 hover:border-white/20 transition-all duration-300 rounded-2xl p-6 mb-6">
@@ -81,16 +35,16 @@ export const ThemeShowcase: React.FC = () => {
       </div>
       
       <div className="grid grid-cols-5 gap-4">
-        {themes.map((theme) => {
-          const isActive = currentTheme.id === theme.id
-          const isHovered = hoveredTheme === theme.id
+        {THEME_DISPLAY_DATA.map((theme) => {
+          const isActive = isThemeActive(theme.id)
+          const isHovered = isThemeHovered(theme.id)
           
           return (
             <button
               key={theme.id}
               onClick={() => handleThemeSwitch(theme.id)}
-              onMouseEnter={() => setHoveredTheme(theme.id)}
-              onMouseLeave={() => setHoveredTheme(null)}
+              onMouseEnter={() => handleThemeHover(theme.id)}
+              onMouseLeave={() => handleThemeHover(null)}
               className={cn(
                 "relative group p-4 rounded-xl border-2 transition-all duration-500",
                 "hover:scale-105 hover:-translate-y-2 hover:shadow-2xl",

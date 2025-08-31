@@ -120,7 +120,7 @@ const useDashboard = () => {
       try {
         // Parallel API calls for better performance
         const [statsResponse, gamesResponse, puzzleResponse, achievementsResponse] = await Promise.all([
-          fetch('/api/users/dashboard-stats', {
+          fetch('/api/user/dashboard-stats', {
             headers: { 'Authorization': `Bearer ${getToken()}` }
           }),
           fetch('/api/games?limit=5&status=completed', {
@@ -852,7 +852,7 @@ const getPuzzleHint = async () => {
 const updateUserProgress = async (progressData: ProgressUpdate) => {
   try {
     // API Call: Update user progress (background)
-    const response = await fetch('/api/users/progress', {
+    const response = await fetch('/api/user/progress', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -927,7 +927,7 @@ const updateUserPreferences = async (preferences: UserPreferences) => {
     updateLocalPreferences(preferences)
     
     // API Call: Save preferences
-    const response = await fetch('/api/users/preferences', {
+    const response = await fetch('/api/user/preferences', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -1099,7 +1099,7 @@ const loadDashboardStats = async () => {
     return
   }
   
-  const response = await fetch('/api/users/dashboard-stats')
+  const response = await fetch('/api/user/dashboard-stats')
   const data = await response.json()
   
   setCachedData(cacheKey, data)
@@ -1200,8 +1200,8 @@ const useWebSocket = () => {
 - `GET /api/game-reviews/:id` - Game reviews (1-5 calls per session)
 
 #### **Low Frequency (Periodic)**:
-- `GET /api/users/dashboard-stats` - Dashboard loads (1-3 calls per session)
-- `PUT /api/users/progress` - Progress updates (background, after games/puzzles)
+- `GET /api/user/dashboard-stats` - Dashboard loads (1-3 calls per session)
+- `PUT /api/user/progress` - Progress updates (background, after games/puzzles)
 - `POST /api/achievements/check` - Achievement checks (background, triggered)
 
 ### **Performance Targets**:

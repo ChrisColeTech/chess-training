@@ -5,6 +5,9 @@ import type { Chess } from 'chess.js'
  * Single Responsibility: Chess-related type definitions
  */
 
+// Re-export Square type to avoid react-chessboard import issues
+export type Square = string
+
 // Basic chess move type
 export interface ChessMove {
   from: string

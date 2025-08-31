@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { ApiClient } from '../services/apiClient'
 import { StatsApiClient, type DashboardStats } from '../services/api/StatsApiClient'
 import { GameApiClient, type GameHistory } from '../services/api/GameApiClient'
-import { UserApiClient, type Achievement, type RecentActivity } from '../services/api/UserApiClient'
+import { UserApiClient } from '../services/api/UserApiClient'
+import type { Achievement, RecentActivity } from '../types/user'
 
 // Dashboard data types
 export interface DashboardData {
@@ -115,8 +116,8 @@ export const useDashboard = () => {
   // API client instances - following Document 12 architecture
   const apiClient = new ApiClient()
   const statsClient = new StatsApiClient(apiClient)
-  const gameClient = new GameApiClient(apiClient)
-  const userClient = new UserApiClient(apiClient)
+  const gameClient = new GameApiClient()
+  const userClient = new UserApiClient()
 
   // Load dashboard data with parallel API calls (Document 20 pattern)
   const loadDashboardData = useCallback(async () => {
@@ -142,9 +143,9 @@ export const useDashboard = () => {
             console.warn('Achievements API failed:', err)
             return { achievements: [], total_unlocked: 0, total_available: 0, recent_unlocks: [] }
           }),
-          userClient.getRecentActivity(5).catch(err => {
+          userClient.getActivity().catch((err: any) => {
             console.warn('Recent activity API failed:', err)
-            return { activities: [], has_more: false }
+            return []
           })
         ])
 
@@ -163,7 +164,7 @@ export const useDashboard = () => {
         recentGames: gamesResponse.games,
         puzzleProgress,
         achievements: achievementsResponse.achievements,
-        recentActivity: activityResponse.activities,
+        recentActivity: activityResponse,
         dailyGoals,
         isLoading: false,
         error: null

@@ -7,7 +7,8 @@ import {
   HelpCircle, 
   Trophy, 
   User, 
-  BookOpen 
+  BookOpen,
+  Bug
 } from 'lucide-react'
 
 export interface NavItem {
@@ -123,6 +124,19 @@ export const NAVIGATION_ITEMS: NavItem[] = [
         title: 'Contact',
         icon: HelpCircle,
         path: '/help/contact'
+      }
+    ]
+  },
+  {
+    id: 'debug',
+    title: 'Debug',
+    icon: Bug,
+    children: [
+      {
+        id: 'chess-test',
+        title: 'Chess Board Test',
+        icon: Play,
+        path: '/debug/chess'
       }
     ]
   }
