@@ -145,4 +145,5 @@ export interface GameLayoutProps {
   chessBoard: React.ReactNode
   playerInfo: React.ReactNode
   gameControls: React.ReactNode
+  moveHints?: React.ReactNode
 }

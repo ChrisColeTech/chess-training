@@ -1,9 +1,11 @@
 import { Response } from 'express';
 import { ChessService } from '../services/chessService';
+import { AIService } from '../services/aiService';
 import { AuthenticatedRequest } from '../middleware/auth';
 
 export class GameController {
   private chessService = new ChessService();
+  private aiService = new AIService();
 
   createGame = async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -289,6 +291,78 @@ export class GameController {
       res.status(500).json({
         success: false,
         error: 'Failed to analyze game'
+      });
+    }
+  };
+
+  getGameHints = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { gameId } = req.params;
+      const { difficulty = 'intermediate' } = req.query;
+      const userId = req.user?.userId;
+
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: 'User not authenticated'
+        });
+      }
+
+      if (!gameId) {
+        return res.status(400).json({
+          success: false,
+          error: 'Game ID is required'
+        });
+      }
+
+      // Get current game state (need raw game record to check status)
+      const gameRecord = await this.chessService['db'].db.get(
+        'SELECT * FROM games WHERE id = ? AND user_id = ?',
+        [gameId, userId]
+      );
+      
+      if (!gameRecord) {
+        return res.status(404).json({
+          success: false,
+          error: 'Game not found'
+        });
+      }
+
+      if (gameRecord.status !== 'active') {
+        return res.status(400).json({
+          success: false,
+          error: 'Cannot get hints for inactive game'
+        });
+      }
+
+      // Get hints for current position
+      const hints = await this.aiService.getGameHints(
+        gameRecord.current_fen, 
+        difficulty as 'beginner' | 'intermediate' | 'advanced'
+      );
+
+      res.json({
+        success: true,
+        data: {
+          gameId,
+          hints,
+          timestamp: new Date().toISOString()
+        }
+      });
+
+    } catch (error) {
+      console.error('Get game hints error:', error);
+      
+      if ((error as any).message === 'No legal moves available') {
+        return res.status(400).json({
+          success: false,
+          error: 'No legal moves available in current position'
+        });
+      }
+
+      res.status(500).json({
+        success: false,
+        error: 'Failed to get game hints'
       });
     }
   };

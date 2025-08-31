@@ -69,6 +69,31 @@ export interface GameHistory {
   limit: number
 }
 
+export interface GameHints {
+  bestMoves: Array<{
+    move: any
+    san: string
+    evaluation: number
+    explanation: string
+    rank: number
+  }>
+  currentEvaluation: number
+  suggestion: string
+  position: {
+    phase: 'opening' | 'middlegame' | 'endgame'
+    material: { white: number; black: number }
+  }
+}
+
+export interface GameHintsResponse {
+  success: boolean
+  data: {
+    gameId: string
+    hints: GameHints
+    timestamp: string
+  }
+}
+
 /**
  * GameApiClient - Following Document 2 service layer architecture
  * Single Responsibility: Handle game-related API calls
@@ -171,6 +196,20 @@ export class GameApiClient extends ApiClient {
     }
   }> {
     return this.post(`/games/${gameId}/analysis`, options)
+  }
+
+  /**
+   * Get move hints for current game position
+   * Endpoint: GET /api/games/:gameId/hints
+   */
+  async getGameHints(
+    gameId: string, 
+    difficulty: 'beginner' | 'intermediate' | 'advanced' = 'intermediate'
+  ): Promise<GameHints> {
+    const response = await this.get<GameHintsResponse>(
+      `/games/${gameId}/hints?difficulty=${difficulty}`
+    )
+    return response.data.hints
   }
 }
 

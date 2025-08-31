@@ -39,6 +39,8 @@ import ProfilePage from './pages/profile/ProfilePage'
 
 // Debug pages
 import ChessBoardTestPage from './pages/debug/ChessBoardTestPage'
+import ChessGameLayoutTest from './pages/debug/ChessGameLayoutTest'
+import ChessBoardUITestPage from './pages/debug/ChessBoardUITestPage'
 
 // Auth navigator - handles auth redirects programmatically
 function AuthNavigator() {
@@ -257,6 +259,16 @@ function App() {
             <Route path="/debug/chess" element={
               <ProtectedRoute>
                 <ChessBoardTestPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/debug/chess-layout" element={
+              <ProtectedRoute>
+                <ChessGameLayoutTest />
+              </ProtectedRoute>
+            } />
+            <Route path="/debug/chess-ui" element={
+              <ProtectedRoute>
+                <ChessBoardUITestPage />
               </ProtectedRoute>
             } />
             

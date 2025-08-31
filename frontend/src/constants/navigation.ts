@@ -137,6 +137,18 @@ export const NAVIGATION_ITEMS: NavItem[] = [
         title: 'Chess Board Test',
         icon: Play,
         path: '/debug/chess'
+      },
+      {
+        id: 'chess-layout-test',
+        title: 'Layout Test',
+        icon: Play,
+        path: '/debug/chess-layout'
+      },
+      {
+        id: 'chess-ui-test',
+        title: 'Library Comparison',
+        icon: Play,
+        path: '/debug/chess-ui'
       }
     ]
   }

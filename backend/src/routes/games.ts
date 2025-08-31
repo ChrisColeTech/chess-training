@@ -851,4 +851,123 @@ router.post('/:gameId/analysis',
   gameController.analyzeGame
 );
 
+/**
+ * @swagger
+ * /api/games/{gameId}/hints:
+ *   get:
+ *     summary: Get move hints for active game
+ *     description: Provides AI-powered move suggestions and position analysis for training during live gameplay
+ *     tags: [Games]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: gameId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: The unique identifier of the active game
+ *       - in: query
+ *         name: difficulty
+ *         schema:
+ *           type: string
+ *           enum: [beginner, intermediate, advanced]
+ *           default: intermediate
+ *         description: Hint complexity level for educational purposes
+ *     responses:
+ *       200:
+ *         description: Game hints retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         gameId:
+ *                           type: string
+ *                           format: uuid
+ *                           description: The game ID for which hints were generated
+ *                         hints:
+ *                           type: object
+ *                           properties:
+ *                             bestMoves:
+ *                               type: array
+ *                               items:
+ *                                 type: object
+ *                                 properties:
+ *                                   move:
+ *                                     $ref: '#/components/schemas/ChessMove'
+ *                                   san:
+ *                                     type: string
+ *                                     description: Standard Algebraic Notation of the move
+ *                                     example: "Nf3"
+ *                                   evaluation:
+ *                                     type: number
+ *                                     description: Position evaluation after this move (centipawns)
+ *                                     example: 0.15
+ *                                   explanation:
+ *                                     type: string
+ *                                     description: Educational explanation of why this move is good
+ *                                     example: "Develops piece, Controls center"
+ *                                   rank:
+ *                                     type: integer
+ *                                     description: Move ranking (1 = best, 2 = second best, etc.)
+ *                                     example: 1
+ *                             currentEvaluation:
+ *                               type: number
+ *                               description: Current position evaluation (centipawns)
+ *                               example: 0.05
+ *                             suggestion:
+ *                               type: string
+ *                               description: Overall positional advice tailored to player level
+ *                               example: "Consider developing your knight to f3 to improve piece coordination"
+ *                             position:
+ *                               type: object
+ *                               properties:
+ *                                 phase:
+ *                                   type: string
+ *                                   enum: [opening, middlegame, endgame]
+ *                                   description: Current game phase
+ *                                   example: "opening"
+ *                                 material:
+ *                                   type: object
+ *                                   properties:
+ *                                     white:
+ *                                       type: number
+ *                                       description: White's material value
+ *                                       example: 39
+ *                                     black:
+ *                                       type: number
+ *                                       description: Black's material value
+ *                                       example: 39
+ *                         timestamp:
+ *                           type: string
+ *                           format: date-time
+ *                           description: When the hints were generated
+ *       400:
+ *         description: Bad request - invalid game ID or inactive game
+ *       401:
+ *         description: Unauthorized - valid authentication token required
+ *       404:
+ *         description: Game not found
+ *       500:
+ *         description: Internal server error
+ */
+// Get game hints
+router.get('/:gameId/hints',
+  authenticateToken,
+  [
+    param('gameId')
+      .isUUID()
+      .withMessage('Invalid game ID format')
+  ],
+  validateRequest,
+  gameController.getGameHints
+);
+
 export default router;

@@ -174,6 +174,7 @@ export const useChessGame = () => {
     }
   }, [gameState])
 
+
   // SRP: Game resignation
   const resignGame = useCallback(async () => {
     if (!gameState.gameId || gameState.status !== 'active') return

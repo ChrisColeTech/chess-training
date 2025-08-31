@@ -9,14 +9,25 @@ import type { GameLayoutProps } from '../../types/components'
 export const GameLayout: React.FC<GameLayoutProps> = ({
   chessBoard,
   playerInfo,
-  gameControls
+  gameControls,
+  moveHints
 }) => {
   return (
     <div className="w-full h-screen flex flex-col lg:flex-row bg-background">
       
-      {/* Chess Board Section */}
-      <div className="flex-1 flex items-center justify-center p-2 lg:p-4">
-        {chessBoard}
+      {/* Chess Board Section with Optional Hints */}
+      <div className="flex-1 flex flex-col items-center justify-center p-2 lg:p-4">
+        {/* Chess Board */}
+        <div className="chess-board-container">
+          {chessBoard}
+        </div>
+        
+        {/* Move Hints (if provided) */}
+        {moveHints && (
+          <div className="w-full max-w-4xl mt-4">
+            {moveHints}
+          </div>
+        )}
       </div>
 
       {/* Side Panel */}

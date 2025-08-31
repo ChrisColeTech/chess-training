@@ -4,9 +4,11 @@ import { GameSetupForm } from '../../components/chess/GameSetupForm'
 import { GameControls } from '../../components/chess/GameControls'
 import { PlayerInfo } from '../../components/chess/PlayerInfo'
 import { GameLayout } from '../../components/chess/GameLayout'
+import { MoveHintsPanel } from '../../components/chess/MoveHintsPanel'
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'
 import { Badge } from '../../components/ui/badge'
 import { useChessGame } from '../../hooks/useChessGame'
+import { useGameHints } from '../../hooks/chess/useGameHints'
 
 /**
  * PlayComputerPage - Following Document 12 page structure and Document 2 SRP
@@ -27,6 +29,20 @@ const PlayComputerPage: React.FC = () => {
     resetGame,
     clearError
   } = useChessGame()
+
+  // Game hints hook - disabled during opponent's turn
+  const {
+    hints,
+    isLoading: hintsLoading,
+    error: hintsError,
+    refresh: refreshHints,
+    clearError: clearHintsError
+  } = useGameHints({
+    gameId: gameState.gameId,
+    position: gameState.chess?.fen() || '',
+    difficulty: 'intermediate',
+    disabled: !isPlayerTurn || gameState.status !== 'active'
+  })
 
   // Game setup phase - Using separated component (SRP)
   if (gameState.status === 'setup') {
@@ -115,6 +131,16 @@ const PlayComputerPage: React.FC = () => {
           onPause={pauseGame}
           onNewGame={resetGame}
           disabled={gameState.status !== 'active'}
+        />
+      }
+      moveHints={
+        <MoveHintsPanel
+          hints={hints}
+          isLoading={hintsLoading}
+          error={hintsError}
+          onRefresh={refreshHints}
+          disabled={!isPlayerTurn || gameState.status !== 'active'}
+          difficulty="intermediate"
         />
       }
     />
