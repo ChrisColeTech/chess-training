@@ -10,11 +10,11 @@ export interface TokenPayload {
 
 export class JWTService {
   static generateAccessToken(payload: TokenPayload): string {
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+    return jwt.sign(payload, JWT_SECRET);
   }
 
   static generateRefreshToken(payload: TokenPayload): string {
-    return jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: '7d' });
+    return jwt.sign(payload, JWT_REFRESH_SECRET);
   }
 
   static verifyAccessToken(token: string): TokenPayload {

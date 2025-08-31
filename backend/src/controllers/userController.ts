@@ -117,10 +117,16 @@ export class UserController {
       res.json({
         success: true,
         stats: {
-          chessRating: user.chess_elo,
-          puzzleRating: user.puzzle_rating,
-          todayGames: todayStats.games,
-          todayPuzzles: todayStats.puzzles,
+          chess_elo: user.chess_elo,
+          puzzle_rating: user.puzzle_rating,
+          games_played: todayStats.games, // Daily games played
+          study_hours: 0, // TODO: Add study tracking
+          rating_change: 0, // TODO: Calculate daily rating change
+          puzzle_rating_change: 0, // TODO: Calculate daily puzzle rating change
+          games_change: 0, // TODO: Calculate daily games change
+          study_hours_change: 0, // TODO: Calculate daily study hours change
+          puzzles_solved_today: todayStats.puzzles,
+          study_minutes_today: 0, // TODO: Add study time tracking
           currentStreak: streak,
           recentGames: recentGames.slice(0, 5) // Last 5 games
         }

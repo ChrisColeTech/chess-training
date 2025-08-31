@@ -2,8 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
 import { Database } from './utils/database';
 import { errorHandler } from './middleware/errorHandler';
+import { swaggerSpec } from './config/swagger';
 
 // Route imports
 import authRoutes from './routes/auth';
@@ -56,6 +58,33 @@ app.use(cors({
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Swagger UI setup - serve at root /
+app.use('/', swaggerUi.serve);
+app.get('/', swaggerUi.setup(swaggerSpec, {
+  explorer: true,
+  customSiteTitle: 'Chess Training API Documentation',
+  customCss: `
+    .swagger-ui .topbar { display: none; }
+    .swagger-ui .info .title { color: #2c3e50; font-size: 2.5em; }
+    .swagger-ui .info .description { font-size: 1.2em; color: #34495e; }
+  `,
+  customfavIcon: '/favicon.ico',
+  swaggerOptions: {
+    persistAuthorization: true,
+    displayRequestDuration: true,
+    docExpansion: 'list',
+    filter: true,
+    showRequestHeaders: true,
+    tryItOutEnabled: true
+  }
+}));
+
+// Also serve swagger.json for API clients
+app.get('/swagger.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
 
 // Comprehensive logging for troubleshooting - ALL requests, responses, and errors
 app.use((req, res, next) => {
@@ -116,6 +145,19 @@ app.use((req, res, next) => {
   };
   
   next();
+});
+
+// System health endpoint
+app.get('/api/system/health', (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      version: '1.0.0'
+    }
+  });
 });
 
 // Routes

@@ -14,6 +14,8 @@
     "migrate-full": "cd ../tools && npm run build && npm run migrate-all-data && npm run migrate-all-puzzles && cd ../backend && npm run cleanup-duplicates && npm run backup-database"
   },
   "dependencies": {
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
     "bcrypt": "^5.1.x",
     "chess.js": "^1.0.x",
     "cors": "^2.8.x",
@@ -24,6 +26,8 @@
     "jsonwebtoken": "^9.0.x",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.6",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "typescript": "^5.0.x",
     "uuid": "^9.0.x"
   },

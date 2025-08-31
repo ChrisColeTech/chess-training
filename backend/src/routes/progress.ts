@@ -7,7 +7,255 @@ const router = express.Router();
 // All progress routes require authentication
 router.use(authenticateToken);
 
-// GET /api/progress/overview - Get progress overview
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ProgressOverview:
+ *       type: object
+ *       properties:
+ *         ratings:
+ *           type: object
+ *           properties:
+ *             chess:
+ *               type: integer
+ *               description: Current chess rating
+ *               example: 1350
+ *             puzzle:
+ *               type: integer
+ *               description: Current puzzle rating
+ *               example: 1420
+ *         activity:
+ *           type: object
+ *           properties:
+ *             todayGames:
+ *               type: integer
+ *               description: Games played today
+ *               example: 3
+ *             todayPuzzles:
+ *               type: integer
+ *               description: Puzzles attempted today
+ *               example: 15
+ *             currentStreak:
+ *               type: integer
+ *               description: Current daily activity streak
+ *               example: 7
+ *         statistics:
+ *           type: object
+ *           properties:
+ *             games:
+ *               type: object
+ *               properties:
+ *                 total:
+ *                   type: integer
+ *                   example: 245
+ *                 wins:
+ *                   type: integer
+ *                   example: 127
+ *                 losses:
+ *                   type: integer
+ *                   example: 98
+ *                 draws:
+ *                   type: integer
+ *                   example: 20
+ *                 winRate:
+ *                   type: number
+ *                   format: float
+ *                   example: 0.518
+ *             puzzles:
+ *               type: object
+ *               properties:
+ *                 total:
+ *                   type: integer
+ *                   example: 1523
+ *                 correct:
+ *                   type: integer
+ *                   example: 1287
+ *                 accuracy:
+ *                   type: number
+ *                   format: float
+ *                   example: 0.845
+ *                 avgTime:
+ *                   type: integer
+ *                   description: Average time in seconds
+ *                   example: 45
+ *     DetailedProgress:
+ *       type: object
+ *       properties:
+ *         ratingHistory:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               date:
+ *                 type: string
+ *                 format: date
+ *               avg_rating_change:
+ *                 type: number
+ *               attempts:
+ *                 type: integer
+ *         themePerformance:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               themes:
+ *                 type: string
+ *                 description: Tactical themes
+ *               attempts:
+ *                 type: integer
+ *               accuracy:
+ *                 type: number
+ *               avg_time:
+ *                 type: number
+ *         hourlyPerformance:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               hour:
+ *                 type: string
+ *                 description: Hour of day (00-23)
+ *               attempts:
+ *                 type: integer
+ *               accuracy:
+ *                 type: number
+ *         recentSessions:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               session_date:
+ *                 type: string
+ *                 format: date
+ *               puzzles_solved:
+ *                 type: integer
+ *               accuracy:
+ *                 type: number
+ *               rating_change:
+ *                 type: number
+ *     Achievement:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: Achievement identifier
+ *         name:
+ *           type: string
+ *           description: Achievement name
+ *         description:
+ *           type: string
+ *           description: Achievement description
+ *         unlocked:
+ *           type: boolean
+ *           description: Whether achievement is unlocked
+ *         progress:
+ *           type: number
+ *           description: Current progress toward achievement
+ *         target:
+ *           type: number
+ *           description: Target value to unlock achievement
+ *     LearningPath:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: Learning path identifier
+ *         name:
+ *           type: string
+ *           description: Learning path name
+ *         description:
+ *           type: string
+ *           description: Learning path description
+ *         category:
+ *           type: string
+ *           enum: [fundamentals, tactics, strategy, openings, endgames]
+ *           description: Learning path category
+ *         difficulty:
+ *           type: string
+ *           enum: [beginner, intermediate, advanced, expert]
+ *           description: Difficulty level
+ *         progress:
+ *           type: number
+ *           description: Completion progress (0-1)
+ *         totalLessons:
+ *           type: integer
+ *           description: Total number of lessons
+ *         completedLessons:
+ *           type: integer
+ *           description: Number of completed lessons
+ *         estimatedTime:
+ *           type: string
+ *           description: Estimated completion time
+ *         unlocked:
+ *           type: boolean
+ *           description: Whether path is unlocked
+ */
+
+/**
+ * @swagger
+ * /api/progress/overview:
+ *   get:
+ *     tags:
+ *       - Progress
+ *     summary: Get progress overview
+ *     description: Retrieves a comprehensive overview of the user's progress including ratings, activity, and statistics
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Progress overview retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/ProgressOverview'
+ *             example:
+ *               success: true
+ *               data:
+ *                 ratings:
+ *                   chess: 1350
+ *                   puzzle: 1420
+ *                 activity:
+ *                   todayGames: 3
+ *                   todayPuzzles: 15
+ *                   currentStreak: 7
+ *                 statistics:
+ *                   games:
+ *                     total: 245
+ *                     wins: 127
+ *                     losses: 98
+ *                     draws: 20
+ *                     winRate: 0.518
+ *                   puzzles:
+ *                     total: 1523
+ *                     correct: 1287
+ *                     accuracy: 0.845
+ *                     avgTime: 45
+ *       401:
+ *         description: Authentication required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: "Authentication required"
+ *       500:
+ *         description: Failed to fetch progress overview
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: "Failed to fetch progress overview"
+ */
 router.get('/overview', async (req: AuthenticatedRequest, res) => {
   try {
     const db = Database.getInstance();
@@ -129,7 +377,77 @@ router.get('/overview', async (req: AuthenticatedRequest, res) => {
   }
 });
 
-// GET /api/progress/detailed - Get detailed progress stats
+/**
+ * @swagger
+ * /api/progress/detailed:
+ *   get:
+ *     tags:
+ *       - Progress
+ *     summary: Get detailed progress statistics
+ *     description: Retrieves detailed progress analytics including rating history, theme performance, hourly patterns, and recent session data
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Detailed progress statistics retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/DetailedProgress'
+ *             example:
+ *               success: true
+ *               data:
+ *                 ratingHistory:
+ *                   - date: "2024-01-20"
+ *                     avg_rating_change: 15.5
+ *                     attempts: 12
+ *                   - date: "2024-01-19"
+ *                     avg_rating_change: -8.2
+ *                     attempts: 8
+ *                 themePerformance:
+ *                   - themes: "fork,pin"
+ *                     attempts: 45
+ *                     accuracy: 0.89
+ *                     avg_time: 38.5
+ *                   - themes: "skewer,deflection"
+ *                     attempts: 32
+ *                     accuracy: 0.78
+ *                     avg_time: 42.1
+ *                 hourlyPerformance:
+ *                   - hour: "14"
+ *                     attempts: 89
+ *                     accuracy: 0.91
+ *                   - hour: "20"
+ *                     attempts: 156
+ *                     accuracy: 0.87
+ *                 recentSessions:
+ *                   - session_date: "2024-01-20"
+ *                     puzzles_solved: 25
+ *                     accuracy: 0.88
+ *                     rating_change: 18
+ *                   - session_date: "2024-01-19"
+ *                     puzzles_solved: 15
+ *                     accuracy: 0.73
+ *                     rating_change: -5
+ *       401:
+ *         description: Authentication required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Failed to fetch detailed progress
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 router.get('/detailed', async (req: AuthenticatedRequest, res) => {
   try {
     const db = Database.getInstance();
@@ -215,7 +533,77 @@ router.get('/detailed', async (req: AuthenticatedRequest, res) => {
   }
 });
 
-// GET /api/progress/achievements - Get user achievements
+/**
+ * @swagger
+ * /api/progress/achievements:
+ *   get:
+ *     tags:
+ *       - Progress
+ *     summary: Get user achievements
+ *     description: Retrieves all achievements with their unlock status and progress
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User achievements retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Achievement'
+ *             example:
+ *               success: true
+ *               data:
+ *                 - id: "first_game"
+ *                   name: "First Game"
+ *                   description: "Complete your first chess game"
+ *                   unlocked: true
+ *                   progress: 1
+ *                   target: 1
+ *                 - id: "game_winner"
+ *                   name: "Game Winner"
+ *                   description: "Win your first chess game"
+ *                   unlocked: true
+ *                   progress: 1
+ *                   target: 1
+ *                 - id: "puzzle_solver"
+ *                   name: "Puzzle Solver"
+ *                   description: "Solve your first puzzle"
+ *                   unlocked: true
+ *                   progress: 1
+ *                   target: 1
+ *                 - id: "puzzle_master"
+ *                   name: "Puzzle Master"
+ *                   description: "Solve 100 puzzles"
+ *                   unlocked: false
+ *                   progress: 67
+ *                   target: 100
+ *                 - id: "rating_climber"
+ *                   name: "Rating Climber"
+ *                   description: "Reach 1200 puzzle rating"
+ *                   unlocked: true
+ *                   progress: 1200
+ *                   target: 1200
+ *       401:
+ *         description: Authentication required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Failed to fetch achievements
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 router.get('/achievements', async (req: AuthenticatedRequest, res) => {
   try {
     const db = Database.getInstance();
@@ -304,7 +692,77 @@ router.get('/achievements', async (req: AuthenticatedRequest, res) => {
   }
 });
 
-// GET /api/progress/learning-paths - Get learning path progress
+/**
+ * @swagger
+ * /api/progress/learning-paths:
+ *   get:
+ *     tags:
+ *       - Progress
+ *     summary: Get learning path progress
+ *     description: Retrieves all available learning paths with progress information and unlock status
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Learning paths retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/LearningPath'
+ *             example:
+ *               success: true
+ *               data:
+ *                 - id: "beginner_tactics"
+ *                   name: "Beginner Tactics"
+ *                   description: "Learn basic tactical patterns"
+ *                   category: "tactics"
+ *                   difficulty: "beginner"
+ *                   progress: 0.3
+ *                   totalLessons: 10
+ *                   completedLessons: 3
+ *                   estimatedTime: "2-3 hours"
+ *                   unlocked: true
+ *                 - id: "opening_principles"
+ *                   name: "Opening Principles"
+ *                   description: "Master the fundamentals of chess openings"
+ *                   category: "openings"
+ *                   difficulty: "beginner"
+ *                   progress: 0
+ *                   totalLessons: 8
+ *                   completedLessons: 0
+ *                   estimatedTime: "1-2 hours"
+ *                   unlocked: true
+ *                 - id: "endgame_basics"
+ *                   name: "Endgame Basics"
+ *                   description: "Essential endgame knowledge"
+ *                   category: "endgames"
+ *                   difficulty: "intermediate"
+ *                   progress: 0
+ *                   totalLessons: 12
+ *                   completedLessons: 0
+ *                   estimatedTime: "3-4 hours"
+ *                   unlocked: false
+ *       401:
+ *         description: Authentication required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Failed to fetch learning paths
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 router.get('/learning-paths', async (req: AuthenticatedRequest, res) => {
   try {
     const db = Database.getInstance();
