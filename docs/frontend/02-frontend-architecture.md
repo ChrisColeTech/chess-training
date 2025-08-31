@@ -96,7 +96,7 @@ User Action → Loading State (500ms) → Success Animation (300ms) → navigate
 
 ### Chess Libraries ✅ **Research-Validated Stack**
 - **chess.js** - Chess game logic and validation *(Validated in research)*
-- **react-chessboard** - Modern, actively maintained board component *(Validated in research)*
+- **responsive-chessboard** - Modern, responsive chess board component with native responsive props *(Validated in research)*
 
 ### State Management ✅ **Implementation Decision Override**
 **Decision: React Context API + useState/useReducer** *(Override from research-recommended Zustand)*

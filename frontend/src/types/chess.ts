@@ -183,3 +183,20 @@ export interface ChessBoardAccessibilityConfig {
   reducedMotion: boolean
   focusIndicators: boolean
 }
+
+// Responsive chessboard types
+export interface ChessPosition {
+  fen: string
+  turn: 'white' | 'black'
+  check: boolean
+  checkmate: boolean
+  stalemate: boolean
+}
+
+export interface ChessGameResult {
+  winner: 'white' | 'black' | 'draw'
+  reason: 'checkmate' | 'stalemate' | 'timeout' | 'resignation'
+  moves: number
+  duration: number
+  finalPosition: string
+}

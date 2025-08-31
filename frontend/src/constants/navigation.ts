@@ -1,155 +1,145 @@
-import { 
-  Home, 
-  Play, 
-  Puzzle, 
-  BarChart3, 
-  Settings, 
-  HelpCircle, 
-  Trophy, 
-  User, 
+import {
+  Home,
+  Play,
+  Puzzle,
+  BarChart3,
+  Settings,
+  HelpCircle,
+  Trophy,
+  User,
   BookOpen,
-  Bug
-} from 'lucide-react'
+  Bug,
+  Smartphone,
+  Layout,
+} from "lucide-react";
 
 export interface NavItem {
-  id: string
-  title: string
-  icon: any
-  path?: string
-  children?: NavItem[]
+  id: string;
+  title: string;
+  icon: any;
+  path?: string;
+  children?: NavItem[];
 }
 
 export const NAVIGATION_ITEMS: NavItem[] = [
   {
-    id: 'dashboard',
-    title: 'Dashboard',
+    id: "dashboard",
+    title: "Dashboard",
     icon: Home,
-    path: '/dashboard'
+    path: "/dashboard",
   },
   {
-    id: 'play',
-    title: 'Play',
+    id: "play",
+    title: "Play",
     icon: Play,
     children: [
       {
-        id: 'vs-computer',
-        title: 'vs Computer',
+        id: "vs-computer",
+        title: "vs Computer",
         icon: Play,
-        path: '/play/computer'
+        path: "/play/computer",
       },
       {
-        id: 'online',
-        title: 'Online Games',
+        id: "online",
+        title: "Online Games",
         icon: Play,
-        path: '/play/online'
-      }
-    ]
+        path: "/play/online",
+      },
+    ],
   },
   {
-    id: 'puzzles',
-    title: 'Puzzles',
+    id: "puzzles",
+    title: "Puzzles",
     icon: Puzzle,
     children: [
       {
-        id: 'daily-puzzles',
-        title: 'Daily Puzzles',
+        id: "daily-puzzles",
+        title: "Daily Puzzles",
         icon: Puzzle,
-        path: '/puzzles/daily'
+        path: "/puzzles/daily",
       },
       {
-        id: 'tactical',
-        title: 'Tactical',
+        id: "tactical",
+        title: "Tactical",
         icon: Puzzle,
-        path: '/puzzles/tactical'
+        path: "/puzzles/tactical",
       },
       {
-        id: 'endgame',
-        title: 'Endgame',
+        id: "endgame",
+        title: "Endgame",
         icon: Puzzle,
-        path: '/puzzles/endgame'
-      }
-    ]
+        path: "/puzzles/endgame",
+      },
+    ],
   },
   {
-    id: 'progress',
-    title: 'Progress',
+    id: "progress",
+    title: "Progress",
     icon: BarChart3,
     children: [
       {
-        id: 'overview',
-        title: 'Overview',
+        id: "overview",
+        title: "Overview",
         icon: BarChart3,
-        path: '/progress/overview'
+        path: "/progress/overview",
       },
       {
-        id: 'achievements',
-        title: 'Achievements',
+        id: "achievements",
+        title: "Achievements",
         icon: Trophy,
-        path: '/progress/achievements'
-      }
-    ]
+        path: "/progress/achievements",
+      },
+    ],
   },
   {
-    id: 'settings',
-    title: 'Settings',
+    id: "settings",
+    title: "Settings",
     icon: Settings,
     children: [
       {
-        id: 'preferences',
-        title: 'Preferences',
+        id: "preferences",
+        title: "Preferences",
         icon: Settings,
-        path: '/settings/preferences'
+        path: "/settings/preferences",
       },
       {
-        id: 'account',
-        title: 'Account',
+        id: "account",
+        title: "Account",
         icon: User,
-        path: '/settings/account'
-      }
-    ]
+        path: "/settings/account",
+      },
+    ],
   },
   {
-    id: 'help',
-    title: 'Help',
+    id: "help",
+    title: "Help",
     icon: HelpCircle,
     children: [
       {
-        id: 'tutorials',
-        title: 'Tutorials',
+        id: "tutorials",
+        title: "Tutorials",
         icon: BookOpen,
-        path: '/help/tutorials'
+        path: "/help/tutorials",
       },
       {
-        id: 'contact',
-        title: 'Contact',
+        id: "contact",
+        title: "Contact",
         icon: HelpCircle,
-        path: '/help/contact'
-      }
-    ]
+        path: "/help/contact",
+      },
+    ],
   },
   {
-    id: 'debug',
-    title: 'Debug',
+    id: "debug",
+    title: "Debug",
     icon: Bug,
     children: [
       {
-        id: 'chess-test',
-        title: 'Chess Board Test',
-        icon: Play,
-        path: '/debug/chess'
-      },
-      {
-        id: 'chess-layout-test',
-        title: 'Layout Test',
-        icon: Play,
-        path: '/debug/chess-layout'
-      },
-      {
-        id: 'chess-ui-test',
-        title: 'Library Comparison',
-        icon: Play,
-        path: '/debug/chess-ui'
+        id: "responsive-chess-game",
+        title: "Responsive Game",
+        icon: Layout, 
+        path: "/debug/responsive-chess-game"
       }
-    ]
-  }
-]
+    ],
+  },
+];

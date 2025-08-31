@@ -147,3 +147,56 @@ export interface GameLayoutProps {
   gameControls: React.ReactNode
   moveHints?: React.ReactNode
 }
+
+// Responsive Chess Components
+export interface ChessBoardResponsiveProps {
+  position: string
+  playerColor?: 'white' | 'black'
+  boardSize?: number
+  disabled?: boolean
+  reversed?: boolean
+  onMove?: (moveData: ChessMove) => void
+  onGameEnd?: (result: any) => void
+  customConfig?: any
+  className?: string
+}
+
+export interface ChessBoardResponsiveContainerProps extends Omit<ChessBoardContainerProps, 'boardWidth'> {
+  boardSize?: number
+  className?: string
+}
+
+export interface PlayerCardProps {
+  player: {
+    name: string
+    avatar?: string | React.ReactNode
+    color: 'white' | 'black'
+    rating?: number
+    isAI: boolean
+    aiLevel?: number
+  }
+  timer: {
+    remaining: number
+    format: string
+    isActive: boolean
+  }
+  gameStatus: {
+    isPlayerTurn: boolean
+    gameState: 'active' | 'paused' | 'completed'
+    lastMove?: string
+  }
+  position?: 'top' | 'bottom' | 'left' | 'right'
+  compact?: boolean
+  className?: string
+}
+
+export interface MoveHintsPanelProps {
+  hints: any | null
+  isLoading: boolean
+  error: string | null
+  onRefresh: () => void
+  onToggleVisibility: (visible: boolean) => void
+  disabled?: boolean
+  difficulty: 'beginner' | 'intermediate' | 'advanced'
+  className?: string
+}

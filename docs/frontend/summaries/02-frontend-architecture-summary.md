@@ -93,7 +93,7 @@ The navigation follows a smooth flow pattern: User Action triggers Loading State
 ### Chess-Specific Libraries (Research-Validated)
 
 - **chess.js**: Chess game logic and validation (validated in research)
-- **react-chessboard**: Modern, actively maintained board component (validated in research)
+- **responsive-chessboard**: Modern, responsive chess board component with native responsive props (validated in research)
 
 ### State Management - Implementation Override
 
@@ -214,7 +214,7 @@ Chess-specific components maintain clear separation of concerns:
 - Handles position display, move callbacks, and orientation settings
 - Supports coordinate display toggling and piece interaction
 - Single responsibility focused on rendering interactive chess board
-- Integrates with react-chessboard library for chess-specific functionality
+- Integrates with responsive-chessboard library for chess-specific functionality
 
 ### Puzzle Domain Components
 
@@ -557,7 +557,7 @@ The architecture implements React Context API over Zustand for simplified state 
 4. Set up routing and navigation with HashRouter for Electron compatibility
 
 ### Phase 2: Core Features Implementation
-1. Implement chess board components with react-chessboard integration
+1. Implement chess board components with responsive-chessboard integration
 2. Create puzzle solving interface with Stockfish.js integration
 3. Add authentication components with Context API state management
 4. Implement basic game functionality with audio feedback
